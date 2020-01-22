@@ -1,0 +1,22 @@
+{
+  "name": "nizkctf",
+  "version": "0.0.0",
+  "description": "A distributed and openly auditable CTF platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LorhanSohaky/nizkctf.git"
+  },
+  "keywords": [
+    "ctf"
+  ],
+  "author": "Lorhan Sohaky",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LorhanSohaky/nizkctf/issues"
+  },
+  "homepage": "https://github.com/LorhanSohaky/nizkctf#readme"
+}
