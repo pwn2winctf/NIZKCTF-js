@@ -10,9 +10,8 @@ export class GitHub {
       }
     })
   }
-  
+
   getUser () {
     return this.api.get('/user').then(response => console.log(response))
   }
 }
-
