@@ -5,7 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r esm src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "prettier-standard src/**/*.js --lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
   },
   "repository": {
     "type": "git",
@@ -24,5 +30,8 @@
     "apisauce": "^1.1.1",
     "esm": "^3.2.25"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "husky": "^4.2.1",
+    "prettier-standard": "^16.1.0"
+  }
 }
