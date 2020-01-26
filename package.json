@@ -4,13 +4,23 @@
   "description": "A distributed and openly auditable CTF platform",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node -r esm src/index.js",
     "test": "jest --forceExit --detectOpenHandles",
     "lint": "prettier-standard src/**/*.js --lint"
   },
   "lint-staged": {
-    "src/**/*.js": ["prettier-standard --lint", "git add"],
-    "__tests__/**/*.js": ["prettier-standard --lint", "git add"]
+    "src/**/*.js": [
+      "prettier-standard --lint",
+      "git add"
+    ],
+    "__tests__/**/*.js": [
+      "prettier-standard --lint",
+      "git add"
+    ],
+    "package.json": [
+      "prettier-standard --lint",
+      "git add"
+    ]
   },
   "husky": {
     "hooks": {
@@ -21,7 +31,9 @@
     "type": "git",
     "url": "git+https://github.com/LorhanSohaky/nizkctf.git"
   },
-  "keywords": ["ctf"],
+  "keywords": [
+    "ctf"
+  ],
   "author": "Lorhan Sohaky",
   "license": "MIT",
   "bugs": {
@@ -33,7 +45,6 @@
     "esm": "^3.2.25"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.8.3",
     "@types/jest": "^24.9.1",
     "babel-jest": "^25.1.0",
     "babel-preset-env": "^1.7.0",
