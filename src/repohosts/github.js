@@ -40,6 +40,11 @@ export class GitHub {
     return this.api.post(url, { title, head, base: targetBranch })
   }
 
+  commentMergeRequest (repo, mergeRequestId, body) {
+    const url = '/repos/' + repo + '/issues/' + mergeRequestId + '/comments'
+    return this.api.post(url, { body })
+  }
+
   static getSshUrl (sourceRepo) {
     return 'git@github.com:' + sourceRepo + '.git'
   }

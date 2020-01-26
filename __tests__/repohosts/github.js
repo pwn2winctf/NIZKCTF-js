@@ -48,4 +48,19 @@ describe('GitHub', function () {
     expect(response.data.message).toBe('Not Found')
     done()
   })
+
+  test('should does a comment', async done => {
+    const mergeRequestId = 3
+    const repo = 'pwn2winctf/NIZKCTF'
+
+    const body = 'Test comment'
+
+    const response = await this.repo.commentMergeRequest(
+      repo,
+      mergeRequestId,
+      body
+    )
+    expect(response.status).toBe(201)
+    done()
+  })
 })
