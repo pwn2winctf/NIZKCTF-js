@@ -72,4 +72,13 @@ describe('GitHub', function () {
     expect(response.status).toBe(200)
     done()
   })
+
+  test('should not accept merge request', async done => {
+    const mergeRequestId = 3
+    const repo = 'pwn2winctf/NIZKCTF'
+
+    const response = await this.repo.acceptMergeRequest(repo, mergeRequestId)
+    expect(response.status).toBe(404)
+    done()
+  })
 })

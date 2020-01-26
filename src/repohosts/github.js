@@ -50,6 +50,11 @@ export class GitHub {
     return this.api.patch(url, { state: 'closed' })
   }
 
+  acceptMergeRequest (repo, mergeRequest, sha = undefined) {
+    const url = '/repos/' + repo + '/pulls/' + mergeRequest + '/merge'
+    return this.api.put(url, { sha })
+  }
+
   static getSshUrl (sourceRepo) {
     return 'git@github.com:' + sourceRepo + '.git'
   }
