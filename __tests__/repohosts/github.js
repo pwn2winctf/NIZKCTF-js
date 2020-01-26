@@ -23,7 +23,7 @@ describe('GitHub', function () {
     const expectSshUrl = 'git@github.com:pwn2winctf/NIZKCTF.git'
 
     const sourceRepo = 'pwn2winctf/NIZKCTF'
-    const sshUrl = GitHub.getSshUrl(sourceRepo)
+    const sshUrl = GitHub.resolveSshUrl(sourceRepo)
 
     expect(sshUrl).toBe(expectSshUrl)
   })

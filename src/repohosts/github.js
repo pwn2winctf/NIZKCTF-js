@@ -55,7 +55,7 @@ export class GitHub {
     return this.api.put(url, { sha })
   }
 
-  static getSshUrl (sourceRepo) {
+  static resolveSshUrl (sourceRepo) {
     return 'git@github.com:' + sourceRepo + '.git'
   }
 }
