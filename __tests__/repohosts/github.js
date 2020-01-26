@@ -3,6 +3,7 @@ const { GitHub } = require('../../src/repohosts/github')
 describe('GitHub', function () {
   beforeEach(() => {
     this.repo = new GitHub(process.env.TOKEN)
+    this.username = process.env.GITHUB_USER
   })
 
   test("should get user's data", async done => {
@@ -25,5 +26,26 @@ describe('GitHub', function () {
     const sshUrl = GitHub.getSshUrl(sourceRepo)
 
     expect(sshUrl).toBe(expectSshUrl)
+  })
+
+  test('should does a merge request', async done => {
+    const sourceRepo = this.username + '/NIZKCTF-1'
+    const sourceBranch = 'master'
+
+    const targetRepo = 'test/test'
+    const targetBranch = 'master'
+
+    const title = 'My merge request'
+
+    const response = await this.repo.mergeRequest(
+      sourceRepo,
+      targetRepo,
+      sourceBranch,
+      targetBranch,
+      title
+    )
+    expect(response.status).toBe(404)
+    expect(response.data.message).toBe('Not Found')
+    done()
   })
 })

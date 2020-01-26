@@ -26,6 +26,20 @@ export class GitHub {
     return this.api.post(url)
   }
 
+  mergeRequest (
+    sourceRepo,
+    targetRepo,
+    sourceBranch = 'master',
+    targetBranch = 'master',
+    title = 'Pull Request'
+  ) {
+    const username = sourceRepo.split('/')[0]
+    const head = username + ':' + sourceBranch
+    const url = '/repos/' + targetRepo + '/pulls'
+
+    return this.api.post(url, { title, head, base: targetBranch })
+  }
+
   static getSshUrl (sourceRepo) {
     return 'git@github.com:' + sourceRepo + '.git'
   }
