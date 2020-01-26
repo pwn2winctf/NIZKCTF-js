@@ -9,7 +9,8 @@
     "lint": "prettier-standard src/**/*.js --lint"
   },
   "lint-staged": {
-    "src/**/*.js": ["prettier-standard --lint", "git add"]
+    "src/**/*.js": ["prettier-standard --lint", "git add"],
+    "__tests__/**/*.js": ["prettier-standard --lint", "git add"]
   },
   "husky": {
     "hooks": {
