@@ -21,8 +21,10 @@ export class GitHub {
     return this.api.get('/user')
   }
 
-  fork (sourceRepo) {
+  async fork (sourceRepo) {
     const url = '/repos/' + sourceRepo + '/forks'
-    return this.api.post(url)
+    const { data, status } = await this.api.post(url)
+
+    return { status, fullName: data.full_name, sshUR: data.ssh_url }
   }
 }
