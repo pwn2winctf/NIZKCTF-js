@@ -6,11 +6,14 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "jest --forceExit --silent --detectOpenHandles",
-    "precommit": "prettier-standard src/**/*.js --lint"
+    "lint": "prettier-standard src/**/*.js --lint"
+  },
+  "lint-staged": {
+    "src/**/*.js": ["prettier-standard --lint", "git add"]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run precommit"
+      "pre-commit": "lint-staged"
     }
   },
   "repository": {
