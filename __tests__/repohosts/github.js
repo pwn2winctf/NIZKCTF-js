@@ -28,7 +28,7 @@ describe('GitHub', function () {
     expect(sshUrl).toBe(expectSshUrl)
   })
 
-  test('should does a merge request', async done => {
+  test('should return 404', async done => {
     const sourceRepo = this.username + '/NIZKCTF-1'
     const sourceBranch = 'master'
 
