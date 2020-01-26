@@ -63,4 +63,13 @@ describe('GitHub', function () {
     expect(response.status).toBe(201)
     done()
   })
+
+  test('should close merge request', async done => {
+    const mergeRequestId = 3
+    const repo = 'pwn2winctf/NIZKCTF'
+
+    const response = await this.repo.closeMergeRequest(repo, mergeRequestId)
+    expect(response.status).toBe(200)
+    done()
+  })
 })

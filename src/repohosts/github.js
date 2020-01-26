@@ -45,6 +45,11 @@ export class GitHub {
     return this.api.post(url, { body })
   }
 
+  closeMergeRequest (repo, mergeRequest) {
+    const url = '/repos/' + repo + '/pulls/' + mergeRequest
+    return this.api.patch(url, { state: 'closed' })
+  }
+
   static getSshUrl (sourceRepo) {
     return 'git@github.com:' + sourceRepo + '.git'
   }
