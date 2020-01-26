@@ -25,6 +25,10 @@ export class GitHub {
     const url = '/repos/' + sourceRepo + '/forks'
     const { data, status } = await this.api.post(url)
 
-    return { status, fullName: data.full_name, sshUR: data.ssh_url }
+    return { status, fullName: data.full_name, sshUrl: data.ssh_url }
+  }
+
+  static getSshUrl (sourceRepo) {
+    return 'git@github.com:' + sourceRepo + '.git'
   }
 }
