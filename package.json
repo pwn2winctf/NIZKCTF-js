@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node -r esm src/index.js",
     "test": "jest --forceExit --detectOpenHandles",
-    "lint": "prettier-standard src/**/*.js --lint"
+    "lint": "prettier-standard src/**/*.js --lint",
+    "build": "babel src/ -d build/"
   },
   "lint-staged": {
     "src/**/*.js": [
@@ -41,13 +42,15 @@
   },
   "homepage": "https://github.com/LorhanSohaky/nizkctf#readme",
   "dependencies": {
-    "apisauce": "^1.1.1",
-    "esm": "^3.2.25"
+    "apisauce": "^1.1.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
     "@types/jest": "^24.9.1",
     "babel-jest": "^25.1.0",
-    "babel-preset-env": "^1.7.0",
+    "esm": "^3.2.25",
     "husky": "^4.2.1",
     "jest": "^25.1.0",
     "prettier-standard": "^16.1.0"
