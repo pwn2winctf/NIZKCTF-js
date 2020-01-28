@@ -55,6 +55,11 @@ export class GitHub {
     return this.api.put(url, { sha })
   }
 
+  listFiles (repo, path, ref = 'master') {
+    const url = `/repos/${repo}/contents/${path}`
+    return this.api.get(url, { ref })
+  }
+
   static resolveSshUrl (sourceRepo) {
     return 'git@github.com:' + sourceRepo + '.git'
   }
