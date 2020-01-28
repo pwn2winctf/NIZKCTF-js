@@ -1,4 +1,5 @@
 const CHALLENGES_DIR = 'challenges/'
+const DEFAULT_LANGUAGE = 'en'
 
 export class Challenges {
   constructor (repoHost, repository) {
@@ -28,7 +29,10 @@ export class Challenges {
           const language = description.name
             .slice(0, description.name.lastIndexOf('.md'))
             .substring(fileName.length + 1)
-          map[language] = { path: description.path, url: description.url }
+          map[language] = {
+            path: description.path,
+            url: description.download_url
+          }
           return map
         }, {})
       return {
@@ -39,6 +43,40 @@ export class Challenges {
       }
     })
 
+    this.challenges = challenges
+
     return challenges
+  }
+
+  get (name, language = DEFAULT_LANGUAGE) {
+    if (this.challenges === undefined) {
+      throw new Error('First execute list')
+    }
+
+    const challenges = this.challenges.filter(
+      challenge => challenge.name === name
+    )
+
+    if (challenges.length === 0) {
+      throw new Error('Challenge not found')
+    }
+
+    const selectedChallenge = challenges[0]
+
+    const selectedDescription =
+      selectedChallenge.descriptions[language] ||
+      selectedChallenge.descriptions[DEFAULT_LANGUAGE] ||
+      Object.values(selectedChallenge.descriptions)[0]
+    if (selectedDescription === undefined) {
+      throw new Error('Description not found')
+    }
+
+    const challenge = {
+      ...selectedChallenge,
+      description: selectedDescription.url
+    }
+    delete challenge.descriptions
+
+    return challenge
   }
 }

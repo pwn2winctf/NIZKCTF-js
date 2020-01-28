@@ -46,7 +46,7 @@ describe('Challenges', function () {
         const fileName = `${item.name}.${lang}`
         map[lang] = {
           path: `challenges/${fileName}.md`,
-          url: `${baseURL}/${fileName}.md?ref=${ref}`
+          url: `https://raw.githubusercontent.com/pwn2winctf/2019/${ref}/challenges/${fileName}.md`
         }
         return map
       }, {})
@@ -60,6 +60,23 @@ describe('Challenges', function () {
     const list = await this.challenges.list()
 
     expect(list).toStrictEqual(expected)
+    done()
+  })
+
+  test('should get the challenge', async done => {
+    const expected = {
+      name: 'vamos_pra_russia',
+      path: 'challenges/vamos_pra_russia.json',
+      url:
+        'https://api.github.com/repos/pwn2winctf/2019/contents/challenges/vamos_pra_russia.json?ref=master',
+      description:
+        'https://raw.githubusercontent.com/pwn2winctf/2019/master/challenges/vamos_pra_russia.en.md'
+    }
+
+    await this.challenges.list()
+    const challenge = this.challenges.get('vamos_pra_russia')
+
+    expect(challenge).toStrictEqual(expected)
     done()
   })
 })
