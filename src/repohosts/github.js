@@ -1,4 +1,5 @@
 import { create } from 'apisauce'
+import { responseWrapper } from '../apiHandlers'
 
 const API_URL = 'https://api.github.com'
 
@@ -7,6 +8,7 @@ export class GitHub {
     this.api = create({
       baseURL: API_URL
     })
+    this.api.addAsyncResponseTransform(responseWrapper())
 
     if (token) {
       this.setToken(token)
