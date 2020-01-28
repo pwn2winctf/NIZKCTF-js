@@ -5,7 +5,7 @@ const repo = new GitHub(process.env.TOKEN)
 this.challenges = new Challenges(repo, 'pwn2winctf/2019')
 
 this.challenges
-  .listChallenges()
+  .list()
   .then(list => {
     list.forEach(challenge => {
       console.log(challenge.name)
