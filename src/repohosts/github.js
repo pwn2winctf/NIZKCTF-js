@@ -55,6 +55,18 @@ export class GitHub {
     return this.api.put(url, { sha })
   }
 
+  createOrUpdateFile (
+    repo,
+    path,
+    message,
+    content,
+    branch = 'master',
+    sha = undefined
+  ) {
+    const url = `/repos/${repo}/contents/${path}`
+    return this.api.put(url, { message, content, branch, sha })
+  }
+
   static resolveSshUrl (sourceRepo) {
     return 'git@github.com:' + sourceRepo + '.git'
   }

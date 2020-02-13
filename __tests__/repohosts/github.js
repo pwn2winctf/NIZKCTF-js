@@ -81,4 +81,24 @@ describe('GitHub', function () {
     expect(response.status).toBe(404)
     done()
   })
+
+  test('should add new file', async done => {
+    const repo = `${this.username}/NIZKCTF-1`
+
+    const date = new Date()
+    const timestamp = date.getTime()
+
+    const content = `Commit test ${date}`
+    const buffer = Buffer.from(content)
+    const base64Content = buffer.toString('base64')
+
+    const response = await this.repo.createOrUpdateFile(
+      repo,
+      `${timestamp}`,
+      'Initial commit',
+      base64Content
+    )
+    expect(response.status).toBe(201)
+    done()
+  })
 })
