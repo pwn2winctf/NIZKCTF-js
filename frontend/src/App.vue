@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style type="sass" scoped>
-.page-container{
-  width:100%;
+.page-container {
+  width: 100%;
 }
 </style>
