@@ -11,6 +11,7 @@
 	"dependencies": {
 		"core-js": "^3.6.4",
 		"vue": "^2.6.11",
+		"vue-material": "^1.0.0-beta-11",
 		"vue-router": "^3.1.5",
 		"vuex": "^3.1.2"
 	},
@@ -35,17 +36,27 @@
 		"env": {
 			"node": true
 		},
-		"extends": [ "plugin:vue/essential", "eslint:recommended", "@vue/prettier" ],
+		"extends": [
+			"plugin:vue/essential",
+			"eslint:recommended",
+			"@vue/prettier"
+		],
 		"parserOptions": {
 			"parser": "babel-eslint"
 		},
 		"rules": {}
 	},
-	"browserslist": [ "> 1%", "last 2 versions" ],
+	"browserslist": [
+		"> 1%",
+		"last 2 versions"
+	],
 	"gitHooks": {
 		"pre-commit": "lint-staged"
 	},
 	"lint-staged": {
-		"*.{js,jsx,vue}": [ "vue-cli-service lint", "git add" ]
+		"*.{js,jsx,vue}": [
+			"vue-cli-service lint",
+			"git add"
+		]
 	}
 }
