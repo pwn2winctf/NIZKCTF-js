@@ -6,5 +6,6 @@ const api = axios.create({
 });
 
 export const API = {
-  listNews: () => api.get("/news.json")
+  listNews: () => api.get("/news.json"),
+  listSolvedChallenges: () => api.get("/accepted-submissions.json")
 };
