@@ -1,5 +1,5 @@
 <template>
-  <md-app class="page-container">
+  <md-app md-mode="fixed">
     <md-app-toolbar class="md-primary" md-elevation="0">
       <md-button class="md-icon-button" @click="toggleMenu" v-if="!menuVisible">
         <md-icon>menu</md-icon>
@@ -40,7 +40,7 @@
         </md-list-item>
       </md-list>
     </md-app-drawer>
-    <md-app-content class="md-scrollbar">
+    <md-app-content>
       <router-view />
     </md-app-content>
   </md-app>
@@ -59,9 +59,3 @@ export default {
   }
 };
 </script>
-
-<style type="sass" scoped>
-.page-container {
-  width: 100%;
-}
-</style>
