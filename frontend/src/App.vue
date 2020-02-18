@@ -1,5 +1,5 @@
 <template>
-  <md-app md-mode="fixed">
+  <md-app md-mode="fixed" class="container">
     <md-app-toolbar class="md-primary" md-elevation="0">
       <md-button class="md-icon-button" @click="toggleMenu" v-if="!menuVisible">
         <md-icon>menu</md-icon>
@@ -59,3 +59,9 @@ export default {
   }
 };
 </script>
+
+<style type="sass" scoped>
+.container {
+  width: 100%;
+}
+</style>
