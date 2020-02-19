@@ -1,0 +1,20 @@
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
+
+@include md-register-theme(
+  "default",
+  (
+    primary: md-get-palette-color(black, A200),
+    accent: md-get-palette-color(red, A200)
+  )
+);
+
+@include md-register-theme(
+  "dark",
+  (
+    primary: md-get-palette-color(grey, A200),
+    accent: md-get-palette-color(red, 100),
+    theme: dark
+  )
+);
+
+@import "~vue-material/dist/theme/all"; // Apply the theme
