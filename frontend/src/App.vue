@@ -1,5 +1,5 @@
 <template>
-  <md-app md-mode="fixed" class="container" md-theme="default">
+  <md-app md-mode="fixed" class="container" :md-theme="this.theme">
     <md-app-toolbar class="md-primary" md-elevation="0">
       <md-button class="md-icon-button" @click="toggleMenu" v-if="!menuVisible">
         <md-icon>menu</md-icon>
@@ -47,10 +47,15 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "App",
   data: () => ({
     menuVisible: false
+  }),
+  computed: mapState({
+    theme: state => state.theme
   }),
   methods: {
     toggleMenu() {
