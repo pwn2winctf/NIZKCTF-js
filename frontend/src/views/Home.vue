@@ -1,7 +1,7 @@
 <template>
-  <md-content class="md-layout md-gutter">
-    <News class="md-layout-item md-xsmall-size-100 md-size-50 " />
-    <SolvedChallenges class="md-layout-item md-xsmall-size-100 md-size-50 " />
+  <md-content class="md-layout md-gutter container">
+    <News class="md-layout-item md-xsmall-size-100 md-size-50" />
+    <SolvedChallenges class="md-layout-item md-xsmall-size-100 md-size-50" />
   </md-content>
 </template>
 
@@ -14,3 +14,10 @@ export default {
   components: { News, SolvedChallenges }
 };
 </script>
+
+<style type="sass" scoped>
+.container {
+  flex: 1;
+  justify-content: space-around;
+}
+</style>

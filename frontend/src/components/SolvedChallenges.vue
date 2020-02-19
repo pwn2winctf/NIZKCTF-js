@@ -1,5 +1,5 @@
 <template>
-  <md-content class="md-scrollbar">
+  <md-content>
     <md-toolbar :md-elevation="1">
       <span class="md-title">Solves</span>
     </md-toolbar>
@@ -9,20 +9,14 @@
         md-mode="indeterminate"
       ></md-progress-spinner>
     </md-content>
-    <md-list v-if="!loading">
-      <md-list-item
-        v-for="(item, index) in challenges"
-        v-bind:key="index"
-        class="md-list-item-text"
-      >
-        <p>
-          <span class="item-date"
-            >[{{ item.datetime.toLocaleString() }}] {{ item.team }}</span
-          >
-          solved {{ item.challenge }}
-        </p>
-      </md-list-item>
-    </md-list>
+    <md-content v-if="!loading" class="container md-scrollbar">
+      <p v-for="(item, index) in challenges" v-bind:key="index">
+        <span class="item-date"
+          >[{{ item.datetime.toLocaleString() }}] {{ item.team }}</span
+        >
+        solved {{ item.challenge }}
+      </p>
+    </md-content>
   </md-content>
 </template>
 
@@ -61,6 +55,10 @@ export default {
 </script>
 
 <style type="sass" scoped>
+.container {
+  overflow: scroll;
+  height: 70vh;
+}
 .spinner {
   display: flex;
   align-items: center;
