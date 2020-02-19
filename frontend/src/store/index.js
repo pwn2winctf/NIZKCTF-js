@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import createLogger from "vuex/dist/logger";
 import VuexPersist from "vuex-persist";
 
+const plugins = [];
+
 const DEV = process.env.NODE_ENV !== "production";
 
 Vue.use(Vuex);
@@ -11,10 +13,12 @@ const vuexLocalStorage = new VuexPersist({
   key: "pw2winctf",
   storage: window.localStorage
 });
+plugins.push(vuexLocalStorage.plugin);
 
-const logger = createLogger();
-
-const plugins = [DEV && logger, vuexLocalStorage.plugin];
+if (DEV) {
+  const logger = createLogger();
+  plugins.push(logger);
+}
 
 export default new Vuex.Store({
   strict: DEV,
