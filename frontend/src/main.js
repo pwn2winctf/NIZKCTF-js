@@ -4,8 +4,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import 'vue-material/dist/vue-material.min.css'
-import '@/themes.scss'
+import "vue-material/dist/vue-material.min.css";
+import "@/themes.scss";
 
 Vue.config.productionTip = false;
 Vue.use(VueMaterial);
