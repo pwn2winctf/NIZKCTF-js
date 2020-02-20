@@ -3,13 +3,10 @@
     <md-toolbar :md-elevation="1">
       <span class="md-title">News</span>
     </md-toolbar>
-    <md-content v-if="loading" class="spinner">
-      <md-progress-spinner
-        v-if="loading"
-        md-mode="indeterminate"
-      ></md-progress-spinner>
+    <md-content v-if="firstLoad" class="spinner">
+      <md-progress-spinner md-mode="indeterminate" />
     </md-content>
-    <md-content v-if="!loading" class="container md-scrollbar">
+    <md-content v-else class="container md-scrollbar">
       <p v-for="(item, index) in news" v-bind:key="index">
         <span class="item-date">[{{ item.datetime }}]</span> {{ item.text }}
       </p>
@@ -18,18 +15,26 @@
 </template>
 
 <script>
-import { API } from "@/services/api";
 import fromUnixTime from "date-fns/fromUnixTime";
+
+import { API } from "@/services/api";
+import { createPooling } from "@/utils";
 
 export default {
   name: "News",
   data: () => ({
     news: [],
-    loading: true
+    firstLoad: true
   }),
-  created() {
-    API.listNews()
-      .then(response => {
+  created() {},
+  mounted() {
+    this.newsPolling = createPooling(this.loadNews);
+    this.newsPolling.start();
+  },
+  methods: {
+    loadNews() {
+      API.listNews().then(response => {
+        this.firstLoad = false;
         const datas = response.data
           .sort((a, b) => b.time - a.time)
           .map(item => ({
@@ -37,12 +42,12 @@ export default {
             text: item.msg
           }));
         this.news = datas;
-      })
-      .finally(() => (this.loading = false));
+      });
+    }
   },
-  methods: {},
-  mounted: () => {},
-  beforeDestroy: () => {}
+  beforeDestroy: function() {
+    this.newsPolling.stop();
+  }
 };
 </script>
 
