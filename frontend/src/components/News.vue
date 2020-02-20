@@ -26,8 +26,7 @@ export default {
     news: [],
     firstLoad: true
   }),
-  created() {},
-  mounted() {
+  created() {
     this.newsPolling = createPooling(this.loadNews);
     this.newsPolling.start();
   },
