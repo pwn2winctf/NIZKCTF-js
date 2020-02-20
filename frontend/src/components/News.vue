@@ -21,7 +21,7 @@
 import fromUnixTime from "date-fns/fromUnixTime";
 
 import { API } from "@/services/api";
-import { createPooling } from "@/utils";
+import { createPolling } from "@/utils";
 
 export default {
   name: "News",
@@ -30,7 +30,7 @@ export default {
     firstLoad: true
   }),
   created() {
-    this.newsPolling = createPooling(this.loadNews);
+    this.newsPolling = createPolling(this.loadNews);
     this.newsPolling.start();
   },
   methods: {

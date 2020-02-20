@@ -1,4 +1,4 @@
-export const createPooling = (callback, milliseconds = 60000) => {
+export const createPolling = (callback, milliseconds = 60000) => {
   let interval;
   return {
     running: false,

@@ -21,7 +21,7 @@
 import fromUnixTime from "date-fns/fromUnixTime";
 
 import { API } from "@/services/api";
-import { createPooling } from "@/utils";
+import { createPolling } from "@/utils";
 
 export default {
   name: "SolvedChallenges",
@@ -30,7 +30,7 @@ export default {
     firstLoad: true
   }),
   created() {
-    this.solvedChallengesPolling = createPooling(this.loadSolvedChallenges);
+    this.solvedChallengesPolling = createPolling(this.loadSolvedChallenges);
     this.solvedChallengesPolling.start();
   },
   methods: {
