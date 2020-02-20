@@ -1,56 +1,62 @@
 <template>
   <md-content>
-    <md-toolbar :md-elevation="1">
+    <md-toolbar md-elevation="1">
       <span class="md-title">Solves</span>
     </md-toolbar>
-    <md-content v-if="loading" class="spinner">
-      <md-progress-spinner
-        v-if="loading"
-        md-mode="indeterminate"
-      ></md-progress-spinner>
+    <md-content v-if="firstLoad" class="spinner">
+      <md-progress-spinner md-mode="indeterminate" />
     </md-content>
-    <md-content v-if="!loading" class="container md-scrollbar">
-      <p v-for="(item, index) in challenges" v-bind:key="index">
-        <span class="item-date"
-          >[{{ item.datetime.toLocaleString() }}] {{ item.team }}</span
-        >
-        solved {{ item.challenge }}
-      </p>
+    <md-content v-else class="container md-scrollbar">
+      <transition-group name="list">
+        <p v-for="item in challenges" v-bind:key="item.datetime">
+          <span class="item-date">[{{ item.date }}] {{ item.team }}</span>
+          solved {{ item.challenge }}
+        </p>
+      </transition-group>
     </md-content>
   </md-content>
 </template>
 
 <script>
-import { API } from "@/services/api";
 import fromUnixTime from "date-fns/fromUnixTime";
+
+import { API } from "@/services/api";
+import { createPooling } from "@/utils";
 
 export default {
   name: "SolvedChallenges",
   data: () => ({
     challenges: [],
-    loading: true
+    firstLoad: true
   }),
-  mounted() {
-    API.listSolvedChallenges()
-      .then(response => {
+  created() {
+    this.solvedChallengesPolling = createPooling(this.loadSolvedChallenges);
+    this.solvedChallengesPolling.start();
+  },
+  methods: {
+    loadSolvedChallenges() {
+      API.listSolvedChallenges().then(response => {
         const datas = response.data.standings
           .reduce((reducer, { taskStats, team }) => {
             Object.keys(taskStats).forEach(challenge => {
               reducer.push({
                 team,
                 challenge,
-                datetime: fromUnixTime(taskStats[challenge].time)
+                datetime: taskStats[challenge].time,
+                date: fromUnixTime(taskStats[challenge].time).toLocaleString()
               });
             });
             return reducer;
           }, [])
           .sort((a, b) => b.datetime - a.datetime);
         this.challenges = datas;
-      })
-      .finally(() => (this.loading = false));
+        this.firstLoad = false;
+      });
+    }
   },
-  methods: {},
-  beforeDestroy: () => {}
+  beforeDestroy: () => {
+    this.solvedChallengesPolling.stop();
+  }
 };
 </script>
 
@@ -70,5 +76,17 @@ export default {
 }
 .item-date {
   font-weight: bold;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 2s;
+}
+
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  background-color: yellow;
+  transform: translateY(30px);
 }
 </style>
