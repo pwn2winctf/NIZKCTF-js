@@ -54,7 +54,7 @@ export default {
       });
     }
   },
-  beforeDestroy: () => {
+  beforeDestroy() {
     this.solvedChallengesPolling.stop();
   }
 };

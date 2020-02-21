@@ -49,7 +49,7 @@ export default {
       });
     }
   },
-  beforeDestroy: function() {
+  beforeDestroy() {
     this.newsPolling.stop();
   }
 };
