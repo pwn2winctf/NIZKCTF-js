@@ -1,4 +1,5 @@
 import { dynamic_scoring } from "@/config.json";
+import { sha256 } from "js-sha256";
 
 export const createPolling = (callback, milliseconds = 60000) => {
   let interval;
@@ -56,3 +57,12 @@ export const computeScore = num_solves => {
     )
   );
 };
+
+String.prototype.splice = function(idx, rem, str) {
+  return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+};
+
+export const getTeamPath = teamName =>
+  sha256(teamName)
+    .splice(1, 0, "/")
+    .splice(5, 0, "/");

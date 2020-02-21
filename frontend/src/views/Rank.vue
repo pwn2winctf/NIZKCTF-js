@@ -7,6 +7,26 @@
       <div class="small">
         <LineChart :data="this.data" :options="chartOptions" :height="300" />
       </div>
+      <md-table v-model="standings" md-sort="pos" md-sort-order="asc">
+        <md-table-row slot="md-table-row" slot-scope="{ item }">
+          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
+            item.pos
+          }}</md-table-cell>
+          <md-table-cell md-label="Team" md-sort-by="team">{{
+            item.team
+          }}</md-table-cell>
+          <md-table-cell md-label="Country">
+            <img
+              v-if="countries[item.team]"
+              v-bind:src="countries[item.team]"
+              class="small-flag"
+            />
+          </md-table-cell>
+          <md-table-cell md-label="Score" md-sort-by="score">{{
+            item.score
+          }}</md-table-cell>
+        </md-table-row>
+      </md-table>
     </md-content>
   </md-content>
 </template>
@@ -30,6 +50,8 @@ export default {
     timeAxis: [],
     scoreAxis: {},
     topStandings: [],
+    standings: [],
+    countries: {},
     data: {
       labels: [],
       datasets: []
@@ -104,6 +126,8 @@ export default {
       const standings = data.standings;
       standings.sort((a, b) => a.pos - b.pos);
 
+      this.standings = standings;
+
       const allSolves = standings.reduce(
         (list, standing) =>
           list.concat(
@@ -166,6 +190,24 @@ export default {
         }
 
         this.calculateScore(data);
+        Promise.all(this.standings.map(({ team }) => API.getTeam(team))).then(
+          requests => {
+            this.countries = requests
+              .map(({ data }) => ({
+                name: data.name,
+                countries: data.countries
+              }))
+              .filter(({ countries }) => countries.length > 0)
+              .map(({ name, countries }) => ({
+                name,
+                country: `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/flags/4x3/${countries[0]}.svg`
+              }))
+              .reduce((obj, { name, country }) => {
+                obj[name] = country;
+                return obj;
+              }, []);
+          }
+        );
 
         const defaultOptions = {
           fill: false,
@@ -196,4 +238,11 @@ export default {
 </script>
 
 <style type="sass" scoped>
+.small {
+  align-items: center;
+}
+.small-flag {
+  width: 32px;
+  height: 32px;
+}
 </style>
