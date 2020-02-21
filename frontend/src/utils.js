@@ -52,7 +52,7 @@ export const computeScore = num_solves => {
   return Math.trunc(
     Math.max(
       minpts,
-      Math.floor(maxpts - K * Math.log((num_solves + V) / (1 + V), 2))
+      Math.floor(maxpts - K * Math.log2((num_solves + V) / (1 + V)))
     )
   );
 };
