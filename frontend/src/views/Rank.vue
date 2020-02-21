@@ -31,6 +31,7 @@
               text: 'General'
             },
             responsive: true,
+            animation: false,
             maintainAspectRatio: true
           }"
         />
