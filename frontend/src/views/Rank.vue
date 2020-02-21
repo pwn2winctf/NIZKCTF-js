@@ -5,36 +5,7 @@
     </md-content>
     <md-content v-else>
       <div class="small">
-        <LineChart
-          :data="this.data"
-          :options="{
-            scales: {
-              xAxes: [
-                {
-                  type: 'time',
-                  distribution: 'series',
-                  time: {
-                    unit: 'milliseconds',
-                    displayFormats: {
-                      milliseconds: 'MMM	D H:mm'
-                    }
-                  },
-                  ticks: {
-                    autoSkip: true,
-                    maxTicksLimit: 10
-                  }
-                }
-              ]
-            },
-            title: {
-              display: true,
-              text: 'General'
-            },
-            responsive: true,
-            animation: false,
-            maintainAspectRatio: true
-          }"
-        />
+        <LineChart :data="this.data" :options="chartOptions" :height="300" />
       </div>
     </md-content>
   </md-content>
@@ -61,6 +32,32 @@ export default {
     data: {
       labels: [],
       datasets: []
+    },
+    chartOptions: {
+      maintainAspectRatio: false,
+      responsive: true,
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            distribution: "series",
+            time: {
+              unit: "milliseconds",
+              displayFormats: {
+                milliseconds: "MMM	D H:mm"
+              }
+            },
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 10
+            }
+          }
+        ]
+      },
+      title: {
+        display: true,
+        text: "General"
+      }
     }
   }),
   created() {
@@ -164,8 +161,4 @@ export default {
 </script>
 
 <style type="sass" scoped>
-.small {
-  max-width: 500px;
-  max-height: 250px;
-}
 </style>
