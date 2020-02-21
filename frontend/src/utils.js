@@ -1,3 +1,5 @@
+import { dynamic_scoring } from '@/config.json'
+
 export const createPolling = (callback, milliseconds = 60000) => {
   let interval;
   return {
@@ -18,3 +20,14 @@ export const createPolling = (callback, milliseconds = 60000) => {
     }
   };
 };
+
+export const computeScore = (num_solves) => {
+  const { K, V, minpts, maxpts } = dynamic_scoring;
+
+  return Math.trunc(
+    Math.max(
+      minpts,
+      Math.floor(maxpts - K * Math.log((num_solves + V) / (1 + V), 2))
+    )
+  );
+}
