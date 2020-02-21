@@ -62,6 +62,8 @@ export default {
 
 <style type="sass" scoped>
 .container {
+  padding-left: 16px;
+  padding-right: 16px;
   overflow: scroll;
   height: 70vh;
 }
