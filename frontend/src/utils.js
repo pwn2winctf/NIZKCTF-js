@@ -1,4 +1,4 @@
-import { dynamic_scoring } from '@/config.json'
+import { dynamic_scoring } from "@/config.json";
 
 export const createPolling = (callback, milliseconds = 60000) => {
   let interval;
@@ -46,7 +46,7 @@ export const colors = [
   "#000000"
 ];
 
-export const computeScore = (num_solves) => {
+export const computeScore = num_solves => {
   const { K, V, minpts, maxpts } = dynamic_scoring;
 
   return Math.trunc(
@@ -55,4 +55,4 @@ export const computeScore = (num_solves) => {
       Math.floor(maxpts - K * Math.log((num_solves + V) / (1 + V), 2))
     )
   );
-}
+};
