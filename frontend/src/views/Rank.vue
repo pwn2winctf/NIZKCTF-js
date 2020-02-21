@@ -13,6 +13,7 @@
 
 <script>
 import fromUnixTime from "date-fns/fromUnixTime";
+import { mapState } from "vuex";
 
 import { API } from "@/services/api";
 import { createPolling, computeScore, colors } from "@/utils";
@@ -32,35 +33,68 @@ export default {
     data: {
       labels: [],
       datasets: []
-    },
-    chartOptions: {
-      maintainAspectRatio: false,
-      animation:false,
-      responsive: true,
-      scales: {
-        xAxes: [
-          {
-            type: "time",
-            distribution: "series",
-            time: {
-              unit: "milliseconds",
-              displayFormats: {
-                milliseconds: "MMM	D H:mm"
-              }
-            },
-            ticks: {
-              autoSkip: true,
-              maxTicksLimit: 10
-            }
-          }
-        ]
-      },
-      title: {
-        display: true,
-        text: "General"
-      }
     }
   }),
+  computed: {
+    ...mapState({
+      theme: state => state.theme
+    }),
+    chartOptions: function() {
+      return {
+        maintainAspectRatio: false,
+        animation: false,
+        responsive: true,
+        legend: {
+          labels: {
+            fontColor: this.theme === "dark" ? "#fff" : "#666"
+          }
+        },
+        scales: {
+          yAxes: [
+            {
+              gridLines: {
+                color:
+                  this.theme === "dark"
+                    ? "rgba(255, 255, 255,0.5)"
+                    : "rgba(0, 0, 0, 0.1)"
+              },
+              ticks: {
+                fontColor: this.theme === "dark" ? "#fff" : "#666"
+              }
+            }
+          ],
+          xAxes: [
+            {
+              gridLines: {
+                color:
+                  this.theme === "dark"
+                    ? "rgba(255, 255, 255,0.5)"
+                    : "rgba(0, 0, 0, 0.1)"
+              },
+              type: "time",
+              distribution: "series",
+              time: {
+                unit: "milliseconds",
+                displayFormats: {
+                  milliseconds: "MMM	D H:mm"
+                }
+              },
+              ticks: {
+                fontColor: this.theme === "dark" ? "#fff" : "#666",
+                autoSkip: true,
+                maxTicksLimit: 10
+              }
+            }
+          ]
+        },
+        title: {
+          display: true,
+          fontColor: this.theme === "dark" ? "#fff" : "#666",
+          text: "General"
+        }
+      };
+    }
+  },
   created() {
     this.rankPolling = createPolling(this.loadSolvedChallenges);
     this.rankPolling.start();
