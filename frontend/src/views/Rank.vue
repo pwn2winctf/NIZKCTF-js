@@ -35,6 +35,7 @@ export default {
     },
     chartOptions: {
       maintainAspectRatio: false,
+      animation:false,
       responsive: true,
       scales: {
         xAxes: [
