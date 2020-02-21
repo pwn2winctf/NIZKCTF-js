@@ -1,3 +1,6 @@
 module.exports = {
-  publicPath: "/NIZKCTF-js"
+  publicPath: "/NIZKCTF-js",
+  configureWebpack: {
+    devtool: "source-map"
+  }
 };
