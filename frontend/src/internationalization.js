@@ -2,6 +2,7 @@ export default {
   en: {
     language: "Language",
     label: "English",
+    darkMode: "Dark mode",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -13,6 +14,7 @@ export default {
   ptBr: {
     language: "Idioma",
     label: "Português (BR)",
+    darkMode: "Modo escuro",
     router: {
       Home: "Início",
       Challenges: "Desafios",

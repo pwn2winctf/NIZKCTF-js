@@ -16,7 +16,7 @@
         >{{item.label}}</md-option>
       </md-select>
     </md-field>
-    <md-switch :value="this.theme === 'default'" @change="toggleTheme">Dark mode</md-switch>
+    <md-switch :value="this.theme === 'default'" @change="toggleTheme">{{$t("darkMode")}}</md-switch>
   </md-content>
 </template>
 
