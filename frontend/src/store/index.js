@@ -23,17 +23,27 @@ if (DEV) {
 export default new Vuex.Store({
   strict: DEV,
   state: {
-    theme: "default"
+    theme: "default",
+    language: "en"
   },
   mutations: {
     setTheme(state, theme) {
       state.theme = theme;
+    },
+    setLanguage(state, language) {
+      state.language = language;
     }
   },
   actions: {
     setTheme(context, theme) {
       context.commit("setTheme", theme);
+    },
+    setLanguage(context, language) {
+      context.commit("setLanguage", language);
     }
+  },
+  getters: {
+    language: state => state.language
   },
   modules: {},
   plugins
