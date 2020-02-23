@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Settings from "../views/Settings.vue";
 import Rank from "../views/Rank.vue";
+import Rules from "../views/Rules.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/rank",
     name: "Rank",
     component: Rank
+  },
+  {
+    path: "/rules",
+    name: "Rules",
+    component: Rules
   }
   // {
   //   path: "/about",

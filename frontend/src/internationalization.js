@@ -10,6 +10,7 @@ export default {
     team: "Team",
     country: "Country",
     score: "Score",
+    rulesButton: "Click here to go to the website with the rules",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -29,6 +30,7 @@ export default {
     team: "Time",
     country: "País",
     score: "Pontuação",
+    rulesButton: "Clique aqui para ir ao site com as regras",
     router: {
       Home: "Início",
       Challenges: "Desafios",
