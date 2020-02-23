@@ -10,22 +10,20 @@
       <md-table v-model="standings" md-sort="pos" md-sort-order="asc">
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>
-            {{
-            item.pos
-            }}
+            {{ item.pos }}
           </md-table-cell>
           <md-table-cell :md-label="$t('team')" md-sort-by="team">
-            {{
-            item.team
-            }}
+            {{ item.team }}
           </md-table-cell>
           <md-table-cell :md-label="$t('country')">
-            <img v-if="countries[item.team]" v-bind:src="countries[item.team]" class="small-flag" />
+            <img
+              v-if="countries[item.team]"
+              v-bind:src="countries[item.team]"
+              class="small-flag"
+            />
           </md-table-cell>
           <md-table-cell :md-label="$t('score')" md-sort-by="score">
-            {{
-            item.score
-            }}
+            {{ item.score }}
           </md-table-cell>
         </md-table-row>
       </md-table>

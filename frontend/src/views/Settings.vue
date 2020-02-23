@@ -1,7 +1,7 @@
 <template>
   <md-content>
     <md-field>
-      <label for="language">{{$t("language")}}</label>
+      <label for="language">{{ $t("language") }}</label>
       <md-select
         :value="this.language"
         name="movie"
@@ -12,10 +12,13 @@
           v-for="item in languages"
           :key="item.language"
           :value="item.language"
-        >{{item.label}}</md-option>
+          >{{ item.label }}</md-option
+        >
       </md-select>
     </md-field>
-    <md-switch :value="this.theme === 'default'" @change="toggleTheme">{{$t("darkMode")}}</md-switch>
+    <md-switch :value="this.theme === 'default'" @change="toggleTheme">{{
+      $t("darkMode")
+    }}</md-switch>
   </md-content>
 </template>
 

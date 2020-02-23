@@ -8,7 +8,7 @@
     </md-app-toolbar>
     <md-app-drawer :md-active="menuVisible" md-persistent="mini">
       <md-toolbar class="md-transparent" md-elevation="0">
-        <span class="md-title">{{$t("navigation")}}</span>
+        <span class="md-title">{{ $t("navigation") }}</span>
         <div class="md-toolbar-section-end">
           <md-button class="md-icon-button md-dense" @click="toggleMenu">
             <md-icon>keyboard_arrow_left</md-icon>
@@ -18,25 +18,25 @@
       <md-list>
         <md-list-item to="/">
           <md-icon>home</md-icon>
-          <span class="md-list-item-text">{{$t("router.Home")}}</span>
+          <span class="md-list-item-text">{{ $t("router.Home") }}</span>
         </md-list-item>
         <md-list-item to="/challenges">
           <md-icon>flag</md-icon>
-          <span class="md-list-item-text">{{$t("router.Challenges")}}</span>
+          <span class="md-list-item-text">{{ $t("router.Challenges") }}</span>
         </md-list-item>
         <md-list-item to="/rank">
           <md-icon>emoji_events</md-icon>
-          <span class="md-list-item-text">{{$t("router.Rank")}}</span>
+          <span class="md-list-item-text">{{ $t("router.Rank") }}</span>
         </md-list-item>
 
         <md-list-item to="/rules">
           <md-icon>assignment</md-icon>
-          <span class="md-list-item-text">{{$t("router.Rules")}}</span>
+          <span class="md-list-item-text">{{ $t("router.Rules") }}</span>
         </md-list-item>
 
         <md-list-item to="/settings">
           <md-icon>settings</md-icon>
-          <span class="md-list-item-text">{{$t("router.Settings")}}</span>
+          <span class="md-list-item-text">{{ $t("router.Settings") }}</span>
         </md-list-item>
       </md-list>
     </md-app-drawer>

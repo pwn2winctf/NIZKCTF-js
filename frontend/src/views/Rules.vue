@@ -3,7 +3,8 @@
     <md-button
       class="md-raised md-layout-item md-primary"
       href="https://pwn2win.party/rules"
-    >{{$t("rulesButton")}}</md-button>
+      >{{ $t("rulesButton") }}</md-button
+    >
   </md-content>
 </template>
 
