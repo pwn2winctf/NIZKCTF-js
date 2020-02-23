@@ -1,7 +1,7 @@
 <template>
   <md-content>
     <md-toolbar md-elevation="1">
-      <span class="md-title">Solves</span>
+      <span class="md-title">{{$t("solves")}}</span>
     </md-toolbar>
     <md-content v-if="firstLoad" class="spinner">
       <md-progress-spinner md-mode="indeterminate" />

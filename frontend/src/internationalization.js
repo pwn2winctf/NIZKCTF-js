@@ -4,6 +4,8 @@ export default {
     label: "English",
     darkMode: "Dark mode",
     navigation: "Navigation",
+    news: "News",
+    solves: "Solves",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -17,6 +19,8 @@ export default {
     label: "Português (BR)",
     darkMode: "Modo escuro",
     navigation: "Navegação",
+    news: "Notícias",
+    solves: "Resolvidos",
     router: {
       Home: "Início",
       Challenges: "Desafios",
