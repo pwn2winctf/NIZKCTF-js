@@ -6,6 +6,10 @@ export default {
     navigation: "Navigation",
     news: "News",
     solves: "Solves",
+    general: "General",
+    team: "Team",
+    country: "Country",
+    score: "Score",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -21,6 +25,10 @@ export default {
     navigation: "Navegação",
     news: "Notícias",
     solves: "Resolvidos",
+    general: "Geral",
+    team: "Time",
+    country: "País",
+    score: "Pontuação",
     router: {
       Home: "Início",
       Challenges: "Desafios",
