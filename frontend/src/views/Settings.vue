@@ -3,7 +3,6 @@
     <md-field>
       <label for="language">{{$t("language")}}</label>
       <md-select
-        v-model="$i18n.locale"
         :value="this.language"
         name="movie"
         id="language"
@@ -46,6 +45,7 @@ export default {
       this.setTheme(theme);
     },
     changeLanguage(language) {
+      this.$i18n.locale = language;
       this.setLanguage(language);
     }
   }
