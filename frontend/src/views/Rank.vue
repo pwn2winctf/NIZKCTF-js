@@ -16,10 +16,12 @@
             {{ item.team }}
           </md-table-cell>
           <md-table-cell :md-label="$t('country')">
-            <img
-              v-if="countries[item.team]"
-              v-bind:src="countries[item.team]"
-              class="small-flag"
+            <country-flag
+              class="flags"
+              v-for="(flag, index) in countries[item.team]"
+              v-bind:key="index"
+              :country="flag"
+              size="normal"
             />
           </md-table-cell>
           <md-table-cell :md-label="$t('score')" md-sort-by="score">
@@ -33,6 +35,7 @@
 
 <script>
 import fromUnixTime from "date-fns/fromUnixTime";
+import CountryFlag from "vue-country-flag";
 import { mapState } from "vuex";
 
 import { API } from "@/services/api";
@@ -44,7 +47,7 @@ const topN = 10;
 
 export default {
   name: "Rank",
-  components: { LineChart },
+  components: { LineChart, CountryFlag },
   data: () => ({
     firstLoad: true,
     timeAxis: [],
@@ -197,13 +200,8 @@ export default {
                 name: data.name,
                 countries: data.countries
               }))
-              .filter(({ countries }) => countries.length > 0)
-              .map(({ name, countries }) => ({
-                name,
-                country: `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/flags/4x3/${countries[0]}.svg`
-              }))
-              .reduce((obj, { name, country }) => {
-                obj[name] = country;
+              .reduce((obj, { name, countries }) => {
+                obj[name] = countries;
                 return obj;
               }, []);
           }
@@ -241,8 +239,7 @@ export default {
 .small {
   align-items: center;
 }
-.small-flag {
-  width: 32px;
-  height: 32px;
+.flags {
+  display: inline-block;
 }
 </style>
