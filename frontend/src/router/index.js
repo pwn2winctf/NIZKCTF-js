@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Settings from "../views/Settings.vue";
 import Rank from "../views/Rank.vue";
 import Rules from "../views/Rules.vue";
+import Challenges from "../views/Challenges.vue";
 
 Vue.use(VueRouter);
 
@@ -22,6 +23,11 @@ const routes = [
     path: "/rank",
     name: "Rank",
     component: Rank
+  },
+  {
+    path: "/challenges",
+    name: "Challenges",
+    component: Challenges
   },
   {
     path: "/rules",
