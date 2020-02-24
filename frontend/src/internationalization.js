@@ -11,6 +11,11 @@ export default {
     country: "Country",
     score: "Score",
     rulesButton: "Click here to go to the website with the rules",
+    username: "Username",
+    members: "Members",
+    challenge: "Challenge",
+    time: "Time",
+    close: "Close",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -31,6 +36,11 @@ export default {
     country: "País",
     score: "Pontuação",
     rulesButton: "Clique aqui para ir ao site com as regras",
+    username: "Username",
+    members: "Membros",
+    challenge: "Desafio",
+    time: "Hora",
+    close: "Fechar",
     router: {
       Home: "Início",
       Challenges: "Desafios",

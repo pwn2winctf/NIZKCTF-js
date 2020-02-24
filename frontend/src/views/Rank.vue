@@ -4,6 +4,7 @@
       <md-progress-spinner md-mode="indeterminate" />
     </md-content>
     <md-content v-else>
+      <team-info :info="popup" :on-close="closePopup" />
       <div class="small">
         <LineChart :data="this.data" :options="chartOptions" :height="300" />
       </div>
@@ -11,6 +12,7 @@
         <md-table-row
           slot="md-table-row"
           slot-scope="{ item }"
+          @click="openPopup(item)"
         >
           <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
             item.pos
@@ -45,13 +47,17 @@ import { API } from "@/services/api";
 import { createPolling, computeScore, colors } from "@/utils";
 
 import LineChart from "@/components/LineChart.vue";
+import TeamInfo from "@/components/TeamInfo.vue";
 
 const topN = 10;
 
 export default {
   name: "Rank",
-  components: { LineChart, CountryFlag },
+  components: { LineChart, CountryFlag, TeamInfo },
   data: () => ({
+    popup: {
+      isOpen: false
+    },
     firstLoad: true,
     timeAxis: [],
     scoreAxis: {},
@@ -127,6 +133,19 @@ export default {
     this.rankPolling.start();
   },
   methods: {
+    openPopup(item) {
+      this.popup.pos = item.pos;
+      this.popup.name = item.name;
+      this.popup.crypt_pk = item.crypt_pk;
+      this.popup.sign_pk = item.sign_pk;
+      this.popup.members = item.members;
+      this.popup.score = item.score;
+      this.popup.solvedChallenges = item.solvedChallenges;
+      this.popup.isOpen = true;
+    },
+    closePopup() {
+      this.popup.isOpen = false;
+    },
     calculateScore(data) {
       const standings = data.standings;
       standings.sort((a, b) => a.pos - b.pos);
@@ -201,7 +220,7 @@ export default {
               pos,
               score,
               ...teamResponse.data,
-              members: { ...teamMembersResponse.data },
+              members: teamMembersResponse.data,
               solvedChallenges: Object.entries(taskStats).map(item => ({
                 name: item[0],
                 ...item[1]
@@ -209,7 +228,6 @@ export default {
             };
           })
         );
-
         this.teams = teams;
 
         const defaultOptions = {
