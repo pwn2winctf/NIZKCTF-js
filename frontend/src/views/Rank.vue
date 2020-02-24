@@ -14,12 +14,12 @@
           slot-scope="{ item }"
           @click="openPopup(item)"
         >
-          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
-            item.pos
-          }}</md-table-cell>
-          <md-table-cell :md-label="$t('team')" md-sort-by="team">{{
-            item.name
-          }}</md-table-cell>
+          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>
+            {{ item.pos }}
+          </md-table-cell>
+          <md-table-cell :md-label="$t('team')" md-sort-by="team">
+            {{ item.name }}
+          </md-table-cell>
           <md-table-cell :md-label="$t('country')">
             <country-flag
               class="flags"
@@ -29,9 +29,9 @@
               size="normal"
             />
           </md-table-cell>
-          <md-table-cell :md-label="$t('score')" md-sort-by="score">{{
-            item.score
-          }}</md-table-cell>
+          <md-table-cell :md-label="$t('score')" md-sort-by="score">
+            {{ item.score }}
+          </md-table-cell>
         </md-table-row>
       </md-table>
     </md-content>
@@ -273,5 +273,8 @@ export default {
 .md-content {
   flex: 1;
   height: 100%;
+}
+.md-table-row {
+  cursor: pointer;
 }
 </style>
