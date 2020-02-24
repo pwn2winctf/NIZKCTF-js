@@ -7,26 +7,29 @@
       <div class="small">
         <LineChart :data="this.data" :options="chartOptions" :height="300" />
       </div>
-      <md-table v-model="standings" md-sort="pos" md-sort-order="asc">
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>
-            {{ item.pos }}
-          </md-table-cell>
-          <md-table-cell :md-label="$t('team')" md-sort-by="team">
-            {{ item.team }}
-          </md-table-cell>
+      <md-table v-model="teams" md-sort="pos" md-sort-order="asc">
+        <md-table-row
+          slot="md-table-row"
+          slot-scope="{ item }"
+        >
+          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
+            item.pos
+          }}</md-table-cell>
+          <md-table-cell :md-label="$t('team')" md-sort-by="team">{{
+            item.name
+          }}</md-table-cell>
           <md-table-cell :md-label="$t('country')">
             <country-flag
               class="flags"
-              v-for="(flag, index) in countries[item.team]"
+              v-for="(flag, index) in item.countries"
               v-bind:key="index"
               :country="flag"
               size="normal"
             />
           </md-table-cell>
-          <md-table-cell :md-label="$t('score')" md-sort-by="score">
-            {{ item.score }}
-          </md-table-cell>
+          <md-table-cell :md-label="$t('score')" md-sort-by="score">{{
+            item.score
+          }}</md-table-cell>
         </md-table-row>
       </md-table>
     </md-content>
@@ -53,8 +56,7 @@ export default {
     timeAxis: [],
     scoreAxis: {},
     topStandings: [],
-    standings: [],
-    countries: {},
+    teams: [],
     data: {
       labels: [],
       datasets: []
@@ -129,8 +131,6 @@ export default {
       const standings = data.standings;
       standings.sort((a, b) => a.pos - b.pos);
 
-      this.standings = standings;
-
       const allSolves = standings.reduce(
         (list, standing) =>
           list.concat(
@@ -185,27 +185,32 @@ export default {
       this.timeAxis = timeAxis;
     },
     loadSolvedChallenges() {
-      API.listSolvedChallenges().then(response => {
-        const data = response.data;
+      API.listSolvedChallenges().then(async ({ data }) => {
         if (!data.standings || data.standings.length === 0) {
           this.firstLoad = false;
           return;
         }
 
         this.calculateScore(data);
-        Promise.all(this.standings.map(({ team }) => API.getTeam(team))).then(
-          requests => {
-            this.countries = requests
-              .map(({ data }) => ({
-                name: data.name,
-                countries: data.countries
+
+        const teams = await Promise.all(
+          data.standings.map(async ({ team, score, pos, taskStats }) => {
+            const teamResponse = await API.getTeam(team);
+            const teamMembersResponse = await API.getTeamMembers(team);
+            return {
+              pos,
+              score,
+              ...teamResponse.data,
+              members: { ...teamMembersResponse.data },
+              solvedChallenges: Object.entries(taskStats).map(item => ({
+                name: item[0],
+                ...item[1]
               }))
-              .reduce((obj, { name, countries }) => {
-                obj[name] = countries;
-                return obj;
-              }, []);
-          }
+            };
+          })
         );
+
+        this.teams = teams;
 
         const defaultOptions = {
           fill: false,
@@ -236,10 +241,19 @@ export default {
 </script>
 
 <style type="sass" scoped>
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .small {
   align-items: center;
 }
 .flags {
   display: inline-block;
+}
+.md-content {
+  flex: 1;
+  height: 100%;
 }
 </style>
