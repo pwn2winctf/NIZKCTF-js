@@ -33,9 +33,8 @@
             v-for="tag in challenge.tags"
             v-bind:key="tag"
             class="md-primary"
+            >{{ tag }}</md-chip
           >
-            {{ tag }}
-          </md-chip>
         </md-card-actions>
       </md-card>
     </div>
@@ -84,7 +83,7 @@ export default {
             const challenges = datas.map(item => ({
               ...item,
               solves: solves[item.id] || 0,
-              points: computeScore(solves[item.id])
+              points: computeScore(solves[item.id] || 0)
             }));
             this.challenges = challenges;
             this.selectedChallenges = this.challenges;
