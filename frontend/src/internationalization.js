@@ -24,7 +24,7 @@ export default {
       Settings: "Settings"
     }
   },
-  ptBr: {
+  pt: {
     language: "Idioma",
     label: "Português (BR)",
     darkMode: "Modo escuro",
