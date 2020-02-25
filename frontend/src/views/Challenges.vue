@@ -12,28 +12,31 @@
     </md-content>
     <md-content class="grid-cards">
       <md-card
-        v-for="challenge in selectedChallenges"
+        v-for="challenge in filteredChallenges"
         v-bind:key="challenge.id"
         class="md-accent"
         md-with-hover
       >
-        <md-ripple class="card">
-          <md-card-content>
-            <div class="md-title">{{ challenge.title }}</div>
-            <div>{{ $t("solves") }}: {{ challenge.solves }}</div>
-            <div>{{ $t("score") }}: {{ challenge.points }}</div>
-          </md-card-content>
-          <md-card-actions>
-            <md-chip
-              v-for="tag in challenge.tags"
-              v-bind:key="tag"
-              class="md-primary md-layout-item card-tag"
-              >{{ tag }}</md-chip
-            >
-          </md-card-actions>
-        </md-ripple>
+        <div @click="selectChallenge(challenge)" style="height:100%">
+          <md-ripple class="card">
+            <md-card-content>
+              <div class="md-title">{{ challenge.title }}</div>
+              <div>{{ $t("solves") }}: {{ challenge.solves }}</div>
+              <div>{{ $t("score") }}: {{ challenge.points }}</div>
+            </md-card-content>
+            <md-card-actions>
+              <md-chip
+                v-for="tag in challenge.tags"
+                v-bind:key="tag"
+                class="md-primary md-layout-item card-tag"
+                >{{ tag }}</md-chip
+              >
+            </md-card-actions>
+          </md-ripple>
+        </div>
       </md-card>
     </md-content>
+    <challenge-info-dialog :info="{ ...popup }" :on-close="closePopup" />
   </md-content>
 </template>
 
@@ -41,11 +44,17 @@
 import { API } from "@/services/api";
 import { computeScore } from "@/utils";
 
+import ChallengeInfoDialog from "@/components/ChallengeInfoDialog.vue";
+
 export default {
   name: "Challenges",
+  components: { ChallengeInfoDialog },
   data: () => ({
     challenges: [],
-    selectedChallenges: [],
+    popup: {
+      isOpen: false
+    },
+    filteredChallenges: [],
     categories: [],
     selectedCategory: undefined
   }),
@@ -82,7 +91,7 @@ export default {
               points: computeScore(solves[item.id] || 0)
             }));
             this.challenges = challenges;
-            this.selectedChallenges = this.challenges;
+            this.filteredChallenges = this.challenges;
           })
           .catch(err => console.error(err));
       });
@@ -91,14 +100,25 @@ export default {
     filterChallenges(category) {
       if (this.selectedCategory == category) {
         this.selectedCategory = this.undefined;
-        this.selectedChallenges = this.challenges;
+        this.filteredChallenges = this.challenges;
         return;
       }
 
       this.selectedCategory = category;
-      this.selectedChallenges = this.challenges.filter(item =>
+      this.filteredChallenges = this.challenges.filter(item =>
         item.tags.includes(category)
       );
+    },
+    selectChallenge(challenge) {
+      this.popup.id = challenge.id;
+      this.popup.title = challenge.title;
+      this.popup.tags = challenge.tags;
+      this.popup.solves = challenge.solves;
+      this.popup.points = challenge.points;
+      this.popup.isOpen = true;
+    },
+    closePopup() {
+      this.popup.isOpen = false;
     }
   }
 };
