@@ -88,8 +88,9 @@ export default {
             const challenges = datas.map(item => ({
               ...item,
               solves: solves[item.id] || 0,
-              points: computeScore(solves[item.id] || 0)
+              points: computeScore((solves[item.id] || 0) + 1)
             }));
+            challenges.sort((a, b) => a.title.localeCompare(b.title));
             this.challenges = challenges;
             this.filteredChallenges = this.challenges;
           })
