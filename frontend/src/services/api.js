@@ -16,7 +16,10 @@ export const API = {
     api.get(`/challenges/${challenge}.json`, {
       baseURL: "https://pwn2.win/2019/"
     }), // TODO remove baseURL
-  getChallengeDescription: (challenge, language) => api.get(`challenges/${challenge}.${language.toLowerCase()}.md`, { baseURL: "https://pwn2.win/2019/" }),// TODO remove baseURL
+  getChallengeDescription: (challenge, language) =>
+    api.get(`challenges/${challenge}.${language.toLowerCase()}.md`, {
+      baseURL: "https://pwn2.win/2019/"
+    }), // TODO remove baseURL
   getTeam: teamName => {
     const path = getTeamPath(teamName);
     return api.get(`/${path}/team.json`);
