@@ -10,34 +10,30 @@
         >{{ item }}</md-chip
       >
     </md-content>
-    <div class="cards-container">
+    <md-content class="grid-cards">
       <md-card
         v-for="challenge in selectedChallenges"
         v-bind:key="challenge.id"
         class="md-accent"
+        md-with-hover
       >
-        <md-card-header>
-          <md-card-header-text>
+        <md-ripple class="card">
+          <md-card-content>
             <div class="md-title">{{ challenge.title }}</div>
-            <div class="md-subhead">
-              {{ $t("solves") }}: {{ challenge.solves }}
-            </div>
-            <div class="md-subhead">
-              {{ $t("score") }}: {{ challenge.points }}
-            </div>
-          </md-card-header-text>
-        </md-card-header>
-
-        <md-card-actions>
-          <md-chip
-            v-for="tag in challenge.tags"
-            v-bind:key="tag"
-            class="md-primary"
-            >{{ tag }}</md-chip
-          >
-        </md-card-actions>
+            <div>{{ $t("solves") }}: {{ challenge.solves }}</div>
+            <div>{{ $t("score") }}: {{ challenge.points }}</div>
+          </md-card-content>
+          <md-card-actions>
+            <md-chip
+              v-for="tag in challenge.tags"
+              v-bind:key="tag"
+              class="md-primary md-layout-item card-tag"
+              >{{ tag }}</md-chip
+            >
+          </md-card-actions>
+        </md-ripple>
       </md-card>
-    </div>
+    </md-content>
   </md-content>
 </template>
 
@@ -115,10 +111,37 @@ export default {
   padding-right: 16px;
   padding-left: 16px;
 }
-.cards-container {
-  display: inline-grid;
-  grid-row-gap: 32px;
-  grid-template-columns: auto auto auto;
-  padding-bottom: 16px;
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(auto, 1fr));
+  grid-template-rows: auto;
+  grid-gap: 12px;
+}
+
+@media (max-width: 740px) {
+  .grid-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: 0;
+
+  display: flex;
+
+  flex: 1;
+  justify-content: space-between;
+}
+
+.md-card-actions {
+  display: inline;
+}
+
+.card-tag {
+  margin-bottom: 2px;
 }
 </style>
