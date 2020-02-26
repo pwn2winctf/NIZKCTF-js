@@ -6,19 +6,19 @@
       </md-button>
       <span class="md-title">{{ $t(`router.${this.$route.name}`) }}</span>
       <div class="md-toolbar-section-end">
-        <md-menu
-          md-size="big"
-          md-direction="top-start"
-          :md-active.sync="cardVisible"
-        >
+        <md-menu md-size="big" md-direction="top-start" :md-active.sync="cardVisible">
           <md-button class="md-icon-button" md-menu-trigger>
             <md-avatar v-if="this.avatar" class="md-avatar-icon">
               <img :src="this.avatar" alt="Avatar" />
             </md-avatar>
             <md-icon v-else>person</md-icon>
           </md-button>
-
-          <md-menu-content>
+          <md-menu-content v-if="this.token">
+            <md-list>
+              <md-list-item @click="logout">{{$t("logout")}}</md-list-item>
+            </md-list>
+          </md-menu-content>
+          <md-menu-content v-else>
             <md-list>
               <md-list-item :href="authLink">Logar com GitHub</md-list-item>
             </md-list>
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 import config from "@/config.json";
 
@@ -80,14 +80,20 @@ export default {
   }),
   computed: mapState({
     theme: state => state.theme,
-    avatar: state => state.avatar
+    avatar: state => state.avatar,
+    token: state => state.token
   }),
   methods: {
+    ...mapActions(["setAvatar", "setToken"]),
     toggleMenu() {
       this.menuVisible = !this.menuVisible;
     },
     toggleCard() {
       this.cardVisible = !this.cardVisible;
+    },
+    logout() {
+      this.setToken(undefined);
+      this.setAvatar(undefined);
     }
   }
 };
