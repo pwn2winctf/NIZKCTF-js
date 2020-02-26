@@ -17,6 +17,7 @@ export default {
     time: "Time",
     close: "Close",
     gettingInformations: "Getting informations",
+    logout: "Logout",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -44,6 +45,7 @@ export default {
     time: "Hora",
     close: "Fechar",
     gettingInformations: "Obtendo informações",
+    logout: "Sair",
     router: {
       Home: "Início",
       Challenges: "Desafios",
