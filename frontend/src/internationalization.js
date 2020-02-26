@@ -16,12 +16,14 @@ export default {
     challenge: "Challenge",
     time: "Time",
     close: "Close",
+    gettingInformations: "Getting informations",
     router: {
       Home: "Home",
       Challenges: "Challenges",
       Rank: "Rank",
       Rules: "Rules",
-      Settings: "Settings"
+      Settings: "Settings",
+      Logged: "Getting informations"
     }
   },
   pt: {
@@ -41,12 +43,14 @@ export default {
     challenge: "Desafio",
     time: "Hora",
     close: "Fechar",
+    gettingInformations: "Obtendo informações",
     router: {
       Home: "Início",
       Challenges: "Desafios",
       Rank: "Rank",
       Rules: "Regras",
-      Settings: "Configurações"
+      Settings: "Configurações",
+      Logged: "Obtendo informações"
     }
   }
 };
