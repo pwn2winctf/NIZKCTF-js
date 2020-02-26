@@ -1,7 +1,9 @@
 <template>
   <div>
     <h1>{{ $route.query.code }}</h1>
-    <md-button class="md-raised md-layout-item md-primary" @click="getToken">get token</md-button>
+    <md-button class="md-raised md-layout-item md-primary" @click="getToken"
+      >get token</md-button
+    >
   </div>
 </template>
 
