@@ -1,9 +1,6 @@
 <template>
   <div>
-    <h1>{{ $route.query.code }}</h1>
-    <md-button class="md-raised md-layout-item md-primary" @click="getToken"
-      >get token</md-button
-    >
+    <h1>Getting access token</h1>
   </div>
 </template>
 
@@ -14,21 +11,24 @@ import { API } from "@/services/api";
 
 export default {
   name: "AfterLogin",
-  computed: mapState({
-    token: state => state.token
+  data: () => ({
+    ...mapState({
+      token: state => state.token
+    })
   }),
   mounted() {
     if (this.token) {
-      this.$route.push("/");
+      this.$router.push("/");
+    } else {
+      this.getToken();
     }
   },
   methods: {
     ...mapActions(["setToken"]),
     getToken() {
-      API.postAccessToken(this.$route.query.code).then(response => {
+      API.getAccessToken(this.$route.query.code).then(response => {
         const { data } = response;
-        console.log(data);
-        this.setToken(data.access_token);
+        this.setToken(data.token);
       });
     }
   }

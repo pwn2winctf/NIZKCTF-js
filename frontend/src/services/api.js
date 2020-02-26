@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import config from "@/config.json";
-import { getTeamPath, encodeForm } from "@/utils";
+import { getTeamPath } from "@/utils";
 
 const api = axios.create({
   baseURL: config.submissionsBasePath
@@ -28,19 +28,6 @@ export const API = {
     const path = getTeamPath(teamName);
     return api.get(`/${path}/members.json`);
   },
-  postAccessToken: code =>
-    api.post(
-      "/login/oauth/access_token",
-      encodeForm({
-        code,
-        client_id: config.client_id,
-        client_secret: config.client_secret
-      }),
-      {
-        baseURL: config.repohost,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      }
-    )
+  getAccessToken: code =>
+    api.get(`/authenticate/${code}`, { baseURL: config.gatekeeperBasePath })
 };
