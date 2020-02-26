@@ -1,11 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
 import Home from "../views/Home.vue";
 import Settings from "../views/Settings.vue";
 import Rank from "../views/Rank.vue";
 import Rules from "../views/Rules.vue";
 import Challenges from "../views/Challenges.vue";
 import AfterLogin from "../views/AfterLogin.vue";
+
+import config from "@/config.json";
 
 Vue.use(VueRouter);
 
@@ -52,6 +55,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
+  base: config.deployPath,
   mode: "history",
   routes
 });
