@@ -22,12 +22,6 @@ export const createPolling = (callback, milliseconds = 60000) => {
   };
 };
 
-export const encodeForm = data => {
-  return Object.keys(data)
-    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-    .join("&");
-};
-
 export const colors = [
   "#e6194b",
   "#3cb44b",
