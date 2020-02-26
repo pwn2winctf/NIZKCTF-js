@@ -12,14 +12,15 @@
           :md-active.sync="cardVisible"
         >
           <md-button class="md-icon-button" md-menu-trigger>
-            <md-icon>person</md-icon>
+            <md-avatar v-if="this.avatar" class="md-avatar-icon">
+              <img :src="this.avatar" alt="Avatar" />
+            </md-avatar>
+            <md-icon v-else>person</md-icon>
           </md-button>
 
           <md-menu-content>
             <md-list>
-              <md-list-item :href="authLink" target="_blank"
-                >Logar com GitHub</md-list-item
-              >
+              <md-list-item :href="authLink">Logar com GitHub</md-list-item>
             </md-list>
           </md-menu-content>
         </md-menu>
@@ -78,7 +79,8 @@ export default {
     authLink: config.authLink
   }),
   computed: mapState({
-    theme: state => state.theme
+    theme: state => state.theme,
+    avatar: state => state.avatar
   }),
   methods: {
     toggleMenu() {
