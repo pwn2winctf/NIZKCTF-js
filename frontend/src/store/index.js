@@ -25,7 +25,8 @@ export default new Vuex.Store({
   state: {
     theme: "default",
     language: "en",
-    token: undefined
+    token: undefined,
+    avatar: undefined
   },
   mutations: {
     setTheme(state, theme) {
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     },
     setToken(state, token) {
       state.token = token;
+    },
+    setAvatar(state, avatar) {
+      state.avatar = avatar;
     }
   },
   actions: {
@@ -47,10 +51,14 @@ export default new Vuex.Store({
     },
     setToken(context, token) {
       context.commit("setToken", token);
+    },
+    setAvatar(context, avatar) {
+      context.commit("setAvatar", avatar);
     }
   },
   getters: {
-    language: state => state.language
+    language: state => state.language,
+    token: state => state.token
   },
   modules: {},
   plugins
