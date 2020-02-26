@@ -39,7 +39,7 @@ export default {
       return data.token;
     },
     async getUser(token) {
-      const github = GitHub.getInstance(token);
+      const github = new GitHub(token);
       const { data } = await github.getUser();
       return data;
     }
