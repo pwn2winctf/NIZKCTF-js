@@ -9,6 +9,7 @@
 		"deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
 	},
 	"dependencies": {
+		"@octokit/rest": "^17.0.0",
 		"axios": "^0.19.2",
 		"chart.js": "^2.9.3",
 		"core-js": "^3.6.4",
