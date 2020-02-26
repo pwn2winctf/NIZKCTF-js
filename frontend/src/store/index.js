@@ -24,7 +24,8 @@ export default new Vuex.Store({
   strict: DEV,
   state: {
     theme: "default",
-    language: "en"
+    language: "en",
+    token: undefined
   },
   mutations: {
     setTheme(state, theme) {
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     },
     setLanguage(state, language) {
       state.language = language;
+    },
+    setToken(state, token) {
+      state.token = token;
     }
   },
   actions: {
@@ -40,6 +44,9 @@ export default new Vuex.Store({
     },
     setLanguage(context, language) {
       context.commit("setLanguage", language);
+    },
+    setToken(context, token) {
+      context.commit("setToken", token);
     }
   },
   getters: {
