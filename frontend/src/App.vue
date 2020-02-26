@@ -6,7 +6,11 @@
       </md-button>
       <span class="md-title">{{ $t(`router.${this.$route.name}`) }}</span>
       <div class="md-toolbar-section-end">
-        <md-menu md-size="big" md-direction="top-start" :md-active.sync="cardVisible">
+        <md-menu
+          md-size="big"
+          md-direction="top-start"
+          :md-active.sync="cardVisible"
+        >
           <md-button class="md-icon-button" md-menu-trigger>
             <md-avatar v-if="this.avatar" class="md-avatar-icon">
               <img :src="this.avatar" alt="Avatar" />
@@ -15,12 +19,12 @@
           </md-button>
           <md-menu-content v-if="this.token">
             <md-list>
-              <md-list-item @click="logout">{{$t("logout")}}</md-list-item>
+              <md-list-item @click="logout">{{ $t("logout") }}</md-list-item>
             </md-list>
           </md-menu-content>
           <md-menu-content v-else>
             <md-list>
-              <md-list-item :href="authLink">Logar com GitHub</md-list-item>
+              <md-list-item :href="authLink">{{ $t("login") }}</md-list-item>
             </md-list>
           </md-menu-content>
         </md-menu>

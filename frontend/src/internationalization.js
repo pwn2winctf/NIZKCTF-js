@@ -17,6 +17,7 @@ export default {
     time: "Time",
     close: "Close",
     gettingInformations: "Getting informations",
+    login: "Login",
     logout: "Logout",
     router: {
       Home: "Home",
@@ -45,6 +46,7 @@ export default {
     time: "Hora",
     close: "Fechar",
     gettingInformations: "Obtendo informações",
+    login: "Entrar",
     logout: "Sair",
     router: {
       Home: "Início",
