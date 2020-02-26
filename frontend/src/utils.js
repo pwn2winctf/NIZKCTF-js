@@ -22,6 +22,12 @@ export const createPolling = (callback, milliseconds = 60000) => {
   };
 };
 
+export const encodeForm = (data) => {
+  return Object.keys(data)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
+}
+
 export const colors = [
   "#e6194b",
   "#3cb44b",
@@ -58,7 +64,7 @@ export const computeScore = num_solves => {
   );
 };
 
-String.prototype.splice = function(idx, rem, str) {
+String.prototype.splice = function (idx, rem, str) {
   return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
 };
 
