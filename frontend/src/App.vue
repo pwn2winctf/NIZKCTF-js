@@ -5,6 +5,25 @@
         <md-icon>menu</md-icon>
       </md-button>
       <span class="md-title">{{ $t(`router.${this.$route.name}`) }}</span>
+      <div class="md-toolbar-section-end">
+        <md-menu
+          md-size="big"
+          md-direction="top-start"
+          :md-active.sync="cardVisible"
+        >
+          <md-button class="md-icon-button" md-menu-trigger>
+            <md-icon>person</md-icon>
+          </md-button>
+
+          <md-menu-content>
+            <md-list>
+              <md-list-item :href="authLink" target="_blank"
+                >Logar com GitHub</md-list-item
+              >
+            </md-list>
+          </md-menu-content>
+        </md-menu>
+      </div>
     </md-app-toolbar>
     <md-app-drawer :md-active="menuVisible" md-persistent="mini">
       <md-toolbar class="md-transparent" md-elevation="0">
@@ -49,10 +68,14 @@
 <script>
 import { mapState } from "vuex";
 
+import config from "@/config.json";
+
 export default {
   name: "App",
   data: () => ({
-    menuVisible: false
+    menuVisible: false,
+    cardVisible: false,
+    authLink: config.authLink
   }),
   computed: mapState({
     theme: state => state.theme
@@ -60,6 +83,9 @@ export default {
   methods: {
     toggleMenu() {
       this.menuVisible = !this.menuVisible;
+    },
+    toggleCard() {
+      this.cardVisible = !this.cardVisible;
     }
   }
 };
