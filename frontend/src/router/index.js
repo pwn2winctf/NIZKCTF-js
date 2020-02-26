@@ -5,6 +5,7 @@ import Settings from "../views/Settings.vue";
 import Rank from "../views/Rank.vue";
 import Rules from "../views/Rules.vue";
 import Challenges from "../views/Challenges.vue";
+import AfterLogin from "../views/AfterLogin.vue";
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ const routes = [
     path: "/rules",
     name: "Rules",
     component: Rules
+  },
+  {
+    path: "/after-login",
+    name: "Logged",
+    component: AfterLogin
   }
   // {
   //   path: "/about",
@@ -46,6 +52,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
+  mode: "history",
   routes
 });
 
