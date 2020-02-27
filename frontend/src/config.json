@@ -8,6 +8,8 @@
   },
   "authLink": " https://github.com/login/oauth/authorize?client_id=9428a38e889e92919c92&scope=public_repo",
   "repohost": "https://github.com/",
+  "owner": "pwn2winctf",
+  "submissionsRepo": "2019submissions",
   "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
   "deployPath": "/NIZKCTF-js"
 }
