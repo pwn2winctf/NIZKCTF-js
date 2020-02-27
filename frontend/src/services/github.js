@@ -8,4 +8,5 @@ export default class GitHub {
   }
 
   getUser = () => this.octokit.request("/user");
+  createFork = (owner, repo) => this.octokit.repos.createFork({ owner, repo });
 }
