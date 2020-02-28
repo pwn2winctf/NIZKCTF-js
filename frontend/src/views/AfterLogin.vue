@@ -4,54 +4,51 @@
       <md-steppers :md-active-step.sync="active" md-vertical md-linear>
         <md-step
           id="token"
-          md-label="Getting token"
+          :md-label="$t('gettingToken')"
           :md-editable="false"
           :md-done="!!this.token"
           :md-error="this.errors.token"
         >
-          <p>
-            This token will be used to create forks, make pull requests, make
-            merge requests, make commits on your behalf.
-          </p>
+          <p>{{ $t("gettingTokenInfo") }}</p>
         </md-step>
         <md-step
           id="user"
-          md-label="Getting user data"
+          :md-label="$t('gettingUser')"
           :md-editable="false"
           :md-done="!!this.user"
           :md-error="this.errors.user"
         >
-          <p>
-            Name and others info.
-          </p>
+          <p>{{ $t("gettingUserInfo") }}</p>
         </md-step>
         <md-step
           id="fork"
-          md-label="Creating fork"
+          :md-label="$t('creatingFork')"
           :md-editable="false"
           :md-done="!!this.fork"
         >
-          <p>
-            Name and avatar.
-          </p>
+          <p>{{ $t("creatingFork") }}</p>
         </md-step>
         <md-step
           id="team"
-          md-label="Team"
+          :md-label="$t('team')"
           :md-editable="false"
           :md-done="!!this.teamPrivateKey"
         >
           <div>
-            <md-radio v-model="team" value="create">Create team</md-radio>
-            <md-radio v-model="team" value="join">Join team</md-radio>
+            <md-radio v-model="team" value="create">{{
+              $t("createTeam")
+            }}</md-radio>
+            <md-radio v-model="team" value="join">{{
+              $t("joinTeam")
+            }}</md-radio>
           </div>
           <div v-if="team === 'create'">
             <md-field>
-              <label>Team name</label>
+              <label>{{ $t("teamName") }}</label>
               <md-input v-model="teamName" maxlength="30"></md-input>
             </md-field>
             <md-content class="md-scrollbar">
-              <h2 class="md-title">Team coutries</h2>
+              <h2 class="md-title">{{ $t("teamCountries") }}</h2>
               <md-list style="height:300px; overflow:scroll">
                 <md-list-item v-for="item in countries" :key="item.key">
                   <md-checkbox v-model="teamCoutries" :value="item.key">
@@ -61,14 +58,22 @@
                 </md-list-item>
               </md-list>
             </md-content>
-            <md-button class="md-raised md-primary">Submit</md-button>
+            <div style="display:flex; justify-content:center;">
+              <md-button class="md-raised md-primary">{{
+                $t("submit")
+              }}</md-button>
+            </div>
           </div>
           <div v-else>
             <md-field>
-              <label>Team private key</label>
+              <label>{{ $t("teamPrivateKey") }}</label>
               <md-input v-model="teamPrivateKey"></md-input>
             </md-field>
-            <md-button class="md-raised md-primary">Submit</md-button>
+            <div style="display:flex; justify-content:center;">
+              <md-button class="md-raised md-primary">{{
+                $t("submit")
+              }}</md-button>
+            </div>
           </div>
         </md-step>
       </md-steppers>
