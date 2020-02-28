@@ -49,8 +49,15 @@
             </md-field>
             <md-content class="md-scrollbar">
               <h2 class="md-title">{{ $t("teamCountries") }}</h2>
+              <md-field>
+                <md-icon>search</md-icon>
+                <md-input
+                  v-model="countryFilter"
+                  placeholder="ex. Japan"
+                ></md-input>
+              </md-field>
               <md-list style="height:300px; overflow:scroll">
-                <md-list-item v-for="item in countries" :key="item.key">
+                <md-list-item v-for="item in filteredCountries" :key="item.key">
                   <md-checkbox v-model="team.countries" :value="item.key">
                     {{ item.name }}
                   </md-checkbox>
@@ -110,7 +117,9 @@ export default {
       countries: [],
       privateKey: ""
     },
-    countries: undefined
+    countries: undefined,
+    countryFilter: "",
+    filteredCountries: []
   }),
   computed: {
     ...mapGetters({
@@ -125,6 +134,7 @@ export default {
     this.countries = Object.entries(
       countries.getNames(this.language)
     ).map(item => ({ key: item[0], name: item[1] }));
+    this.filteredCountries = this.countries;
   },
   mounted() {
     this.getInfo();
@@ -192,6 +202,13 @@ export default {
         config.submissionsRepo
       );
       return data.name;
+    }
+  },
+  watch: {
+    countryFilter(value) {
+      this.filteredCountries = this.countries.filter(
+        item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
+      );
     }
   }
 };
