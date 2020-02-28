@@ -12,8 +12,8 @@
           :md-active.sync="cardVisible"
         >
           <md-button class="md-icon-button" md-menu-trigger>
-            <md-avatar v-if="this.avatar" class="md-avatar-icon">
-              <img :src="this.avatar" alt="Avatar" />
+            <md-avatar v-if="this.user" class="md-avatar-icon">
+              <img :src="this.user.avatar_url" alt="Avatar" />
             </md-avatar>
             <md-icon v-else>person</md-icon>
           </md-button>
@@ -84,11 +84,11 @@ export default {
   }),
   computed: mapState({
     theme: state => state.theme,
-    avatar: state => state.avatar,
+    user: state => state.user,
     token: state => state.token
   }),
   methods: {
-    ...mapActions(["setAvatar", "setToken"]),
+    ...mapActions(["setUser", "setToken"]),
     toggleMenu() {
       this.menuVisible = !this.menuVisible;
     },
@@ -96,8 +96,8 @@ export default {
       this.cardVisible = !this.cardVisible;
     },
     logout() {
-      this.setToken(undefined);
-      this.setAvatar(undefined);
+      this.setUser(null);
+      this.setToken(null);
     }
   }
 };
