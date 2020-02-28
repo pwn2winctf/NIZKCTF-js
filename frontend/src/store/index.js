@@ -25,8 +25,9 @@ export default new Vuex.Store({
   state: {
     theme: "default",
     language: "en",
-    token: undefined,
-    user: undefined
+    token: null,
+    user: null,
+    teamPrivateKey: null
   },
   mutations: {
     setTheme(state, theme) {
@@ -40,6 +41,9 @@ export default new Vuex.Store({
     },
     setUser(state, user) {
       state.user = user;
+    },
+    setTeamPrivateKey(state, teamPrivateKey) {
+      state.teamPrivateKey = teamPrivateKey;
     }
   },
   actions: {
@@ -54,6 +58,9 @@ export default new Vuex.Store({
     },
     setUser(context, user) {
       context.commit("setUser", user);
+    },
+    setTeamPrivateKey(context, teamPrivateKey) {
+      context.commit("setTeamPrivateKey", teamPrivateKey);
     }
   },
   getters: {
