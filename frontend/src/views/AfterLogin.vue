@@ -32,26 +32,26 @@
           id="team"
           :md-label="$t('team')"
           :md-editable="false"
-          :md-done="!!this.teamPrivateKey"
+          :md-done="!!team.privateKey"
         >
           <div>
-            <md-radio v-model="team" value="create">{{
+            <md-radio v-model="team.option" value="create">{{
               $t("createTeam")
             }}</md-radio>
-            <md-radio v-model="team" value="join">{{
+            <md-radio v-model="team.option" value="join">{{
               $t("joinTeam")
             }}</md-radio>
           </div>
-          <div v-if="team === 'create'">
+          <div v-if="team.option === 'create'">
             <md-field>
               <label>{{ $t("teamName") }}</label>
-              <md-input v-model="teamName" maxlength="30"></md-input>
+              <md-input v-model="team.name" maxlength="30"></md-input>
             </md-field>
             <md-content class="md-scrollbar">
               <h2 class="md-title">{{ $t("teamCountries") }}</h2>
               <md-list style="height:300px; overflow:scroll">
                 <md-list-item v-for="item in countries" :key="item.key">
-                  <md-checkbox v-model="teamCoutries" :value="item.key">
+                  <md-checkbox v-model="team.countries" :value="item.key">
                     {{ item.name }}
                   </md-checkbox>
                   <country-flag :country="item.key" size="normal" />
@@ -59,7 +59,7 @@
               </md-list>
             </md-content>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary">{{
+              <md-button class="md-raised md-primary" @click="onCreateTeam">{{
                 $t("submit")
               }}</md-button>
             </div>
@@ -67,10 +67,10 @@
           <div v-else>
             <md-field>
               <label>{{ $t("teamPrivateKey") }}</label>
-              <md-input v-model="teamPrivateKey"></md-input>
+              <md-input v-model="team.privateKey"></md-input>
             </md-field>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary">{{
+              <md-button class="md-raised md-primary" @click="onJoinTeam">{{
                 $t("submit")
               }}</md-button>
             </div>
@@ -104,10 +104,12 @@ export default {
       user: undefined
     },
     fork: undefined,
-    teamPrivateKey: undefined,
-    team: "create",
-    teamName: "",
-    teamCoutries: [],
+    team: {
+      option: "create",
+      name: "",
+      countries: [],
+      privateKey: ""
+    },
     countries: undefined
   }),
   computed: {
@@ -136,6 +138,16 @@ export default {
       if (index) {
         this.active = index;
       }
+    },
+    onCreateTeam() {
+      const { name, countries } = this.team;
+      const team = { name, countries };
+      console.log("Create team", team);
+    },
+    onJoinTeam() {
+      const { name, privateKey } = this.team;
+      const team = { name, privateKey };
+      console.log("Join team", team);
     },
     getInfo() {
       if (!this.token) {
