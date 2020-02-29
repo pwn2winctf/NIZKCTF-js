@@ -88,7 +88,7 @@ export default {
     token: state => state.token
   }),
   methods: {
-    ...mapActions(["setUser", "setToken"]),
+    ...mapActions(["setUser", "setToken", "setRepository"]),
     toggleMenu() {
       this.menuVisible = !this.menuVisible;
     },
@@ -98,6 +98,7 @@ export default {
     logout() {
       this.setUser(null);
       this.setToken(null);
+      this.setRepository(null);
     }
   }
 };
