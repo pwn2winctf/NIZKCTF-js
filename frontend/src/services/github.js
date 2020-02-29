@@ -15,8 +15,8 @@ export default class GitHub {
     path,
     message,
     content,
-    sha = undefined,
-    branch = "master"
+    branch = "master",
+    sha = undefined
   ) =>
     this.octokit.repos.createOrUpdateFile({
       owner,
