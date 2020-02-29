@@ -27,4 +27,12 @@ export default class GitHub {
       sha,
       branch
     });
+  createPullRequest = (owner, repo, title, head, base = "master") =>
+    this.octokit.pulls.create({
+      owner,
+      repo,
+      title,
+      head,
+      base
+    });
 }
