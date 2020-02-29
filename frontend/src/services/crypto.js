@@ -19,5 +19,10 @@ export default {
       sign_pk: Buffer.from(sign_pk).toString("base64"),
       sign_sk: Buffer.from(sign_sk).toString("base64")
     };
+  },
+
+  async randomName() {
+    await libsodium.ready;
+    return libsodium.randombytes_buf(10, "hex").toLowerCase();
   }
 };
