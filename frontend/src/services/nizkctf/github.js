@@ -7,9 +7,17 @@ export default class GitHub {
     });
   }
 
-  getUser = () => this.octokit.request("/user");
-  createFork = (owner, repo) => this.octokit.repos.createFork({ owner, repo });
-  createOrUpdateFile = (
+  async getUser() {
+    const response = await this.octokit.request("/user");
+    return response.data;
+  }
+
+  async createFork(owner, repo) {
+    const response = await this.octokit.repos.createFork({ owner, repo });
+    return response.data;
+  }
+
+  async createOrUpdateFile(
     owner,
     repo,
     path,
@@ -17,8 +25,8 @@ export default class GitHub {
     content,
     branch = "master",
     sha = undefined
-  ) =>
-    this.octokit.repos.createOrUpdateFile({
+  ) {
+    const response = await this.octokit.repos.createOrUpdateFile({
       owner,
       repo,
       path,
@@ -27,26 +35,35 @@ export default class GitHub {
       sha,
       branch
     });
-  createPullRequest = (owner, repo, title, head, base = "master") =>
-    this.octokit.pulls.create({
+    return response.data;
+  }
+
+  async createPullRequest(owner, repo, title, head, base = "master") {
+    const response = await this.octokit.pulls.create({
       owner,
       repo,
       title,
       head,
       base
     });
-  createBranch = (owner, repo, ref, sha) =>
-    this.octokit.git.createRef({
+    return response.data;
+  }
+
+  async createBranch(owner, repo, ref, sha) {
+    const response = await this.octokit.git.createRef({
       owner,
       repo,
       ref,
       sha
     });
-  listBranches = async (owner, repo) => {
+    return response.data;
+  }
+
+  async listBranches(owner, repo) {
     const response = await this.octokit.repos.listBranches({
       owner,
       repo
     });
     return response.data;
-  };
+  }
 }

@@ -35,12 +35,12 @@
           :md-done="!!team.privateKey"
         >
           <div>
-            <md-radio v-model="team.option" value="create">{{
-              $t("createTeam")
-            }}</md-radio>
-            <md-radio v-model="team.option" value="join">{{
-              $t("joinTeam")
-            }}</md-radio>
+            <md-radio v-model="team.option" value="create">
+              {{ $t("createTeam") }}
+            </md-radio>
+            <md-radio v-model="team.option" value="join">
+              {{ $t("joinTeam") }}
+            </md-radio>
           </div>
           <div v-if="team.option === 'create'">
             <md-field>
@@ -58,17 +58,17 @@
               </md-field>
               <md-list style="height:300px; overflow:scroll">
                 <md-list-item v-for="item in filteredCountries" :key="item.key">
-                  <md-checkbox v-model="team.countries" :value="item.key">
-                    {{ item.name }}
-                  </md-checkbox>
+                  <md-checkbox v-model="team.countries" :value="item.key">{{
+                    item.name
+                  }}</md-checkbox>
                   <country-flag :country="item.key" size="normal" />
                 </md-list-item>
               </md-list>
             </md-content>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="createTeam">{{
-                $t("submit")
-              }}</md-button>
+              <md-button class="md-raised md-primary" @click="createTeam">
+                {{ $t("submit") }}
+              </md-button>
             </div>
           </div>
           <div v-else>
@@ -77,9 +77,9 @@
               <md-input v-model="team.privateKey"></md-input>
             </md-field>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="onJoinTeam">{{
-                $t("submit")
-              }}</md-button>
+              <md-button class="md-raised md-primary" @click="onJoinTeam">
+                {{ $t("submit") }}
+              </md-button>
             </div>
           </div>
         </md-step>
@@ -205,16 +205,16 @@ export default {
     },
     async getUser(token) {
       const github = new GitHub(token);
-      const { data } = await github.getUser();
+      const data = await github.getUser();
       return data;
     },
     async createFork(token) {
       const github = new GitHub(token);
-      const { data } = await github.createFork(
+      const { name } = await github.createFork(
         config.owner,
         config.submissionsRepo
       );
-      return data.name;
+      return name;
     }
   },
   watch: {
