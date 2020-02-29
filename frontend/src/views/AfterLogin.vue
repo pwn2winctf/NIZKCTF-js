@@ -24,7 +24,7 @@
           id="fork"
           :md-label="$t('creatingFork')"
           :md-editable="false"
-          :md-done="!!this.fork"
+          :md-done="!!this.repository"
         >
           <p>{{ $t("creatingFork") }}</p>
         </md-step>
@@ -35,12 +35,12 @@
           :md-done="!!team.privateKey"
         >
           <div>
-            <md-radio v-model="team.option" value="create">{{
-              $t("createTeam")
-            }}</md-radio>
-            <md-radio v-model="team.option" value="join">{{
-              $t("joinTeam")
-            }}</md-radio>
+            <md-radio v-model="team.option" value="create">
+              {{ $t("createTeam") }}
+            </md-radio>
+            <md-radio v-model="team.option" value="join">
+              {{ $t("joinTeam") }}
+            </md-radio>
           </div>
           <div v-if="team.option === 'create'">
             <md-field>
@@ -58,17 +58,17 @@
               </md-field>
               <md-list style="height:300px; overflow:scroll">
                 <md-list-item v-for="item in filteredCountries" :key="item.key">
-                  <md-checkbox v-model="team.countries" :value="item.key">
-                    {{ item.name }}
-                  </md-checkbox>
+                  <md-checkbox v-model="team.countries" :value="item.key">{{
+                    item.name
+                  }}</md-checkbox>
                   <country-flag :country="item.key" size="normal" />
                 </md-list-item>
               </md-list>
             </md-content>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="onCreateTeam">{{
-                $t("submit")
-              }}</md-button>
+              <md-button class="md-raised md-primary" @click="onCreateTeam">
+                {{ $t("submit") }}
+              </md-button>
             </div>
           </div>
           <div v-else>
@@ -77,9 +77,9 @@
               <md-input v-model="team.privateKey"></md-input>
             </md-field>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="onJoinTeam">{{
-                $t("submit")
-              }}</md-button>
+              <md-button class="md-raised md-primary" @click="onJoinTeam">
+                {{ $t("submit") }}
+              </md-button>
             </div>
           </div>
         </md-step>
@@ -110,7 +110,6 @@ export default {
       token: undefined,
       user: undefined
     },
-    fork: undefined,
     team: {
       option: "create",
       name: "",
@@ -127,7 +126,8 @@ export default {
     }),
     ...mapState({
       user: state => state.user,
-      language: state => state.language
+      language: state => state.language,
+      repository: state => state.repository
     })
   },
   created() {
@@ -143,7 +143,7 @@ export default {
     this.getInfo();
   },
   methods: {
-    ...mapActions(["setToken", "setUser"]),
+    ...mapActions(["setToken", "setUser", "setRepository"]),
     setNextStepper(index) {
       if (index) {
         this.active = index;
@@ -174,10 +174,10 @@ export default {
             this.setNextStepper("fork");
           })
           .catch(() => (this.errors.avatar = "Try refresh page"));
-      } else if (!this.fork) {
+      } else if (!this.repository) {
         this.createFork(this.token)
           .then(repo => {
-            this.fork = repo;
+            this.setRepository(repo);
             this.setNextStepper("team");
           })
           .catch(() => (this.errors.fork = "Try again later"));
