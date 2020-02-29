@@ -154,23 +154,17 @@ export default {
     async onCreateTeam() {
       const { name, countries } = this.team;
 
-      const github = new GitHub(this.token);
+      const message = `Regiter team ${name}`;
 
       const path = getTeamPath(name);
+
       crypto
         .createTeamKeys()
         .then(({ crypt_pk, sign_pk }) => {
           const team = { crypt_pk, sign_pk, name, countries };
 
           const content = new Buffer(JSON.stringify(team)).toString("base64");
-
-          return github.createOrUpdateFile(
-            this.user.login,
-            this.repository,
-            `${path}/team.json`,
-            `Regiter team ${name}`,
-            content
-          );
+          return this.createPullRequest(this.token, message, path, content);
         })
         .then(() => this.$router.push("/"))
         .catch(err => console.error(err));
@@ -223,6 +217,24 @@ export default {
         config.submissionsRepo
       );
       return data.name;
+    },
+    async createPullRequest(token, message, path, content) {
+      const github = new GitHub(token);
+
+      await github.createOrUpdateFile(
+        this.user.login,
+        this.repository,
+        `${path}/team.json`,
+        message,
+        content
+      );
+
+      await github.createPullRequest(
+        config.owner,
+        config.submissionsRepo,
+        message,
+        `${this.user.login}:master`
+      );
     }
   },
   watch: {
