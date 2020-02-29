@@ -35,4 +35,11 @@ export default class GitHub {
       head,
       base
     });
+  createBranch = (owner, repo, ref, sha) =>
+    this.octokit.git.createRef({
+      owner,
+      repo,
+      ref,
+      sha
+    });
 }
