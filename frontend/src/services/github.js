@@ -42,4 +42,11 @@ export default class GitHub {
       ref,
       sha
     });
+  listBranches = async (owner, repo) => {
+    const response = await this.octokit.repos.listBranches({
+      owner,
+      repo
+    });
+    return response.data;
+  };
 }
