@@ -27,7 +27,7 @@ export default new Vuex.Store({
     language: "en",
     token: null,
     user: null,
-    teamPrivateKey: null,
+    team: null,
     repository: null
   },
   mutations: {
@@ -43,8 +43,8 @@ export default new Vuex.Store({
     setUser(state, user) {
       state.user = user;
     },
-    setTeamPrivateKey(state, teamPrivateKey) {
-      state.teamPrivateKey = teamPrivateKey;
+    setTeam(state, team) {
+      state.team = team;
     },
     setRepository(state, repository) {
       state.repository = repository;
@@ -63,8 +63,8 @@ export default new Vuex.Store({
     setUser(context, user) {
       context.commit("setUser", user);
     },
-    setTeamPrivateKey(context, teamPrivateKey) {
-      context.commit("setTeamPrivateKey", teamPrivateKey);
+    setTeam(context, team) {
+      context.commit("setTeam", team);
     },
     setRepository(context, repository) {
       context.commit("setRepository", repository);
