@@ -95,6 +95,8 @@ import countries from "i18n-iso-countries";
 
 import { API } from "@/services/api";
 import GitHub from "@/services/github";
+import crypto from "@/services/crypto";
+import { getTeamPath } from "@/utils";
 
 import config from "@/config.json";
 
@@ -149,10 +151,29 @@ export default {
         this.active = index;
       }
     },
-    onCreateTeam() {
+    async onCreateTeam() {
       const { name, countries } = this.team;
-      const team = { name, countries };
-      console.log("Create team", team);
+
+      const github = new GitHub(this.token);
+
+      const path = getTeamPath(name);
+      crypto
+        .createTeamKeys()
+        .then(({ crypt_pk, sign_pk }) => {
+          const team = { crypt_pk, sign_pk, name, countries };
+
+          const content = new Buffer(JSON.stringify(team)).toString("base64");
+
+          return github.createOrUpdateFile(
+            this.user.login,
+            this.repository,
+            `${path}/team.json`,
+            `Regiter team ${name}`,
+            content
+          );
+        })
+        .then(() => this.$router.push("/"))
+        .catch(err => console.error(err));
     },
     onJoinTeam() {
       const { name, privateKey } = this.team;
