@@ -9,4 +9,27 @@ export default class GitHub {
 
   getUser = () => this.octokit.request("/user");
   createFork = (owner, repo) => this.octokit.repos.createFork({ owner, repo });
+  createOrUpdateFile = (
+    owner,
+    repo,
+    path,
+    message,
+    content,
+    committer,
+    sha = undefined,
+    branch = "master"
+  ) =>
+    this.octokit.repos.createOrUpdateFile({
+      owner,
+      repo,
+      path,
+      message,
+      content,
+      committer: {
+        name: committer.name,
+        email: committer.email
+      },
+      sha,
+      branch
+    });
 }
