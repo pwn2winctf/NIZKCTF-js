@@ -221,19 +221,38 @@ export default {
     async createPullRequest(token, message, path, content) {
       const github = new GitHub(token);
 
+      const branch = await crypto.randomName();
+      const ref = `refs/heads/${branch}`;
+
+      const branches = await github.listBranches(
+        this.user.login,
+        this.repository
+      );
+
+      const shaOfMaster = branches.find(item => item.name === "master").commit
+        .sha;
+
+      await github.createBranch(
+        this.user.login,
+        this.repository,
+        ref,
+        shaOfMaster
+      );
+
       await github.createOrUpdateFile(
         this.user.login,
         this.repository,
         `${path}/team.json`,
         message,
-        content
+        content,
+        branch
       );
 
       await github.createPullRequest(
         config.owner,
         config.submissionsRepo,
         message,
-        `${this.user.login}:master`
+        `${this.user.login}:${branch}`
       );
     }
   },
