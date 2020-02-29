@@ -66,7 +66,7 @@
               </md-list>
             </md-content>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="onCreateTeam">{{
+              <md-button class="md-raised md-primary" @click="createTeam">{{
                 $t("submit")
               }}</md-button>
             </div>
@@ -94,9 +94,9 @@ import CountryFlag from "vue-country-flag";
 import countries from "i18n-iso-countries";
 
 import { API } from "@/services/api";
-import GitHub from "@/services/github";
-import crypto from "@/services/crypto";
-import { getTeamPath, validCountries } from "@/utils";
+import { validCountries } from "@/utils";
+
+import NIZKCTF, { GitHub } from "@/services/nizkctf";
 
 import config from "@/config.json";
 
@@ -151,22 +151,20 @@ export default {
         this.active = index;
       }
     },
-    async onCreateTeam() {
-      const { name, countries } = this.team;
+    async createTeam() {
+      const local = { owner: this.user.login, repository: this.repository };
+      const upstream = {
+        owner: config.owner,
+        repository: config.submissionsRepo
+      };
 
-      const message = `Regiter team ${name}`;
-
-      const path = getTeamPath(name);
-
-      crypto
-        .createTeamKeys()
-        .then(({ crypt_pk, sign_pk }) => {
-          const team = { crypt_pk, sign_pk, name, countries };
-
-          const content = new Buffer(JSON.stringify(team)).toString("base64");
-          return this.createPullRequest(this.token, message, path, content);
+      const nizkctf = new NIZKCTF(this.token, local, upstream);
+      nizkctf
+        .createTeam(this.team)
+        .then(keys => {
+          this.$router.push("/");
+          console.log("created", keys);
         })
-        .then(() => this.$router.push("/"))
         .catch(err => console.error(err));
     },
     onJoinTeam() {
@@ -217,43 +215,6 @@ export default {
         config.submissionsRepo
       );
       return data.name;
-    },
-    async createPullRequest(token, message, path, content) {
-      const github = new GitHub(token);
-
-      const branch = await crypto.randomName();
-      const ref = `refs/heads/${branch}`;
-
-      const branches = await github.listBranches(
-        this.user.login,
-        this.repository
-      );
-
-      const shaOfMaster = branches.find(item => item.name === "master").commit
-        .sha;
-
-      await github.createBranch(
-        this.user.login,
-        this.repository,
-        ref,
-        shaOfMaster
-      );
-
-      await github.createOrUpdateFile(
-        this.user.login,
-        this.repository,
-        `${path}/team.json`,
-        message,
-        content,
-        branch
-      );
-
-      await github.createPullRequest(
-        config.owner,
-        config.submissionsRepo,
-        message,
-        `${this.user.login}:${branch}`
-      );
     }
   },
   watch: {

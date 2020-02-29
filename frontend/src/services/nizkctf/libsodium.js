@@ -21,8 +21,8 @@ export default {
     };
   },
 
-  async randomName() {
+  async randomString(size) {
     await libsodium.ready;
-    return libsodium.randombytes_buf(10, "hex").toLowerCase();
+    return libsodium.randombytes_buf(size, "hex").toLowerCase();
   }
 };
