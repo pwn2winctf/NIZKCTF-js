@@ -35,12 +35,12 @@
           :md-done="!!team.privateKey"
         >
           <div>
-            <md-radio v-model="team.option" value="create">
-              {{ $t("createTeam") }}
-            </md-radio>
-            <md-radio v-model="team.option" value="join">
-              {{ $t("joinTeam") }}
-            </md-radio>
+            <md-radio v-model="team.option" value="create">{{
+              $t("createTeam")
+            }}</md-radio>
+            <md-radio v-model="team.option" value="join">{{
+              $t("joinTeam")
+            }}</md-radio>
           </div>
           <div v-if="team.option === 'create'">
             <md-field>
@@ -58,17 +58,17 @@
               </md-field>
               <md-list style="height:300px; overflow:scroll">
                 <md-list-item v-for="item in filteredCountries" :key="item.key">
-                  <md-checkbox v-model="team.countries" :value="item.key">{{
-                    item.name
-                  }}</md-checkbox>
+                  <md-checkbox v-model="team.countries" :value="item.key">
+                    {{ item.name }}
+                  </md-checkbox>
                   <country-flag :country="item.key" size="normal" />
                 </md-list-item>
               </md-list>
             </md-content>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="onCreateTeam">
-                {{ $t("submit") }}
-              </md-button>
+              <md-button class="md-raised md-primary" @click="onCreateTeam">{{
+                $t("submit")
+              }}</md-button>
             </div>
           </div>
           <div v-else>
@@ -77,9 +77,9 @@
               <md-input v-model="team.privateKey"></md-input>
             </md-field>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="onJoinTeam">
-                {{ $t("submit") }}
-              </md-button>
+              <md-button class="md-raised md-primary" @click="onJoinTeam">{{
+                $t("submit")
+              }}</md-button>
             </div>
           </div>
         </md-step>
@@ -96,7 +96,7 @@ import countries from "i18n-iso-countries";
 import { API } from "@/services/api";
 import GitHub from "@/services/github";
 import crypto from "@/services/crypto";
-import { getTeamPath } from "@/utils";
+import { getTeamPath, validCountries } from "@/utils";
 
 import config from "@/config.json";
 
@@ -133,9 +133,9 @@ export default {
     })
   },
   created() {
-    this.countries = Object.entries(
-      countries.getNames(this.language)
-    ).map(item => ({ key: item[0], name: item[1] }));
+    this.countries = Object.entries(countries.getNames(this.language))
+      .map(item => ({ key: item[0].toLowerCase(), name: item[1] }))
+      .filter(item => validCountries.includes(item.key));
     this.filteredCountries = this.countries;
   },
   mounted() {
