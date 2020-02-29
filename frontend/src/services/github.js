@@ -15,7 +15,6 @@ export default class GitHub {
     path,
     message,
     content,
-    committer,
     sha = undefined,
     branch = "master"
   ) =>
@@ -25,10 +24,6 @@ export default class GitHub {
       path,
       message,
       content,
-      committer: {
-        name: committer.name,
-        email: committer.email
-      },
       sha,
       branch
     });
