@@ -32,6 +32,8 @@ export default {
     teamCountries: "Team coutries",
     submit: "Submit",
     teamPrivateKey: "Team private key",
+    encodedTeam:
+      "This is your team's private key. Share with your team so they can join the team!",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -74,6 +76,8 @@ export default {
     teamCountries: "Países do time",
     submit: "Enviar",
     teamPrivateKey: "Chave privada do time",
+    encodedTeam:
+      "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe!",
     router: {
       Home: "Início",
       Challenges: "Desafios",

@@ -1,91 +1,93 @@
 <template>
-  <md-content>
-    <md-content>
-      <md-steppers :md-active-step.sync="active" md-vertical md-linear>
-        <md-step
-          id="token"
-          :md-label="$t('gettingToken')"
-          :md-editable="false"
-          :md-done="!!this.token"
-          :md-error="this.errors.token"
-        >
-          <p>{{ $t("gettingTokenInfo") }}</p>
-        </md-step>
-        <md-step
-          id="user"
-          :md-label="$t('gettingUser')"
-          :md-editable="false"
-          :md-done="!!this.user"
-          :md-error="this.errors.user"
-        >
-          <p>{{ $t("gettingUserInfo") }}</p>
-        </md-step>
-        <md-step
-          id="fork"
-          :md-label="$t('creatingFork')"
-          :md-editable="false"
-          :md-done="!!this.repository"
-        >
-          <p>{{ $t("creatingFork") }}</p>
-        </md-step>
-        <md-step
-          id="team"
-          :md-label="$t('team')"
-          :md-editable="false"
-          :md-done="!!team.privateKey"
-        >
-          <div>
-            <md-radio v-model="team.option" value="create">
-              {{ $t("createTeam") }}
-            </md-radio>
-            <md-radio v-model="team.option" value="join">
-              {{ $t("joinTeam") }}
-            </md-radio>
-          </div>
-          <div v-if="team.option === 'create'">
-            <md-field>
-              <label>{{ $t("teamName") }}</label>
-              <md-input v-model="team.name" maxlength="30"></md-input>
-            </md-field>
-            <md-content class="md-scrollbar">
-              <h2 class="md-title">{{ $t("teamCountries") }}</h2>
-              <md-field>
-                <md-icon>search</md-icon>
-                <md-input
-                  v-model="countryFilter"
-                  placeholder="ex. Japan"
-                ></md-input>
-              </md-field>
-              <md-list style="height:300px; overflow:scroll">
-                <md-list-item v-for="item in filteredCountries" :key="item.key">
-                  <md-checkbox v-model="team.countries" :value="item.key">{{
-                    item.name
-                  }}</md-checkbox>
-                  <country-flag :country="item.key" size="normal" />
-                </md-list-item>
-              </md-list>
-            </md-content>
-            <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="createTeam">
-                {{ $t("submit") }}
-              </md-button>
-            </div>
-          </div>
-          <div v-else>
-            <md-field>
-              <label>{{ $t("teamPrivateKey") }}</label>
-              <md-input v-model="team.privateKey"></md-input>
-            </md-field>
-            <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" @click="onJoinTeam">
-                {{ $t("submit") }}
-              </md-button>
-            </div>
-          </div>
-        </md-step>
-      </md-steppers>
-    </md-content>
+  <md-content v-if="encodedTeam">
+    <p>{{ $t("encodedTeam") }}</p>
+    <md-field>
+      <md-textarea v-model="encodedTeam" md-autogrow disabled></md-textarea>
+    </md-field>
   </md-content>
+  <md-steppers v-else :md-active-step.sync="active" md-vertical md-linear>
+    <md-step
+      id="token"
+      :md-label="$t('gettingToken')"
+      :md-editable="false"
+      :md-done="!!this.token"
+      :md-error="this.errors.token"
+    >
+      <p>{{ $t("gettingTokenInfo") }}</p>
+    </md-step>
+    <md-step
+      id="user"
+      :md-label="$t('gettingUser')"
+      :md-editable="false"
+      :md-done="!!this.user"
+      :md-error="this.errors.user"
+    >
+      <p>{{ $t("gettingUserInfo") }}</p>
+    </md-step>
+    <md-step
+      id="fork"
+      :md-label="$t('creatingFork')"
+      :md-editable="false"
+      :md-done="!!this.repository"
+    >
+      <p>{{ $t("creatingFork") }}</p>
+    </md-step>
+    <md-step
+      id="team"
+      :md-label="$t('team')"
+      :md-editable="false"
+      :md-done="!!team.privateKey"
+    >
+      <div>
+        <md-radio v-model="team.option" value="create">
+          {{ $t("createTeam") }}
+        </md-radio>
+        <md-radio v-model="team.option" value="join">
+          {{ $t("joinTeam") }}
+        </md-radio>
+      </div>
+      <div v-if="team.option === 'create'">
+        <md-field>
+          <label>{{ $t("teamName") }}</label>
+          <md-input v-model="team.name" maxlength="30"></md-input>
+        </md-field>
+        <md-content class="md-scrollbar">
+          <h2 class="md-title">{{ $t("teamCountries") }}</h2>
+          <md-field>
+            <md-icon>search</md-icon>
+            <md-input
+              v-model="countryFilter"
+              placeholder="ex. Japan"
+            ></md-input>
+          </md-field>
+          <md-list style="height:300px; overflow:scroll">
+            <md-list-item v-for="item in filteredCountries" :key="item.key">
+              <md-checkbox v-model="team.countries" :value="item.key">{{
+                item.name
+              }}</md-checkbox>
+              <country-flag :country="item.key" size="normal" />
+            </md-list-item>
+          </md-list>
+        </md-content>
+        <div style="display:flex; justify-content:center;">
+          <md-button class="md-raised md-primary" @click="createTeam">
+            {{ $t("submit") }}
+          </md-button>
+        </div>
+      </div>
+      <div v-else>
+        <md-field>
+          <label>{{ $t("teamPrivateKey") }}</label>
+          <md-input v-model="team.privateKey"></md-input>
+        </md-field>
+        <div style="display:flex; justify-content:center;">
+          <md-button class="md-raised md-primary" @click="onJoinTeam">
+            {{ $t("submit") }}
+          </md-button>
+        </div>
+      </div>
+    </md-step>
+  </md-steppers>
 </template>
 
 <script>
@@ -118,6 +120,7 @@ export default {
       countries: [],
       privateKey: ""
     },
+    encodedTeam: null,
     countries: undefined,
     countryFilter: "",
     filteredCountries: []
@@ -129,7 +132,8 @@ export default {
     ...mapState({
       user: state => state.user,
       language: state => state.language,
-      repository: state => state.repository
+      repository: state => state.repository,
+      team: state => state.team
     })
   },
   created() {
@@ -145,7 +149,7 @@ export default {
     this.getInfo();
   },
   methods: {
-    ...mapActions(["setToken", "setUser", "setRepository"]),
+    ...mapActions(["setToken", "setUser", "setRepository", "setTeam"]),
     setNextStepper(index) {
       if (index) {
         this.active = index;
@@ -162,8 +166,12 @@ export default {
       nizkctf
         .createTeam(this.team)
         .then(keys => {
-          this.$router.push("/");
-          console.log("created", keys);
+          const { name, countries } = this.team;
+          const team = { name, countries, ...keys };
+          this.setTeam(team);
+          this.encodedTeam = Buffer.from(JSON.stringify(team)).toString(
+            "base64"
+          );
         })
         .catch(err => console.error(err));
     },
