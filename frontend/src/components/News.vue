@@ -35,18 +35,19 @@ export default {
   },
   methods: {
     loadNews() {
-      API.listNews().then(response => {
-        const datas = response.data
-          .sort((a, b) => b.time - a.time)
-          .map(item => ({
-            datetime: item.time,
-            date: fromUnixTime(item.time).toLocaleString(),
-            text: item.msg
-          }));
+      API.listNews()
+        .then(response => {
+          const datas = response.data
+            .sort((a, b) => b.time - a.time)
+            .map(item => ({
+              datetime: item.time,
+              date: fromUnixTime(item.time).toLocaleString(),
+              text: item.msg
+            }));
 
-        this.news = datas;
-        this.firstLoad = false;
-      });
+          this.news = datas;
+        })
+        .finally(() => (this.firstLoad = false));
     }
   },
   beforeDestroy() {

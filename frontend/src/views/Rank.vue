@@ -14,12 +14,12 @@
           slot-scope="{ item }"
           @click="openPopup(item)"
         >
-          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>
-            {{ item.pos }}
-          </md-table-cell>
-          <md-table-cell :md-label="$t('team')" md-sort-by="team">
-            {{ item.name }}
-          </md-table-cell>
+          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
+            item.pos
+          }}</md-table-cell>
+          <md-table-cell :md-label="$t('team')" md-sort-by="team">{{
+            item.name
+          }}</md-table-cell>
           <md-table-cell :md-label="$t('country')">
             <country-flag
               class="flags"
@@ -29,9 +29,9 @@
               size="normal"
             />
           </md-table-cell>
-          <md-table-cell :md-label="$t('score')" md-sort-by="score">
-            {{ item.score }}
-          </md-table-cell>
+          <md-table-cell :md-label="$t('score')" md-sort-by="score">{{
+            item.score
+          }}</md-table-cell>
         </md-table-row>
       </md-table>
     </md-content>
@@ -204,52 +204,52 @@ export default {
       this.timeAxis = timeAxis;
     },
     loadSolvedChallenges() {
-      API.listSolvedChallenges().then(async ({ data }) => {
-        if (!data.standings || data.standings.length === 0) {
-          this.firstLoad = false;
-          return;
-        }
+      API.listSolvedChallenges()
+        .then(async ({ data }) => {
+          if (!data.standings || data.standings.length === 0) {
+            this.firstLoad = false;
+            return;
+          }
 
-        this.calculateScore(data);
+          this.calculateScore(data);
 
-        const teams = await Promise.all(
-          data.standings.map(async ({ team, score, pos, taskStats }) => {
-            const teamResponse = await API.getTeam(team);
-            const teamMembersResponse = await API.getTeamMembers(team);
-            return {
-              pos,
-              score,
-              ...teamResponse.data,
-              members: teamMembersResponse.data,
-              solvedChallenges: Object.entries(taskStats).map(item => ({
-                name: item[0],
-                ...item[1]
-              }))
-            };
-          })
-        );
-        this.teams = teams;
+          const teams = await Promise.all(
+            data.standings.map(async ({ team, score, pos, taskStats }) => {
+              const teamResponse = await API.getTeam(team);
+              const teamMembersResponse = await API.getTeamMembers(team);
+              return {
+                pos,
+                score,
+                ...teamResponse.data,
+                members: teamMembersResponse.data,
+                solvedChallenges: Object.entries(taskStats).map(item => ({
+                  name: item[0],
+                  ...item[1]
+                }))
+              };
+            })
+          );
+          this.teams = teams;
 
-        const defaultOptions = {
-          fill: false,
-          lineTension: 0,
-          pointRadius: 0,
-          borderWidth: 2
-        };
+          const defaultOptions = {
+            fill: false,
+            lineTension: 0,
+            pointRadius: 0,
+            borderWidth: 2
+          };
 
-        const datasets = this.topStandings.map((item, index) => ({
-          label: item.team,
-          borderColor: colors[index],
-          ...defaultOptions,
-          data: this.scoreAxis[item.team]
-        }));
+          const datasets = this.topStandings.map((item, index) => ({
+            label: item.team,
+            borderColor: colors[index],
+            ...defaultOptions,
+            data: this.scoreAxis[item.team]
+          }));
 
-        this.data.labels = this.timeAxis;
+          this.data.labels = this.timeAxis;
 
-        this.data.datasets = datasets;
-
-        this.firstLoad = false;
-      });
+          this.data.datasets = datasets;
+        })
+        .finally(() => (this.firstLoad = false));
     }
   },
   beforeDestroy() {

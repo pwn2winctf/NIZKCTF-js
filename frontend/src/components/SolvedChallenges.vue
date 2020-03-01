@@ -35,23 +35,28 @@ export default {
   },
   methods: {
     loadSolvedChallenges() {
-      API.listSolvedChallenges().then(response => {
-        const datas = response.data.standings
-          .reduce((reducer, { taskStats, team }) => {
-            Object.keys(taskStats).forEach(challenge => {
-              reducer.push({
-                team,
-                challenge,
-                datetime: taskStats[challenge].time,
-                date: fromUnixTime(taskStats[challenge].time).toLocaleString()
-              });
-            });
-            return reducer;
-          }, [])
-          .sort((a, b) => b.datetime - a.datetime);
-        this.challenges = datas;
-        this.firstLoad = false;
-      });
+      API.listSolvedChallenges()
+        .then(({ data }) => {
+          const datas = data.standings
+            ? data.standings
+                .reduce((reducer, { taskStats, team }) => {
+                  Object.keys(taskStats).forEach(challenge => {
+                    reducer.push({
+                      team,
+                      challenge,
+                      datetime: taskStats[challenge].time,
+                      date: fromUnixTime(
+                        taskStats[challenge].time
+                      ).toLocaleString()
+                    });
+                  });
+                  return reducer;
+                }, [])
+                .sort((a, b) => b.datetime - a.datetime)
+            : [];
+          this.challenges = datas;
+        })
+        .finally(() => (this.firstLoad = false));
     }
   },
   beforeDestroy() {

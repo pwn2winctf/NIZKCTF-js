@@ -79,12 +79,15 @@ export default {
 
         API.listSolvedChallenges()
           .then(({ data }) => {
-            const solves = data.standings.reduce((reducer, { taskStats }) => {
-              Object.keys(taskStats).forEach(chall => {
-                reducer[chall]++ || (reducer[chall] = 1);
-              });
-              return reducer;
-            }, {});
+            const solves = data.standings
+              ? data.standings.reduce((reducer, { taskStats }) => {
+                  Object.keys(taskStats).forEach(chall => {
+                    reducer[chall]++ || (reducer[chall] = 1);
+                  });
+                  return reducer;
+                }, {})
+              : [];
+
             const challenges = datas.map(item => ({
               ...item,
               solves: solves[item.id] || 0,
