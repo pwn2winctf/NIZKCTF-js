@@ -34,6 +34,7 @@ export default {
     teamPrivateKey: "Team private key",
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!",
+    submitFlagField: "Type the flag here",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -78,6 +79,7 @@ export default {
     teamPrivateKey: "Chave privada do time",
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe!",
+    submitFlagField: "Escreva a flag aqui",
     router: {
       Home: "Início",
       Challenges: "Desafios",
