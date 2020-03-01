@@ -1,5 +1,5 @@
 {
-  "submissionsBasePath": "https://pwn2.win/2019submissions",
+  "submissionsBasePath": "https://ctf-br.github.io/ranking_submissions",
   "challegesBasePath": "https://ctf-br.github.io/ranking",
   "dynamic_scoring": {
     "K": 80.0,
