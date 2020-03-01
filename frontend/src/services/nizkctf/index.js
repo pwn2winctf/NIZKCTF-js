@@ -30,9 +30,8 @@ export default class NIZKCTF {
     return keys;
   }
 
-  async;
-
   async _push(message, path, content, pullRequest = true) {
+    await this._pull();
     const encodedContent = new Buffer(content).toString("base64");
 
     const branch = await libsodium.randomString(10);
@@ -70,6 +69,24 @@ export default class NIZKCTF {
         this.upstream.repository,
         message,
         `${this.local.owner}:${branch}`
+      );
+    }
+  }
+
+  async _pull() {
+    const ref = "heads/master";
+
+    const [upstreamRef, localRef] = await Promise.all([
+      this.github.getRef(this.upstream.owner, this.upstream.repository, ref),
+      this.github.getRef(this.local.owner, this.local.repository, ref)
+    ]);
+
+    if (upstreamRef.object.sha !== localRef.object.sha) {
+      await this.github.updateRef(
+        this.local.owner,
+        this.local.repository,
+        ref,
+        upstreamRef.object.sha
       );
     }
   }
