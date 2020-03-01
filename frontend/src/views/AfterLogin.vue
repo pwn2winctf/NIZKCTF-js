@@ -1,5 +1,5 @@
 <template>
-  <md-content v-if="encodedTeam">
+  <md-content v-if="encodedTeam && team.options == 'create'">
     <p>{{ $t("encodedTeam") }}</p>
     <md-field>
       <md-textarea v-model="encodedTeam" md-autogrow disabled></md-textarea>
@@ -36,7 +36,7 @@
       id="team"
       :md-label="$t('team')"
       :md-editable="false"
-      :md-done="!!team.privateKey"
+      :md-done="!!teamKey"
     >
       <div>
         <md-radio v-model="team.option" value="create">
@@ -78,12 +78,12 @@
       <div v-else>
         <md-field>
           <label>{{ $t("teamPrivateKey") }}</label>
-          <md-input v-model="team.privateKey"></md-input>
+          <md-input v-model="encodedTeam"></md-input>
         </md-field>
         <div style="display:flex; justify-content:center;">
-          <md-button class="md-raised md-primary" @click="onJoinTeam">
-            {{ $t("submit") }}
-          </md-button>
+          <md-button class="md-raised md-primary" @click="joinTeam">{{
+            $t("submit")
+          }}</md-button>
         </div>
       </div>
     </md-step>
@@ -133,7 +133,7 @@ export default {
       user: state => state.user,
       language: state => state.language,
       repository: state => state.repository,
-      team: state => state.team
+      teamKey: state => state.team
     })
   },
   created() {
@@ -175,9 +175,9 @@ export default {
         })
         .catch(err => console.error(err));
     },
-    onJoinTeam() {
-      const { name, privateKey } = this.team;
-      const team = { name, privateKey };
+    joinTeam() {
+      const team = Buffer(this.encodedTeam, "base64").toString();
+      this.setTeam(team);
       console.log("Join team", team);
     },
     getInfo() {
