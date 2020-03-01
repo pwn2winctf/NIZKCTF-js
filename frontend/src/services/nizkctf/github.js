@@ -66,4 +66,19 @@ export default class GitHub {
     });
     return response.data;
   }
+
+  async getRef(owner, repo, ref) {
+    const response = await this.octokit.git.getRef({ owner, repo, ref });
+    return response.data;
+  }
+
+  async updateRef(owner, repo, ref, sha) {
+    const response = await this.octokit.git.updateRef({
+      owner,
+      repo,
+      ref,
+      sha
+    });
+    return response.data;
+  }
 }
