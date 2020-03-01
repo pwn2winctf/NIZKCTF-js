@@ -62,7 +62,9 @@ export default {
     }
   },
   mounted() {
-    this.loadDescription(this.info.id);
+    if (this.info.id) {
+      this.loadDescription(this.info.id);
+    }
   },
   watch: {
     info: function(info) {
