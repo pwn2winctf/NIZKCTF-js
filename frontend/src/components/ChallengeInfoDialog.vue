@@ -15,11 +15,20 @@
         class="md-primary md-layout-item card-tag"
         >{{ tag }}</md-chip
       >
+      <div v-if="teamKey" class="flag-field">
+        <md-field>
+          <md-input
+            v-model="flag"
+            :placeholder="$t('submitFlagField')"
+          ></md-input>
+        </md-field>
+      </div>
     </md-dialog-content>
     <md-dialog-actions>
-      <md-button class="md-primary" @click="onClose">
-        {{ $t("close") }}
-      </md-button>
+      <md-button class="md-raised md-accent">{{ $t("submit") }}</md-button>
+      <md-button class="md-primary" @click="onClose">{{
+        $t("close")
+      }}</md-button>
     </md-dialog-actions>
   </md-dialog>
 </template>
@@ -35,12 +44,14 @@ export default {
   name: "ChallengeInfoDialog",
   props: ["info", "onClose"],
   data: () => ({
+    flag: "",
     loading: true,
     description: "",
     converter: new showdown.Converter()
   }),
   computed: mapState({
-    language: state => state.language
+    language: state => state.language,
+    teamKey: state => state.team
   }),
   methods: {
     loadDescription(challenge) {
@@ -49,6 +60,9 @@ export default {
         this.loading = false;
       });
     }
+  },
+  mounted() {
+    this.loadDescription(this.info.id);
   },
   watch: {
     info: function(info) {
