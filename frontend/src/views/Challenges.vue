@@ -119,6 +119,8 @@ export default {
       this.popup.tags = challenge.tags;
       this.popup.solves = challenge.solves;
       this.popup.points = challenge.points;
+      this.popup.pk = challenge.pk;
+      this.popup.salt = challenge.salt;
       this.popup.isOpen = true;
     },
     closePopup() {
