@@ -30,6 +30,39 @@ export default class NIZKCTF {
     return keys;
   }
 
+  async submitFlag(flag, challenge) {
+    const keys = await this._lookupFlag(flag, challenge);
+    if (!keys) {
+      throw new Error("This is not the correct flag.");
+    }
+
+    console.log(keys);
+  }
+
+  async _lookupFlag(flag, challenge) {
+    const { scrypt_ops_limit, scrypt_mem_limit } = {
+      scrypt_ops_limit: 33554432,
+      scrypt_mem_limit: 402653184
+    };
+
+    const decodedPk = Buffer.from(challenge.pk, "base64");
+    const decodedSalt = Buffer.from(challenge.salt, "base64");
+
+    const challengeSeed = await libsodium.cryptoPwhashScryptsalsa208sha256(
+      flag,
+      decodedSalt,
+      scrypt_ops_limit,
+      scrypt_mem_limit
+    );
+    const keys = await libsodium.cryptoSignSeedKeypair(challengeSeed);
+
+    if (decodedPk.compare(Buffer.from(keys.publicKey)) !== 0) {
+      return null;
+    }
+
+    return keys;
+  }
+
   async _push(message, path, content, pullRequest = true) {
     await this._pull();
     const encodedContent = new Buffer(content).toString("base64");
