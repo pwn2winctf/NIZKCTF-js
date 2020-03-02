@@ -25,7 +25,9 @@
       </div>
     </md-dialog-content>
     <md-dialog-actions>
-      <md-button class="md-raised md-accent">{{ $t("submit") }}</md-button>
+      <md-button class="md-raised md-accent" @click="submitFlag">
+        {{ $t("submit") }}
+      </md-button>
       <md-button class="md-primary" @click="onClose">{{
         $t("close")
       }}</md-button>
@@ -40,6 +42,9 @@ import showdown from "showdown";
 // import format from "date-fns/format";
 import { API } from "@/services/api";
 
+import NIZKCTF from "@/services/nizkctf";
+import config from "@/config.json";
+
 export default {
   name: "ChallengeInfoDialog",
   props: ["info", "onClose"],
@@ -51,7 +56,8 @@ export default {
   }),
   computed: mapState({
     language: state => state.language,
-    teamKey: state => state.team
+    teamKey: state => state.team,
+    token: state => state.token
   }),
   methods: {
     loadDescription(challenge) {
@@ -59,6 +65,16 @@ export default {
         this.description = this.converter.makeHtml(data);
         this.loading = false;
       });
+    },
+    submitFlag() {
+      const local = { owner: "", repository: "" };
+      const upstream = {
+        owner: config.owner,
+        repository: config.submissionsRepo
+      };
+
+      const nizkctf = new NIZKCTF(this.token, local, upstream);
+      nizkctf.submitFlag(this.flag, this.info);
     }
   },
   mounted() {
