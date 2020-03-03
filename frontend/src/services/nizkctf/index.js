@@ -3,12 +3,13 @@ import libsodium from "./libsodium";
 import { getTeamPath } from "../../utils";
 
 export default class NIZKCTF {
-  constructor(token, local, upstream) {
+  constructor(token, local, upstream, team = undefined) {
     this.token = token;
     this.local = { owner: local.owner, repository: local.repository };
     this.upstream = { owner: upstream.owner, repository: upstream.repository };
 
     this.github = new GitHub(this.token);
+    this.team = team;
   }
 
   async createTeam({ name, countries }) {
@@ -26,17 +27,25 @@ export default class NIZKCTF {
 
     const content = JSON.stringify(team);
 
-    await this._push(message, path, content);
+    await this._push(message, path, content, "team.json");
     return keys;
   }
 
   async submitFlag(flag, challenge) {
     const keys = await this._lookupFlag(flag, challenge);
+
     if (!keys) {
       throw new Error("This is not the correct flag.");
     }
 
-    console.log(keys);
+    const proof = await this._createProof(challenge, keys.privateKey);
+
+    const path = getTeamPath(this.team.name);
+    const message = `Proof: found flag for ${challenge.id}`;
+
+    const content = Buffer.from(proof).toString("base64");
+
+    await this._push(message, path, content, "submissions.csv");
   }
 
   async _lookupFlag(flag, challenge) {
@@ -63,14 +72,25 @@ export default class NIZKCTF {
     return keys;
   }
 
-  async _push(message, path, content, pullRequest = true) {
+  async _createProof(challenge, privateKey) {
+    const decodedTeamSk = Buffer.from(this.team.sign_sk, "base64");
+
+    const membershipProof = await libsodium.cryptoSign(
+      challenge.id,
+      decodedTeamSk
+    );
+    const proof = await libsodium.cryptoSign(membershipProof, privateKey);
+    return proof;
+  }
+
+  async _push(message, path, content, fileName, pullRequest = true) {
     await this._pull();
     const encodedContent = new Buffer(content).toString("base64");
 
     const branch = await libsodium.randomString(10);
 
     const ref = `refs/heads/${branch}`;
-    const fileName = `${path}/team.json`;
+    const file = `${path}/${fileName}`;
 
     const branches = await this.github.listBranches(
       this.local.owner,
@@ -90,7 +110,7 @@ export default class NIZKCTF {
     await this.github.createOrUpdateFile(
       this.local.owner,
       this.local.repository,
-      fileName,
+      file,
       message,
       encodedContent,
       branch

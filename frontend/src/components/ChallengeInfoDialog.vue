@@ -38,8 +38,7 @@
 <script>
 import { mapState } from "vuex";
 import showdown from "showdown";
-// import fromUnixTime from "date-fns/fromUnixTime";
-// import format from "date-fns/format";
+
 import { API } from "@/services/api";
 
 import NIZKCTF from "@/services/nizkctf";
@@ -57,7 +56,9 @@ export default {
   computed: mapState({
     language: state => state.language,
     teamKey: state => state.team,
-    token: state => state.token
+    token: state => state.token,
+    user: state => state.user,
+    repository: state => state.repository
   }),
   methods: {
     loadDescription(challenge) {
@@ -67,13 +68,13 @@ export default {
       });
     },
     submitFlag() {
-      const local = { owner: "", repository: "" };
+      const local = { owner: this.user.login, repository: this.repository };
       const upstream = {
         owner: config.owner,
         repository: config.submissionsRepo
       };
 
-      const nizkctf = new NIZKCTF(this.token, local, upstream);
+      const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
       nizkctf.submitFlag(this.flag, this.info);
     }
   },
