@@ -45,6 +45,6 @@ export default {
 
   async cryptoSign(message, privateKey) {
     await libsodium.ready;
-    return await libsodium.crypto_sign(message, privateKey)
+    return await libsodium.crypto_sign(message, privateKey);
   }
 };
