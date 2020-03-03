@@ -176,7 +176,10 @@ export default {
         .catch(err => console.error(err));
     },
     joinTeam() {
-      const team = Buffer(this.encodedTeam, "base64").toString();
+      const team = JSON.parse(
+        JSON.parse(Buffer(this.encodedTeam, "base64").toString())
+      );
+
       this.setTeam(team);
       console.log("Join team", team);
     },
