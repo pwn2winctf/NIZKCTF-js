@@ -19,6 +19,10 @@
     <md-switch :value="this.theme === 'default'" @change="toggleTheme">{{
       $t("darkMode")
     }}</md-switch>
+    <md-field v-if="encodedTeam">
+      <label>{{ $t("encodedTeam") }}</label>
+      <md-input v-model="encodedTeam" type="password" disabled></md-input>
+    </md-field>
   </md-content>
 </template>
 
@@ -33,12 +37,19 @@ export default {
     languages: Object.keys(messages).map(item => ({
       language: item,
       label: messages[item].label
-    }))
+    })),
+    encodedTeam: ""
   }),
+  mounted() {
+    this.encodedTeam = Buffer.from(JSON.stringify(this.teamKey)).toString(
+      "base64"
+    );
+  },
   computed: {
     ...mapState({
       theme: state => state.theme,
-      language: state => state.language
+      language: state => state.language,
+      teamKey: state => state.team
     })
   },
   methods: {
