@@ -81,4 +81,13 @@ export default class GitHub {
     });
     return response.data;
   }
+
+  async getContents(owner, repo, path) {
+    const response = await this.octokit.repos.getContents({
+      owner,
+      repo,
+      path
+    });
+    return response.data;
+  }
 }
