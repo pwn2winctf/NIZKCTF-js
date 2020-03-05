@@ -17,7 +17,7 @@ export default {
     time: "Time",
     close: "Close",
     gettingInformations: "Getting informations",
-    login: "Login",
+    login: "Register / Login",
     logout: "Logout",
     gettingToken: "Getting token",
     gettingTokenInfo:
@@ -33,7 +33,7 @@ export default {
     submit: "Submit",
     teamPrivateKey: "Team private key",
     encodedTeam:
-      "This is your team's private key. Share with your team so they can join the team!",
+      "This is your team's private key. Share with your team so they can join the team!  This key is stored in the local storage and is not linked to your GitHub account.",
     submitFlagField: "Type the flag here",
     router: {
       Home: "Home",
@@ -62,11 +62,11 @@ export default {
     time: "Hora",
     close: "Fechar",
     gettingInformations: "Obtendo informações",
-    login: "Entrar",
+    login: "Registrar / Logar",
     logout: "Sair",
     gettingToken: "Obtendo token",
     gettingTokenInfo:
-      "Esse token será usado para criar o fork do repositório de submissões, para fazer commits em seu nome e criar pull requests.",
+      "Esse token será usado para criar o fork do repositório de submissões, para fazer commits em seu nome e criar pull requests. Este token está armazenado no local storage, ou seja, não está vinculada a sua conta do GitHub.",
     gettingUser: "Obtendo dados do usuário",
     gettingUserInfo: "Nome e outras informações.",
     creatingFork: "Criando fork",
@@ -78,7 +78,7 @@ export default {
     submit: "Enviar",
     teamPrivateKey: "Chave privada do time",
     encodedTeam:
-      "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe!",
+      "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenado no local storage e não está vinculada a sua conta do GitHub.",
     submitFlagField: "Escreva a flag aqui",
     router: {
       Home: "Início",
