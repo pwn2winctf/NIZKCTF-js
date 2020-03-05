@@ -43,9 +43,24 @@ export default class NIZKCTF {
     const path = getTeamPath(this.team.name);
     const message = `Proof: found flag for ${challenge.id}`;
 
-    const content = Buffer.from(proof).toString("base64");
+    const newProof = Buffer.from(proof).toString("base64");
 
-    await this._push(message, path, content, "submissions.csv");
+    let currentContent = newProof;
+
+    this.github
+      .getContents(
+        this.upstream.owner,
+        this.upstream.repository,
+        `${path}/submissions.csv`
+      )
+      .then(({ content }) => {
+        const decodedContent = new Buffer.from(content, "base64").toString();
+
+        currentContent = currentContent.concat("\n", decodedContent);
+      })
+      .catch(() => {});
+
+    await this._push(message, path, currentContent, "submissions.csv");
   }
 
   async _lookupFlag(flag, challenge) {
@@ -85,7 +100,7 @@ export default class NIZKCTF {
 
   async _push(message, path, content, fileName, pullRequest = true) {
     await this._pull();
-    const encodedContent = new Buffer(content).toString("base64");
+    const encodedContent = Buffer.from(content).toString("base64");
 
     const branch = await libsodium.randomString(10);
 
