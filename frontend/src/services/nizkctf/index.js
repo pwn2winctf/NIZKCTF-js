@@ -166,13 +166,14 @@ export default class NIZKCTF {
     return this.github
       .createPullRequest(this.local.owner, this.local.repository, title, head)
       .catch(() => {})
-      .then(pullRequest =>
-        this.github.mergePullRequest(
+      .then(({ head }) => {
+        return this.github.updateRef(
           this.local.owner,
           this.local.repository,
-          pullRequest.number
-        )
-      )
+          "heads/master",
+          head.sha
+        );
+      })
       .catch(() => {});
   }
 }
