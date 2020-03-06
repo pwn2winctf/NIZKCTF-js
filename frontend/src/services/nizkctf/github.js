@@ -49,6 +49,15 @@ export default class GitHub {
     return response.data;
   }
 
+  async mergePullRequest(owner, repo, pull_number) {
+    const response = await this.octokit.pulls.merge({
+      owner,
+      repo,
+      pull_number
+    });
+    return response.data;
+  }
+
   async createBranch(owner, repo, ref, sha) {
     const response = await this.octokit.git.createRef({
       owner,
