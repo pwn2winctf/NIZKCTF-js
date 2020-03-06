@@ -25,13 +25,23 @@
       </div>
     </md-dialog-content>
     <md-dialog-actions>
-      <md-button class="md-raised md-accent" @click="submitFlag">
-        {{ $t("submit") }}
+      <md-button
+        v-if="!loading"
+        class="md-raised md-accent"
+        @click="submitFlag"
+        >{{ $t("submit") }}</md-button
+      >
+      <md-button class="md-primary" @click="onClose">
+        {{ $t("close") }}
       </md-button>
-      <md-button class="md-primary" @click="onClose">{{
-        $t("close")
-      }}</md-button>
     </md-dialog-actions>
+    <md-snackbar
+      md-position="center"
+      :md-duration="4000"
+      :md-active.sync="showSnackbar"
+    >
+      <span>{{ message }}</span>
+    </md-snackbar>
   </md-dialog>
 </template>
 
@@ -51,7 +61,9 @@ export default {
     flag: "",
     loading: true,
     description: "",
-    converter: new showdown.Converter()
+    converter: new showdown.Converter(),
+    showSnackbar: false,
+    message: ""
   }),
   computed: mapState({
     language: state => state.language,
@@ -74,8 +86,17 @@ export default {
         repository: config.submissionsRepo
       };
 
+      this.loading = true;
       const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
-      nizkctf.submitFlag(this.flag, this.info);
+      nizkctf
+        .submitFlag(this.flag, this.info)
+        .then(() => this.showMessage("Submitted"))
+        .catch(err => this.showMessage(err))
+        .finally(() => (this.loading = false));
+    },
+    showMessage(message) {
+      this.message = message;
+      this.showSnackbar = true;
     }
   },
   mounted() {
