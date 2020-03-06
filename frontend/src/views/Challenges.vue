@@ -75,6 +75,7 @@ export default {
           return list;
         }, []);
 
+        this.challenges = datas;
         this.categories = categories;
 
         API.listSolvedChallenges()
@@ -97,7 +98,15 @@ export default {
             this.challenges = challenges;
             this.filteredChallenges = this.challenges;
           })
-          .catch(err => console.error(err));
+          .catch(err => {
+            this.challenges = this.challenges.map(item => ({
+              ...item,
+              solves: 0,
+              points: computeScore(1)
+            }));
+            console.error(err);
+          })
+          .finally(() => (this.filteredChallenges = this.challenges));
       });
   },
   methods: {
