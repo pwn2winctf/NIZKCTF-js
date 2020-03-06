@@ -46,6 +46,7 @@ export default class NIZKCTF {
     const newProof = Buffer.from(proof).toString("base64");
 
     let currentContent = newProof;
+    let shaOfFile = undefined;
 
     this.github
       .getContents(
@@ -53,14 +54,23 @@ export default class NIZKCTF {
         this.upstream.repository,
         `${path}/submissions.csv`
       )
-      .then(({ content }) => {
+      .then(({ sha, content }) => {
         const decodedContent = new Buffer.from(content, "base64").toString();
+        shaOfFile = sha;
 
         currentContent = currentContent.concat("\n", decodedContent);
       })
-      .catch(() => {});
-
-    await this._push(message, path, currentContent, "submissions.csv");
+      .catch(() => {})
+      .finally(() => {
+        this._push(
+          message,
+          path,
+          currentContent,
+          "submissions.csv",
+          true,
+          shaOfFile
+        );
+      });
   }
 
   async _lookupFlag(flag, challenge) {
@@ -98,7 +108,14 @@ export default class NIZKCTF {
     return proof;
   }
 
-  async _push(message, path, content, fileName, pullRequest = true) {
+  async _push(
+    message,
+    path,
+    content,
+    fileName,
+    pullRequest = true,
+    shaOfFile = undefined
+  ) {
     await this._pull();
     const encodedContent = Buffer.from(content).toString("base64");
 
@@ -128,7 +145,8 @@ export default class NIZKCTF {
       file,
       message,
       encodedContent,
-      branch
+      branch,
+      shaOfFile
     );
 
     if (pullRequest) {
@@ -142,21 +160,20 @@ export default class NIZKCTF {
   }
 
   async _pull() {
-    const ref = "heads/master";
+    const title = "Update from upstream";
+    const head = `${this.upstream.owner}:master`;
 
-    const [upstreamRef, localRef] = await Promise.all([
-      this.github.getRef(this.upstream.owner, this.upstream.repository, ref),
-      this.github.getRef(this.local.owner, this.local.repository, ref)
-    ]);
-
-    if (upstreamRef.object.sha !== localRef.object.sha) {
-      await this.github.updateRef(
-        this.local.owner,
-        this.local.repository,
-        ref,
-        upstreamRef.object.sha
-      );
-    }
+    return this.github
+      .createPullRequest(this.local.owner, this.local.repository, title, head)
+      .catch(() => {})
+      .then(pullRequest =>
+        this.github.mergePullRequest(
+          this.local.owner,
+          this.local.repository,
+          pullRequest.number
+        )
+      )
+      .catch(() => {});
   }
 }
 
