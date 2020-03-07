@@ -48,7 +48,7 @@ export default class NIZKCTF {
     let currentContent = newProof;
     let shaOfFile = undefined;
 
-    this.github
+    return this.github
       .getContents(
         this.upstream.owner,
         this.upstream.repository,
@@ -62,7 +62,7 @@ export default class NIZKCTF {
       })
       .catch(() => {})
       .finally(() => {
-        this._push(
+        return this._push(
           message,
           path,
           currentContent,
