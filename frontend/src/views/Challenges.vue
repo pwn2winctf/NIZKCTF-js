@@ -61,7 +61,8 @@ export default {
     },
     filteredChallenges: [],
     categories: [],
-    selectedCategory: undefined
+    selectedCategory: undefined,
+    challengesPolling: undefined
   }),
   computed: {
     ...mapState({
@@ -69,66 +70,68 @@ export default {
     })
   },
   created() {
-    const getDatas = API.getChallenges()
-      .then(response => {
-        const challenges = response.data;
-        return Promise.all(challenges.map(item => API.getChallenge(item)));
-      })
-      .then(list => {
-        const datas = list.map(({ data }) => data);
-        const categories = datas.reduce((list, item) => {
-          item.tags.forEach(tag => {
-            const category = list.find(item => item === tag);
+    const getDatas = () =>
+      API.getChallenges()
+        .then(response => {
+          const challenges = response.data;
+          return Promise.all(challenges.map(item => API.getChallenge(item)));
+        })
+        .then(list => {
+          const datas = list.map(({ data }) => data);
+          const categories = datas.reduce((list, item) => {
+            item.tags.forEach(tag => {
+              const category = list.find(item => item === tag);
 
-            !category && list.push(tag);
-          });
-          return list;
-        }, []);
+              !category && list.push(tag);
+            });
+            return list;
+          }, []);
 
-        this.challenges = datas;
-        this.categories = categories;
+          this.challenges = datas;
+          this.categories = categories;
 
-        API.listSolvedChallenges()
-          .then(({ data }) => {
-            const solves = data.standings
-              ? data.standings.reduce((reducer, { taskStats }) => {
-                  Object.keys(taskStats).forEach(chall => {
-                    reducer[chall]++ || (reducer[chall] = 1);
-                  });
-                  return reducer;
-                }, {})
-              : [];
-
-            const solved =
-              this.teamKey &&
-              data.standings.some(item => item.team === this.teamKey.name)
-                ? data.standings.find(item => item.team === this.teamKey.name)
-                    .taskStats
+          API.listSolvedChallenges()
+            .then(({ data }) => {
+              const solves = data.standings
+                ? data.standings.reduce((reducer, { taskStats }) => {
+                    Object.keys(taskStats).forEach(chall => {
+                      reducer[chall]++ || (reducer[chall] = 1);
+                    });
+                    return reducer;
+                  }, {})
                 : [];
 
-            const challenges = datas.map(item => ({
-              ...item,
-              solved: !!solved[item.title],
-              solves: solves[item.id] || 0,
-              points: computeScore((solves[item.id] || 0) + 1)
-            }));
-            challenges.sort((a, b) => a.title.localeCompare(b.title));
-            this.challenges = challenges;
-            this.filteredChallenges = this.challenges;
-          })
-          .catch(err => {
-            this.challenges = this.challenges.map(item => ({
-              ...item,
-              solved: false,
-              solves: 0,
-              points: computeScore(1)
-            }));
-            console.error(err);
-          })
-          .finally(() => (this.filteredChallenges = this.challenges));
-      });
+              const solved =
+                this.teamKey &&
+                data.standings.some(item => item.team === this.teamKey.name)
+                  ? data.standings.find(item => item.team === this.teamKey.name)
+                      .taskStats
+                  : [];
 
-    createPolling(getDatas);
+              const challenges = datas.map(item => ({
+                ...item,
+                solved: !!solved[item.title],
+                solves: solves[item.id] || 0,
+                points: computeScore((solves[item.id] || 0) + 1)
+              }));
+              challenges.sort((a, b) => a.title.localeCompare(b.title));
+              this.challenges = challenges;
+              this.filteredChallenges = this.challenges;
+            })
+            .catch(err => {
+              this.challenges = this.challenges.map(item => ({
+                ...item,
+                solved: false,
+                solves: 0,
+                points: computeScore(1)
+              }));
+              console.error(err);
+            })
+            .finally(() => (this.filteredChallenges = this.challenges));
+        });
+
+    this.challengesPolling = createPolling(getDatas);
+    this.challengesPolling.start();
   },
   methods: {
     filterChallenges(category) {
@@ -156,6 +159,9 @@ export default {
     closePopup() {
       this.popup.isOpen = false;
     }
+  },
+  beforeDestroy() {
+    this.challengesPolling.stop();
   }
 };
 </script>
