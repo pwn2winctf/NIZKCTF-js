@@ -47,7 +47,7 @@
 import { mapState } from "vuex";
 
 import { API } from "@/services/api";
-import { computeScore } from "@/utils";
+import { computeScore, createPolling } from "@/utils";
 
 import ChallengeInfoDialog from "@/components/ChallengeInfoDialog.vue";
 
@@ -69,7 +69,7 @@ export default {
     })
   },
   created() {
-    API.getChallenges()
+    const getDatas = API.getChallenges()
       .then(response => {
         const challenges = response.data;
         return Promise.all(challenges.map(item => API.getChallenge(item)));
@@ -127,6 +127,8 @@ export default {
           })
           .finally(() => (this.filteredChallenges = this.challenges));
       });
+
+    createPolling(getDatas);
   },
   methods: {
     filterChallenges(category) {
