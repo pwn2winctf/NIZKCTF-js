@@ -14,10 +14,13 @@
       <md-card
         v-for="challenge in filteredChallenges"
         v-bind:key="challenge.id"
-        class="md-accent"
+        :class="!challenge.solved && 'md-accent'"
         md-with-hover
       >
-        <div @click="selectChallenge(challenge)" style="height:100%">
+        <div
+          @click="!challenge.solved && selectChallenge(challenge)"
+          style="height:100%"
+        >
           <md-ripple class="card">
             <md-card-content>
               <div class="md-title">{{ challenge.title }}</div>
@@ -41,6 +44,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import { API } from "@/services/api";
 import { computeScore } from "@/utils";
 
@@ -58,6 +63,11 @@ export default {
     categories: [],
     selectedCategory: undefined
   }),
+  computed: {
+    ...mapState({
+      teamKey: state => state.team
+    })
+  },
   created() {
     API.getChallenges()
       .then(response => {
@@ -89,8 +99,16 @@ export default {
                 }, {})
               : [];
 
+            const solved =
+              this.teamKey &&
+              data.standings.some(item => item.team === this.teamKey.name)
+                ? data.standings.find(item => item.team === this.teamKey.name)
+                    .taskStats
+                : [];
+
             const challenges = datas.map(item => ({
               ...item,
+              solved: !!solved[item.title],
               solves: solves[item.id] || 0,
               points: computeScore((solves[item.id] || 0) + 1)
             }));
@@ -101,6 +119,7 @@ export default {
           .catch(err => {
             this.challenges = this.challenges.map(item => ({
               ...item,
+              solved: false,
               solves: 0,
               points: computeScore(1)
             }));
