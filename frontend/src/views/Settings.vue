@@ -16,13 +16,16 @@
         >
       </md-select>
     </md-field>
-    <md-switch :value="this.theme === 'default'" @change="toggleTheme">{{
-      $t("darkMode")
-    }}</md-switch>
-    <md-field v-if="encodedTeam">
-      <label>{{ $t("encodedTeam") }}</label>
-      <md-input v-model="encodedTeam" type="password" disabled></md-input>
-    </md-field>
+    <md-switch :value="this.theme === 'default'" @change="toggleTheme">
+      {{ $t("darkMode") }}
+    </md-switch>
+    <div v-if="teamKey">
+      <p>{{ $t("encodedTeam") }}</p>
+      <md-field>
+        <label>{{ $t("teamPrivateKey") }}</label>
+        <md-input v-model="encodedTeam" type="password" disabled></md-input>
+      </md-field>
+    </div>
   </md-content>
 </template>
 
