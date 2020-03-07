@@ -14,7 +14,7 @@
       <md-card
         v-for="challenge in filteredChallenges"
         v-bind:key="challenge.id"
-        :class="!challenge.solved && 'md-accent'"
+        :class="challenge.solved ? 'solved-challenge' : 'md-accent'"
         md-with-hover
       >
         <div
@@ -205,5 +205,9 @@ export default {
 
 .card-tag {
   margin-bottom: 2px;
+}
+
+.solved-challenge {
+  background-color: #77dd77 !important;
 }
 </style>
