@@ -6,7 +6,11 @@
     <md-content v-else>
       <team-info :info="popup" :on-close="closePopup" />
       <div class="small">
-        <LineChart :data="this.data" :options="chartOptions" :height="300" />
+        <LineChart
+          :chart-data="this.data"
+          :options="chartOptions"
+          :height="300"
+        />
       </div>
       <md-table v-model="teams" md-sort="pos" md-sort-order="asc">
         <md-table-row
@@ -14,12 +18,12 @@
           slot-scope="{ item }"
           @click="openPopup(item)"
         >
-          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
-            item.pos
-          }}</md-table-cell>
-          <md-table-cell :md-label="$t('team')" md-sort-by="team">{{
-            item.name
-          }}</md-table-cell>
+          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>
+            {{ item.pos }}
+          </md-table-cell>
+          <md-table-cell :md-label="$t('team')" md-sort-by="team">
+            {{ item.name }}
+          </md-table-cell>
           <md-table-cell :md-label="$t('country')">
             <country-flag
               class="flags"
@@ -29,9 +33,9 @@
               size="normal"
             />
           </md-table-cell>
-          <md-table-cell :md-label="$t('score')" md-sort-by="score">{{
-            item.score
-          }}</md-table-cell>
+          <md-table-cell :md-label="$t('score')" md-sort-by="score">
+            {{ item.score }}
+          </md-table-cell>
         </md-table-row>
       </md-table>
     </md-content>
