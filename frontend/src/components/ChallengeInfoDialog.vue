@@ -31,9 +31,9 @@
         @click="submitFlag"
         >{{ $t("submit") }}</md-button
       >
-      <md-button class="md-primary" @click="onClose">
-        {{ $t("close") }}
-      </md-button>
+      <md-button class="md-primary" @click="onClose">{{
+        $t("close")
+      }}</md-button>
     </md-dialog-actions>
     <md-snackbar
       md-position="center"
@@ -90,7 +90,7 @@ export default {
       const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
       nizkctf
         .submitFlag(this.flag, this.info)
-        .then(() => this.showMessage("Submitted"))
+        .then(() => this.showMessage(this.$t("flagFound")))
         .catch(err => this.showMessage(err))
         .finally(() => (this.loading = false));
     },

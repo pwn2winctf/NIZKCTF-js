@@ -29,9 +29,10 @@ export default {
     createTeam: "Create team",
     joinTeam: "Join team",
     teamName: "Team name",
-    teamCountries: "Team coutries",
+    teamCountries: "Team countries",
     submit: "Submit",
     teamPrivateKey: "Team private key",
+    flagFound: "Flag found, submitted!",
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!  This key is stored in the local storage and is not linked to your GitHub account.",
     submitFlagField: "Type the flag here",
@@ -77,6 +78,7 @@ export default {
     teamCountries: "Países do time",
     submit: "Enviar",
     teamPrivateKey: "Chave privada do time",
+    flagFound: "Flag encontrada, enviado!",
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenado no local storage e não está vinculada a sua conta do GitHub.",
     submitFlagField: "Escreva a flag aqui",
