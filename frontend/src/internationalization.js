@@ -100,7 +100,8 @@ export default {
     errors: {
       teamName: "Nome do time inválido.",
       privateKey: "Chave privada é inválida.",
-      maxMembers: "Número de membros inválido. São permitidos até {max} membros."
+      maxMembers:
+        "Número de membros inválido. São permitidos até {max} membros."
     }
   }
 };
