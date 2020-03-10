@@ -38,54 +38,66 @@
       :md-editable="false"
       :md-done="!!teamKey"
     >
-      <div>
-        <md-radio v-model="team.option" value="create">{{
-          $t("createTeam")
-        }}</md-radio>
-        <md-radio v-model="team.option" value="join">{{
-          $t("joinTeam")
-        }}</md-radio>
-      </div>
-      <div v-if="team.option === 'create'">
-        <md-field>
-          <label>{{ $t("teamName") }}</label>
-          <md-input v-model="team.name" maxlength="30"></md-input>
-        </md-field>
-        <md-content class="md-scrollbar">
-          <h2 class="md-title">{{ $t("teamCountries") }}</h2>
+      <form @submit="submit">
+        <p v-if="errors.team.length">
+          <b>{{ $t("fixErrors") }}</b>
+        </p>
+        <ul>
+          <li v-for="(error, idx) in errors.team" :key="idx">{{ error }}</li>
+        </ul>
+        <div>
+          <md-radio v-model="team.option" value="create">{{
+            $t("createTeam")
+          }}</md-radio>
+          <md-radio v-model="team.option" value="join">{{
+            $t("joinTeam")
+          }}</md-radio>
+        </div>
+        <div v-if="team.option === 'create'">
           <md-field>
-            <md-icon>search</md-icon>
+            <label>{{ $t("teamName") }}</label>
             <md-input
-              v-model="countryFilter"
-              placeholder="ex. Japan"
+              v-model="team.name"
+              :maxlength="maxTeamNameLength"
+              required
             ></md-input>
           </md-field>
-          <md-list style="height:300px; overflow:scroll">
-            <md-list-item v-for="item in filteredCountries" :key="item.key">
-              <md-checkbox v-model="team.countries" :value="item.key">
-                {{ item.name }}
-              </md-checkbox>
-              <country-flag :country="item.key" size="normal" />
-            </md-list-item>
-          </md-list>
-        </md-content>
-        <div style="display:flex; justify-content:center;">
-          <md-button class="md-raised md-primary" @click="createTeam">{{
-            $t("submit")
-          }}</md-button>
+          <md-content class="md-scrollbar">
+            <h2 class="md-title">{{ $t("teamCountries") }}</h2>
+            <md-field>
+              <md-icon>search</md-icon>
+              <md-input
+                v-model="countryFilter"
+                placeholder="ex. Japan"
+              ></md-input>
+            </md-field>
+            <md-list style="height:300px; overflow:scroll">
+              <md-list-item v-for="item in filteredCountries" :key="item.key">
+                <md-checkbox v-model="team.countries" :value="item.key">
+                  {{ item.name }}
+                </md-checkbox>
+                <country-flag :country="item.key" size="normal" />
+              </md-list-item>
+            </md-list>
+          </md-content>
+          <div style="display:flex; justify-content:center;">
+            <md-button class="md-raised md-primary" type="submit">{{
+              $t("submit")
+            }}</md-button>
+          </div>
         </div>
-      </div>
-      <div v-else>
-        <md-field>
-          <label>{{ $t("teamPrivateKey") }}</label>
-          <md-input v-model="encodedTeam"></md-input>
-        </md-field>
-        <div style="display:flex; justify-content:center;">
-          <md-button class="md-raised md-primary" @click="joinTeam">
-            {{ $t("submit") }}
-          </md-button>
+        <div v-else>
+          <md-field>
+            <label>{{ $t("teamPrivateKey") }}</label>
+            <md-input v-model="encodedTeam" required></md-input>
+          </md-field>
+          <div style="display:flex; justify-content:center;">
+            <md-button class="md-raised md-primary" type="submit">
+              {{ $t("submit") }}
+            </md-button>
+          </div>
         </div>
-      </div>
+      </form>
     </md-step>
     <md-snackbar
       md-position="center"
@@ -119,7 +131,8 @@ export default {
     active: "token",
     errors: {
       token: undefined,
-      user: undefined
+      user: undefined,
+      team: []
     },
     team: {
       option: "create",
@@ -132,7 +145,8 @@ export default {
     countryFilter: "",
     filteredCountries: [],
     showSnackbar: false,
-    message: ""
+    message: "",
+    maxTeamNameLength: config.maxTeamNameLength
   }),
   computed: {
     ...mapGetters({
@@ -167,6 +181,49 @@ export default {
     showMessage(message) {
       this.message = message;
       this.showSnackbar = true;
+    },
+    submit(event) {
+      event.preventDefault();
+
+      if (!this.isValid()) {
+        return;
+      }
+      if (this.team.option === "create") {
+        this.createTeam();
+      } else {
+        this.joinTeam();
+      }
+    },
+    isValid() {
+      this.errors.team = [];
+      if (this.team.option === "create") {
+        const { name, countries } = this.team;
+        if (!name || name.length > config.maxTeamNameLength) {
+          this.showMessage(this.$t("errors.teamName"));
+          this.errors.team.push(this.$t("errors.teamName"));
+          return false;
+        }
+
+        if (countries.length > config.maxMembers) {
+          this.showMessage(
+            this.$t("errors.maxMembers", { max: config.maxMembers })
+          );
+          this.errors.team.push(
+            this.$t("errors.maxMembers", { max: config.maxMembers })
+          );
+          return false;
+        }
+        return true;
+      } else {
+        try {
+          JSON.parse(Buffer(this.encodedTeam, "base64").toString());
+          return true;
+        } catch (err) {
+          this.showMessage(this.$t("errors.privateKey"));
+          this.errors.team.push(this.$t("errors.privateKey"));
+          return false;
+        }
+      }
     },
     async createTeam() {
       const local = { owner: this.user.login, repository: this.repository };
