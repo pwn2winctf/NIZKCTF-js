@@ -31,6 +31,7 @@ export default {
     teamName: "Team name",
     teamCountries: "Team countries",
     submit: "Submit",
+    fixErrors: "Please fix the following error(s):",
     teamPrivateKey: "Team private key",
     flagFound: "Flag found, submitted!",
     encodedTeam:
@@ -43,6 +44,11 @@ export default {
       Rules: "Rules",
       Settings: "Settings",
       Logged: "Getting informations"
+    },
+    errors: {
+      teamName: "Invalid team name.",
+      privateKey: "Private key is invalid.",
+      maxMembers: "Invalid number of members. Up to {max} members are allowed."
     }
   },
   pt: {
@@ -77,6 +83,7 @@ export default {
     teamName: "Nome do time",
     teamCountries: "Países do time",
     submit: "Enviar",
+    fixErrors: "Por favor, corrija o(s) seguinte(s) erro(s):",
     teamPrivateKey: "Chave privada do time",
     flagFound: "Flag encontrada, enviado!",
     encodedTeam:
@@ -89,6 +96,11 @@ export default {
       Rules: "Regras",
       Settings: "Configurações",
       Logged: "Obtendo informações"
+    },
+    errors: {
+      teamName: "Nome do time inválido.",
+      privateKey: "Chave privada é inválida.",
+      maxMembers: "Número de membros inválido. São permitidos até {max} membros."
     }
   }
 };
