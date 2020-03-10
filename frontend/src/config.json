@@ -11,5 +11,7 @@
   "owner": "ctf-br",
   "submissionsRepo": "ranking_submissions",
   "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
-  "deployPath": "/NIZKCTF-js"
+  "deployPath": "/NIZKCTF-js",
+  "maxMembers": 5,
+  "maxTeamNameLength": 30
 }
