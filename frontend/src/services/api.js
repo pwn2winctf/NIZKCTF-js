@@ -8,7 +8,8 @@ const api = axios.create({
   baseURL: config.submissionsBasePath
 });
 
-const now = () => getTime(new Date());
+const now = (timer = 1000 * 60 * 10) =>
+  Math.floor(+getTime(new Date()) / timer);
 
 export const API = {
   listNews: () => api.get(`/news.json?_${now()}`),
