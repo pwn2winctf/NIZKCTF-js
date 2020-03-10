@@ -11,15 +11,20 @@
           md-direction="top-start"
           :md-active.sync="cardVisible"
         >
-          <md-button class="md-icon-button" md-menu-trigger v-if="this.user">
-            <md-avatar class="md-avatar-icon">
+          <md-button class="md-icon-button" md-menu-trigger>
+            <md-avatar v-if="this.user" class="md-avatar-icon">
               <img :src="this.user.avatar_url" alt="Avatar" />
             </md-avatar>
+            <md-icon v-else>person</md-icon>
           </md-button>
-          <md-button :href="authLink" v-else>{{ $t("login") }}</md-button>
           <md-menu-content v-if="this.token">
             <md-list>
               <md-list-item @click="logout">{{ $t("logout") }}</md-list-item>
+            </md-list>
+          </md-menu-content>
+          <md-menu-content v-else>
+            <md-list>
+              <md-list-item :href="authLink">{{ $t("login") }}</md-list-item>
             </md-list>
           </md-menu-content>
         </md-menu>
