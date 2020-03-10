@@ -16,7 +16,7 @@ If you get the message "Flag found, submitted", wait some minutes, the process m
 
 **4 - When do the nicknames appear on the members list (after left click on the team name)?**
 
-Nicknames appear when the player submits any correct flag
+Nicknames appear when the player submits any correct flag.
 
 **5 - How much time does the scoreboard take to update?**
 
