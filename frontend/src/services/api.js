@@ -35,5 +35,9 @@ export const API = {
     return api.get(`/${path}/members.json?_${now()}`);
   },
   getAccessToken: code =>
-    api.get(`/authenticate/${code}`, { baseURL: config.gatekeeperBasePath })
+    api.get(`/authenticate/${code}`, { baseURL: config.gatekeeperBasePath }),
+  getFaq: async () => {
+    const response = await api.get("/FAQ.md", { baseURL: config.faqBasePath });
+    return response.data;
+  }
 };
