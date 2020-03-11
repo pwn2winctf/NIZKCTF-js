@@ -7,6 +7,7 @@ import Rank from "../views/Rank.vue";
 import Rules from "../views/Rules.vue";
 import Challenges from "../views/Challenges.vue";
 import AfterLogin from "../views/AfterLogin.vue";
+import Faq from "../views/Faq.vue";
 
 import config from "@/config.json";
 
@@ -42,6 +43,11 @@ const routes = [
     path: "/after-login",
     name: "Logged",
     component: AfterLogin
+  },
+  {
+    path: "/faq",
+    name: "Faq",
+    component: Faq
   }
   // {
   //   path: "/about",

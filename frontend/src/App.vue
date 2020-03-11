@@ -62,6 +62,11 @@
           <md-icon>settings</md-icon>
           <span class="md-list-item-text">{{ $t("router.Settings") }}</span>
         </md-list-item>
+
+        <md-list-item to="/faq">
+          <md-icon>help</md-icon>
+          <span class="md-list-item-text">{{ $t("router.Faq") }}</span>
+        </md-list-item>
       </md-list>
     </md-app-drawer>
     <md-app-content>

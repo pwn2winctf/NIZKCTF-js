@@ -43,7 +43,8 @@ export default {
       Rank: "Rank",
       Rules: "Rules",
       Settings: "Settings",
-      Logged: "Getting informations"
+      Logged: "Getting informations",
+      Faq: "FAQ"
     },
     errors: {
       teamName: "Invalid team name.",
@@ -95,7 +96,8 @@ export default {
       Rank: "Rank",
       Rules: "Regras",
       Settings: "Configurações",
-      Logged: "Obtendo informações"
+      Logged: "Obtendo informações",
+      Faq: "FAQ"
     },
     errors: {
       teamName: "Nome do time inválido.",
