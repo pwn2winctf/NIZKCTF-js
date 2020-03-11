@@ -37,6 +37,8 @@ export default {
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!  This key is stored in the browser and is not linked to your GitHub account.",
     submitFlagField: "Type the flag here",
+    teamCreated: "Team created",
+    saveYourTeamSecret: "Save <strong>NOW</strong> your team's private key!",
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -90,6 +92,9 @@ export default {
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenada no seu navegador e não está vinculada a sua conta do GitHub.",
     submitFlagField: "Escreva a flag aqui",
+    teamCreated: "Time criado",
+    saveYourTeamSecret:
+      "Salve <strong>AGORA</strong> a chave privada do seu time!",
     router: {
       Home: "Início",
       Challenges: "Desafios",

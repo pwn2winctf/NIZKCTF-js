@@ -106,6 +106,11 @@
     >
       <span>{{ message }}</span>
     </md-snackbar>
+    <md-dialog-alert
+      :md-active.sync="createdTeam"
+      :md-title="$t('teamCreated')"
+      :md-content="$t('saveYourTeamSecret')"
+    />
   </md-steppers>
 </template>
 
@@ -128,6 +133,7 @@ export default {
   name: "AfterLogin",
   components: { CountryFlag },
   data: () => ({
+    createdTeam: true,
     active: "token",
     errors: {
       token: undefined,
@@ -242,7 +248,7 @@ export default {
           this.encodedTeam = Buffer.from(JSON.stringify(team)).toString(
             "base64"
           );
-          this.showMessage("Created team");
+          this.showMessage(this.$t("teamCreated"));
         })
         .catch(err => {
           this.showMessage(err);
@@ -308,6 +314,9 @@ export default {
       this.filteredCountries = this.countries.filter(
         item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
       );
+    },
+    encodedTeam(value) {
+      this.createdTeam = value && this.team.option == "create";
     }
   }
 };
