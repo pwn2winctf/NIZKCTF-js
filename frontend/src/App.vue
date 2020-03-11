@@ -40,7 +40,7 @@
         </div>
       </md-toolbar>
       <md-list>
-        <md-list-item to="/">
+        <md-list-item to="/" exact>
           <md-icon>home</md-icon>
           <span class="md-list-item-text">{{ $t("router.Home") }}</span>
         </md-list-item>
