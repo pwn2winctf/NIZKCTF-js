@@ -1,5 +1,10 @@
 <template>
   <md-content v-if="encodedTeam && team.option == 'create'">
+    <md-dialog-alert
+      :md-active.sync="createdTeam"
+      :md-title="$t('teamCreated')"
+      :md-content="$t('saveYourTeamSecret')"
+    />
     <p>{{ $t("encodedTeam") }}</p>
     <md-field>
       <md-textarea v-model="encodedTeam" md-autogrow disabled></md-textarea>
@@ -106,11 +111,6 @@
     >
       <span>{{ message }}</span>
     </md-snackbar>
-    <md-dialog-alert
-      :md-active.sync="createdTeam"
-      :md-title="$t('teamCreated')"
-      :md-content="$t('saveYourTeamSecret')"
-    />
   </md-steppers>
 </template>
 
@@ -133,7 +133,7 @@ export default {
   name: "AfterLogin",
   components: { CountryFlag },
   data: () => ({
-    createdTeam: true,
+    createdTeam: false,
     active: "token",
     errors: {
       token: undefined,
@@ -249,6 +249,7 @@ export default {
             "base64"
           );
           this.showMessage(this.$t("teamCreated"));
+          this.createdTeam = true;
         })
         .catch(err => {
           this.showMessage(err);
@@ -314,9 +315,6 @@ export default {
       this.filteredCountries = this.countries.filter(
         item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
       );
-    },
-    encodedTeam(value) {
-      this.createdTeam = value && this.team.option == "create";
     }
   }
 };
