@@ -6,6 +6,9 @@
       </md-button>
       <span class="md-title">{{ $t(`router.${this.$route.name}`) }}</span>
       <div class="md-toolbar-section-end">
+        <div class="teamName" v-if="this.user">
+          {{ teamName }}
+        </div>
         <md-menu
           md-size="big"
           md-direction="top-start"
@@ -90,7 +93,8 @@ export default {
   computed: mapState({
     theme: state => state.theme,
     user: state => state.user,
-    token: state => state.token
+    token: state => state.token,
+    teamName: state => state.team && state.team.name
   }),
   methods: {
     ...mapActions(["setUser", "setToken", "setRepository"]),
@@ -112,5 +116,10 @@ export default {
 <style type="sass" scoped>
 .container {
   width: 100%;
+}
+
+.teamName {
+  padding-left: 8px;
+  padding-right: 8px;
 }
 </style>
