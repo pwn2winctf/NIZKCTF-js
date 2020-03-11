@@ -1,6 +1,7 @@
 {
   "submissionsBasePath": "https://ctf-br.github.io/ranking_submissions",
   "challegesBasePath": "https://ctf-br.github.io/ranking",
+  "faqBasePath": "https://pwn2.win/NIZKCTF-js/",
   "dynamic_scoring": {
     "K": 80.0,
     "V": 3.0,
