@@ -23,7 +23,7 @@
       <p>{{ $t("encodedTeam") }}</p>
       <md-field>
         <label>{{ $t("teamPrivateKey") }}</label>
-        <md-input v-model="encodedTeam" type="password" disabled></md-input>
+        <md-textarea v-model="encodedTeam" readonly rows="4"></md-textarea>
       </md-field>
     </div>
   </md-content>
