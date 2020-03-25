@@ -4,7 +4,7 @@ If you want to learn more about our Non-Interactive Zero-Knowledge (NIZK) platfo
 
 **1 - Why do I need to login with my GitHub account?**
 
-Among the technologies we use to make our platform auditable by anyone, GitHub is one of them. You can make an exclusive account for the CTF (it’s very fast, so fast when registering on ctfd), if you wish, or use your personal account. The only permission we need is access to your public repos. For the login process to run smoothly, make sure you are already logged in to GitHub before registering.
+Among the technologies we use to make our platform auditable by anyone, GitHub is one of them. You can make an exclusive account for the CTF (it’s very fast, so fast when registering on ctfd), if you wish, or use your personal account. The only permission we need is access to your public repos. For the login process to run as expected, make sure you are already logged in to GitHub before registering.
 
 **2 - [IMPORTANT] Where is the “team secret” stored?**
 
