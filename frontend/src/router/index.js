@@ -68,8 +68,12 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (store.getters.token && !store.getters.team && to.path !== '/after-login') {
-    next('/after-login');
+  if (
+    store.getters.token &&
+    !store.getters.team &&
+    to.path !== "/after-login"
+  ) {
+    next("/after-login");
   } else {
     next();
   }
