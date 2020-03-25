@@ -40,12 +40,12 @@ export const API = {
     const response = await api.get("/FAQ.md", { baseURL: config.faqBasePath });
     return response.data;
   },
-  getRules: async (language) => {
-    const file = language === 'en' ? 'rules.md' : 'regras.md';
+  getRules: async language => {
+    const file = language === "en" ? "rules.md" : "regras.md";
 
     const response = await api.get(`/${file}`, {
       baseURL: config.challegesBasePath
     });
-    return response.data
+    return response.data;
   }
 };
