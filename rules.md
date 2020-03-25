@@ -95,5 +95,5 @@ The winner team will be the one to score the largest within the 48 hours. In the
 
 If you have any questions, contact us in our e-mail elt *at* ctf-br dot org.
 
-###### For the first time, these tiny letters on the bottom of the screen are not a prank. \o/ if you got to this point, means that you probably read all our informations and instructions. And for that, we will award your team with extra points in the competition, after all, reading is FUNDAMENTAL for a competition like this. Use the flag "CTF-BR{RTFM_1s_4_g00d_3xpr3ss10n_v6.0}" on the challenge "Bonus" during the day of the event and guarantee your extra score! ;)
+###### For the first time, these tiny letters on the bottom of the screen are not a prank. \o/ if you got to this point, means that you probably read all our informations and instructions. And for that, we will award your team with extra points in the competition, after all, reading is FUNDAMENTAL for a competition like this. Use the flag "CTF-BR{RTFM\_1s\_4\_g00d\_3xpr3ss10n\_v6.0}" on the challenge "Bonus" during the day of the event and guarantee your extra score! ;)
 
