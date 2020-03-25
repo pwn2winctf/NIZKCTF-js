@@ -1,6 +1,6 @@
 ## Who is behind it?
 
-The Pwn2Win CTF is being organized by members from '[Epic Leet Team](https://ctftime.org/team/9061){:target="_blank"}', a brazilian CTF team.
+The Pwn2Win CTF is being organized by members from '[Epic Leet Team](https://ctftime.org/team/9061)', a brazilian CTF team.
 
 ## When:
 
@@ -17,13 +17,13 @@ TBA
 
 ## Follow us:
 
-[@eltctfbr](https://twitter.com/eltctfbr){:target="_blank"}
+[@eltctfbr](https://twitter.com/eltctfbr)
 
-[@pwn2win](https://twitter.com/pwn2win){:target="_blank"}
+[@pwn2win](https://twitter.com/pwn2win)
 
 ## Illustration:
 
-If you want to help us promoting the event, see the illustration of this year's story [here.](http://bit.ly/Illustration-Pwn2Win-2020){:target="_blank"}
+If you want to help us promoting the event, see the illustration of this year's story [here.](http://bit.ly/Illustration-Pwn2Win-2020)
 
 ## Prizes:
 
@@ -79,15 +79,15 @@ The winner team will be the one to score the largest within the 48 hours. In the
 
 ## Sponsors:
 
-![](http://pwn2win.party/imgs/aperture_science.png){:target="_blank"}
+![](http://pwn2win.party/imgs/aperture_science.png)
 
 ## Infra Sponsor:
 
-[![](http://pwn2win.party/imgs/gcp.png)](https://g.co/cloud){:target="_blank"}
+[![](http://pwn2win.party/imgs/gcp.png)](https://g.co/cloud)
 
 ## Partners:
 
-[![](https://pwn2win.party/imgs/ctfbr_logo.png)](https://ctf-br.org/){:target="_blank"}  [![](https://pwn2win.party/imgs/logoUFSCar.svg)](https://www2.ufscar.br/){:target="_blank"}
+[![](https://pwn2win.party/imgs/ctfbr_logo.png)](https://ctf-br.org/)  [![](https://pwn2win.party/imgs/logoUFSCar.svg)](https://www2.ufscar.br/)
 
               
 
