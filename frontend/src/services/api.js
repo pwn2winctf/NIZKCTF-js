@@ -44,7 +44,7 @@ export const API = {
     const file = language === "en" ? "rules.md" : "regras.md";
 
     const response = await api.get(`/${file}`, {
-      baseURL: config.challegesBasePath
+      baseURL: config.faqBasePath
     });
     return response.data;
   }

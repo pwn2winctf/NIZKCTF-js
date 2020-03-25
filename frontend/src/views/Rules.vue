@@ -26,7 +26,7 @@ export default {
   }),
   mounted() {
     const converter = new showdown.Converter();
-    API.getRule(this.language)
+    API.getRules(this.language)
       .then(data => (this.rules = converter.makeHtml(data)))
       .finally((this.loading = false));
   }
