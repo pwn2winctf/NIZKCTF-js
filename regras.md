@@ -3,7 +3,7 @@
 
 ### Quem está organizando?
 
-O **CTF Pwn2Win** está sendo organizado pelos membros do [Epic Leet Team](https://epicleet.team){:target="_blank"}, time brasileiro que participa de eventos do gênero.
+O **CTF Pwn2Win** está sendo organizado pelos membros do [Epic Leet Team](https://epicleet.team), time brasileiro que participa de eventos do gênero.
 
 ### Objetivo:
 
@@ -30,9 +30,9 @@ Todos os interessados por desafios em geral e computação (segurança da inform
 
 ### Deseja ajudar na divulgação?
 
-Toda ajuda na divulgação é muito bem-vinda, e por enquanto você pode utilizar nossas redes sociais compartilhar ou retweetar as postagens referentes ao evento: [capturetheflagbr](https://facebook.com/capturetheflagbr){:target="_blank"}, [eltctfbr](https://twitter.com/eltctfbr){:target="_blank"}, [pwn2win](https://twitter.com/pwn2win){:target="_blank"}.
+Toda ajuda na divulgação é muito bem-vinda, e por enquanto você pode utilizar nossas redes sociais compartilhar ou retweetar as postagens referentes ao evento: [capturetheflagbr](https://facebook.com/capturetheflagbr), [eltctfbr](https://twitter.com/eltctfbr), [pwn2win](https://twitter.com/pwn2win).
 
-Também é possível colar o [cartaz da história](http://bit.ly/Illustration-Pwn2Win-2020){:target="_blank"} na sua Universidade, Local de Trabalho, divulgar em Sites e Grupos de TI e Infosec, etc.
+Também é possível colar o [cartaz da história](http://bit.ly/Illustration-Pwn2Win-2020) na sua Universidade, Local de Trabalho, divulgar em Sites e Grupos de TI e Infosec, etc.
 
 ### O que são CTFs?
 
@@ -46,7 +46,7 @@ Existem dois tipos de CTFs, os Jeopardy-style (estilo Quiz), que normalmente sã
 
 **Jeopardy-style:** são apresentadas questões de diversas categorias, níveis de dificuldade e pontuações. As categorias variam de competição pra competição, mas as principais são: Reversing (Eng. Reversa), Crypto (Criptografia), Forensics (Forense), Miscellaneous (Diversos), Trivias (Triviais), Web Hacking, Networking (Redes), Pwnables/Exploitation, PPC (Professional Programming and Coding), etc.
 
-Para saber mais, acesse: [https://ctf-br.org/sobre](https://www.ctf-br.org/sobre){:target="_blank"}.
+Para saber mais, acesse: [https://ctf-br.org/sobre](https://www.ctf-br.org/sobre).
 
 ## PREMIAÇÃO:
 ----------
@@ -113,17 +113,17 @@ A equipe vencedora será a que pontuar mais dentro das 48 horas. Em caso de empa
 
 ## PATROCINADORES:
 
-![](http://pwn2win.party/imgs/aperture_science.png){:target="_blank"}
+![](http://pwn2win.party/imgs/aperture_science.png)
 
 
 ## INFRA SPONSOR:
 
-[![](http://pwn2win.party/imgs/gcp.png)](https://g.co/cloud/){:target="_blank"}
+[![](http://pwn2win.party/imgs/gcp.png)](https://g.co/cloud/)
 
 
 ## PARCEIROS:
 
-[![](https://pwn2win.party/imgs/ctfbr_logo.png)](https://ctf-br.org/){:target="_blank"}  [![](https://pwn2win.party/imgs/logoUFSCar.svg)](https://www2.ufscar.br/){:target="_blank"}
+[![](https://pwn2win.party/imgs/ctfbr_logo.png)](https://ctf-br.org/)  [![](https://pwn2win.party/imgs/logoUFSCar.svg)](https://www2.ufscar.br/)
 
 
 ## CONTATO:
