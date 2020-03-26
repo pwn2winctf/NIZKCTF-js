@@ -132,4 +132,4 @@ A equipe vencedora será a que pontuar mais dentro das 48 horas. Em caso de empa
 Em caso de dúvidas, contate-nos pelo e-mail elt *at* ctf-br dot org.
 
 
-###### Pela primeira vez, as letras miúdas do final do texto não são pegadinha. \o/ Se você chegou até aqui, quer dizer que provavelmente leu todas as informações e instruções. Por ter lido tudo, vamos premiar o seu time com pontos extras na competição, afinal, a leitura é fundamental para uma competição desse tipo. Utilize a flag "CTF-BR{RTFM-1s-4-g00d-3xpr3ss10n-v6.0}" no *challenge* que estiver categorizado como "Bonus" no dia do evento e garanta seus pontinhos extras. ;)
+###### Pela primeira vez, as letras miúdas do final do texto não são pegadinha. \o/ Se você chegou até aqui, quer dizer que provavelmente leu todas as informações e instruções. Por ter lido tudo, vamos premiar o seu time com pontos extras na competição, afinal, a leitura é fundamental para uma competição desse tipo. Utilize a flag "CTF-BR{RTFM\_1s\_4\_g00d\_3xpr3ss10n\_v6.0}" no *challenge* que estiver categorizado como "Bonus" no dia do evento e garanta seus pontinhos extras. ;)
