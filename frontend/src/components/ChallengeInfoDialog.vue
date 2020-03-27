@@ -51,9 +51,6 @@ import showdown from "showdown";
 
 import { API } from "@/services/api";
 
-import NIZKCTF from "@/services/nizkctf";
-import config from "@/config.json";
-
 export default {
   name: "ChallengeInfoDialog",
   props: ["info", "onClose"],
@@ -80,19 +77,32 @@ export default {
       });
     },
     submitFlag() {
-      const local = { owner: this.user.login, repository: this.repository };
-      const upstream = {
-        owner: config.owner,
-        repository: config.submissionsRepo
-      };
+      const self = this;
+      self.loading = true;
+      const worker = new Worker("worker.js");
 
-      this.loading = true;
-      const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
-      nizkctf
-        .submitFlag(this.flag, this.info)
-        .then(() => this.showMessage(this.$t("flagFound")))
-        .catch(err => this.showMessage(err))
-        .finally(() => (this.loading = false));
+      worker.onmessage = function(ev) {
+        switch (ev.data.message) {
+          case "submit-flag":
+            worker.postMessage({
+              cmd: "start-work",
+              value: {
+                password: self.flag,
+                salt: self.info
+              }
+            });
+            break;
+
+          case "worker-completed":
+            worker.terminate();
+            self.showMessage(ev.data.result);
+            self.loading = false;
+            break;
+
+          default:
+            console.log(ev.data);
+        }
+      };
     },
     showMessage(message) {
       this.message = message;
