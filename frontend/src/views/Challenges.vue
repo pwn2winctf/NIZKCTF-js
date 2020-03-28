@@ -124,7 +124,16 @@ export default {
               }));
               console.error(err);
             })
-            .finally(() => (this.filteredChallenges = this.challenges));
+            .finally(() => {
+              if (this.$route.params.id) {
+                const challenge = this.challenges.find(
+                  ({ id }) => id === this.$route.params.id
+                );
+                challenge && this.selectChallenge(challenge);
+              }
+
+              this.filteredChallenges = this.challenges;
+            });
         });
 
     this.challengesPolling = createPolling(getDatas);
