@@ -17,10 +17,7 @@
         :class="challenge.solved ? 'solved-challenge' : 'md-accent'"
         md-with-hover
       >
-        <div
-          @click="!challenge.solved && selectChallenge(challenge)"
-          style="height:100%"
-        >
+        <div @click="selectChallenge(challenge)" style="height:100%">
           <md-ripple class="card">
             <md-card-content>
               <div class="md-title">{{ challenge.title }}</div>
@@ -152,6 +149,7 @@ export default {
       this.popup.tags = challenge.tags;
       this.popup.solves = challenge.solves;
       this.popup.points = challenge.points;
+      this.popup.solved = challenge.solved;
       this.popup.pk = challenge.pk;
       this.popup.salt = challenge.salt;
       this.popup.isOpen = true;

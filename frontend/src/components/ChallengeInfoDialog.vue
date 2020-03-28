@@ -15,7 +15,7 @@
         class="md-primary md-layout-item card-tag"
         >{{ tag }}</md-chip
       >
-      <div v-if="teamKey" class="flag-field">
+      <div v-if="teamKey && !info.solved" class="flag-field">
         <md-field>
           <md-input
             v-model="flag"
@@ -26,14 +26,14 @@
     </md-dialog-content>
     <md-dialog-actions>
       <md-button
-        v-if="!loading"
+        v-if="!loading && !info.solved"
         class="md-raised md-accent"
         @click="submitFlag"
         >{{ $t("submit") }}</md-button
       >
-      <md-button class="md-primary" @click="onClose">{{
-        $t("close")
-      }}</md-button>
+      <md-button class="md-primary" @click="onClose">
+        {{ $t("close") }}
+      </md-button>
     </md-dialog-actions>
     <md-snackbar
       md-position="center"
