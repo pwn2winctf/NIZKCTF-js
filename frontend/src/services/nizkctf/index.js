@@ -74,19 +74,16 @@ export default class NIZKCTF {
   }
 
   async _lookupFlag(flag, challenge) {
-    const { scrypt_ops_limit, scrypt_mem_limit } = {
-      scrypt_ops_limit: 33554432,
-      scrypt_mem_limit: 402653184
-    };
-
     const decodedPk = Buffer.from(challenge.pk, "base64");
     const decodedSalt = Buffer.from(challenge.salt, "base64");
 
-    const challengeSeed = await libsodium.cryptoPwhashScryptsalsa208sha256(
+    const { opslimit, memlimit } = challenge;
+
+    const challengeSeed = await cryptoPwhash(
       flag,
       decodedSalt,
-      scrypt_ops_limit,
-      scrypt_mem_limit
+      opslimit,
+      memlimit
     );
     const keys = await libsodium.cryptoSignSeedKeypair(challengeSeed);
 
@@ -177,5 +174,38 @@ export default class NIZKCTF {
       .catch(() => {});
   }
 }
+
+const cryptoPwhash = (password, salt, opslimit, memlimit) =>
+  new Promise((resolve, reject) => {
+    const worker = new Worker("worker.js");
+
+    const onReady = () => {
+      worker.postMessage({
+        cmd: "start-work",
+        value: {
+          password,
+          salt,
+          opslimit,
+          memlimit
+        }
+      });
+    };
+
+    const onCompleted = () => {
+      worker.terminate();
+      resolve(event.data.result);
+    };
+
+    const onError = () => {
+      worker.terminate();
+      reject(event.data.result);
+    };
+
+    const action = { ready: onReady, completed: onCompleted, error: onError };
+
+    worker.onmessage = event => {
+      action[event.data.message]();
+    };
+  });
 
 export { GitHub, libsodium };

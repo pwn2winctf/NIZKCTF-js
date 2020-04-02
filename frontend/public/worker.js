@@ -1,30 +1,34 @@
 
 self.sodium = {
     onload: function (sodium) {
-        postMessage({message: "submit-flag"});
+        postMessage({ message: "ready" });
     }
 };
 
-onmessage = function (ev) {
-    switch (ev.data.cmd) {
-        case 'start-work':
-            let startTime = new Date();
-            let hash = sodium.crypto_pwhash_scryptsalsa208sha256(
+onmessage = function (event) {
+    if (event.data.cmd === 'start-work') {
+        try {
+            let hash = sodium.crypto_pwhash(
                 sodium.crypto_sign_SEEDBYTES,
-                ev.data.value.password,
-                buffer.Buffer.from(ev.data.value.salt.salt, "base64"),
-                33554432,
-                402653184
+                event.data.value.password,
+                buffer.Buffer.from(event.data.value.salt, "base64"),
+                event.data.value.opslimit,
+                event.data.value.memlimit,
+                sodium.crypto_pwhash_ALG_ARGON2ID13
             );
 
             postMessage({
-                message: 'worker-completed',
-                result: `crypto_pwhash finish in ${((new Date()) - startTime) / 1000} seconds.`
+                message: 'completed',
+                result: hash
             });
-            break;
+        } catch (err) {
+            postMessage({
+                message: 'error',
+                result: err
+            });
+        }
     }
 };
-
 
 importScripts('lib/sodium.js');
 importScripts('lib/buffer.js');

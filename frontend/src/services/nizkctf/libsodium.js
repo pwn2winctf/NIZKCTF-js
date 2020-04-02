@@ -26,18 +26,6 @@ export default {
     return libsodium.randombytes_buf(size, "hex").toLowerCase();
   },
 
-  async cryptoPwhashScryptsalsa208sha256(password, salt, opsLimit, memLimit) {
-    await libsodium.ready;
-
-    return await libsodium.crypto_pwhash_scryptsalsa208sha256(
-      libsodium.crypto_sign_SEEDBYTES,
-      password,
-      salt,
-      opsLimit,
-      memLimit
-    );
-  },
-
   async cryptoSignSeedKeypair(seed) {
     await libsodium.ready;
     return await libsodium.crypto_sign_seed_keypair(seed);

@@ -31,9 +31,9 @@
         @click="submitFlag"
         >{{ $t("submit") }}</md-button
       >
-      <md-button class="md-primary" @click="onClose">{{
-        $t("close")
-      }}</md-button>
+      <md-button class="md-primary" @click="onClose">
+        {{ $t("close") }}
+      </md-button>
     </md-dialog-actions>
     <md-snackbar
       md-position="center"
@@ -50,6 +50,8 @@ import { mapState } from "vuex";
 import showdown from "showdown";
 
 import { API } from "@/services/api";
+import NIZKCTF from "@/services/nizkctf";
+import config from "@/config.json";
 
 export default {
   name: "ChallengeInfoDialog",
@@ -77,32 +79,19 @@ export default {
       });
     },
     submitFlag() {
-      const self = this;
-      self.loading = true;
-      const worker = new Worker("worker.js");
-
-      worker.onmessage = function(ev) {
-        switch (ev.data.message) {
-          case "submit-flag":
-            worker.postMessage({
-              cmd: "start-work",
-              value: {
-                password: self.flag,
-                salt: self.info
-              }
-            });
-            break;
-
-          case "worker-completed":
-            worker.terminate();
-            self.showMessage(ev.data.result);
-            self.loading = false;
-            break;
-
-          default:
-            console.log(ev.data);
-        }
+      const local = { owner: this.user.login, repository: this.repository };
+      const upstream = {
+        owner: config.owner,
+        repository: config.submissionsRepo
       };
+      this.loading = true;
+      const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
+      console.log(this.flag, this.info);
+      nizkctf
+        .submitFlag(this.flag, this.info)
+        .then(() => this.showMessage(this.$t("flagFound")))
+        .catch(err => this.showMessage(err))
+        .finally(() => (this.loading = false));
     },
     showMessage(message) {
       this.message = message;
