@@ -30,6 +30,6 @@ onmessage = function (event) {
     }
 };
 
-importScripts(' ./lib/sodium.js');
-importScripts('./lib/buffer.js');
+importScripts('/lib/sodium.js');
+importScripts('/lib/buffer.js');
 

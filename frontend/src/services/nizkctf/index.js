@@ -177,7 +177,7 @@ export default class NIZKCTF {
 
 const cryptoPwhash = (password, salt, opslimit, memlimit) =>
   new Promise((resolve, reject) => {
-    const worker = new Worker("./worker.js");
+    const worker = new Worker("/worker.js");
 
     const onReady = () => {
       worker.postMessage({
