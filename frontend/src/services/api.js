@@ -39,5 +39,13 @@ export const API = {
   getFaq: async () => {
     const response = await api.get("/FAQ.md", { baseURL: config.faqBasePath });
     return response.data;
+  },
+  getRules: async language => {
+    const file = language === "en" ? "rules.md" : "regras.md";
+
+    const response = await api.get(`/${file}`, {
+      baseURL: config.faqBasePath
+    });
+    return response.data;
   }
 };

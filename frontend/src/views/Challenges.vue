@@ -17,10 +17,7 @@
         :class="challenge.solved ? 'solved-challenge' : 'md-accent'"
         md-with-hover
       >
-        <div
-          @click="!challenge.solved && selectChallenge(challenge)"
-          style="height:100%"
-        >
+        <div @click="selectChallenge(challenge)" style="height:100%">
           <md-ripple class="card">
             <md-card-content>
               <div class="md-title">{{ challenge.title }}</div>
@@ -127,7 +124,16 @@ export default {
               }));
               console.error(err);
             })
-            .finally(() => (this.filteredChallenges = this.challenges));
+            .finally(() => {
+              if (this.$route.params.id) {
+                const challenge = this.challenges.find(
+                  ({ id }) => id === this.$route.params.id
+                );
+                challenge && this.selectChallenge(challenge);
+              }
+
+              this.filteredChallenges = this.challenges;
+            });
         });
 
     this.challengesPolling = createPolling(getDatas);
@@ -152,6 +158,7 @@ export default {
       this.popup.tags = challenge.tags;
       this.popup.solves = challenge.solves;
       this.popup.points = challenge.points;
+      this.popup.solved = challenge.solved;
       this.popup.pk = challenge.pk;
       this.popup.salt = challenge.salt;
       this.popup.memlimit = challenge.memlimit;
