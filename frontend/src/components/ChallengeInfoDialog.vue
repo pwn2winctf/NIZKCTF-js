@@ -86,7 +86,6 @@ export default {
       };
       this.loading = true;
       const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
-      console.log(this.flag, this.info);
       nizkctf
         .submitFlag(this.flag, this.info)
         .then(() => this.showMessage(this.$t("flagFound")))
