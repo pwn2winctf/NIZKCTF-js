@@ -2,6 +2,8 @@ import GitHub from "./github";
 import libsodium from "./libsodium";
 import { getTeamPath } from "../../utils";
 
+import { deployPath } from "@/config";
+
 export default class NIZKCTF {
   constructor(token, local, upstream, team = undefined) {
     this.token = token;
@@ -177,7 +179,7 @@ export default class NIZKCTF {
 
 const cryptoPwhash = (password, salt, opslimit, memlimit) =>
   new Promise((resolve, reject) => {
-    const worker = new Worker("/worker.js");
+    const worker = new Worker(`${deployPath}/worker.js`);
 
     const onReady = () => {
       worker.postMessage({
