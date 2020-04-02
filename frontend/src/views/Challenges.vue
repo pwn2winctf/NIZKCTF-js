@@ -154,6 +154,8 @@ export default {
       this.popup.points = challenge.points;
       this.popup.pk = challenge.pk;
       this.popup.salt = challenge.salt;
+      this.popup.memlimit = challenge.memlimit;
+      this.popup.opslimit = challenge.opslimit;
       this.popup.isOpen = true;
     },
     closePopup() {
