@@ -13,6 +13,7 @@
   "submissionsRepo": "ranking_submissions",
   "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
   "deployPath": "/NIZKCTF-js",
+  "flagFormat": "CTF-BR{...}",
   "maxMembers": 5,
   "maxTeamNameLength": 30
 }

@@ -17,10 +17,7 @@
       >
       <div v-if="teamKey && !info.solved" class="flag-field">
         <md-field>
-          <md-input
-            v-model="flag"
-            :placeholder="$t('submitFlagField')"
-          ></md-input>
+          <md-input v-model="flag" :placeholder="flagFormat"></md-input>
         </md-field>
       </div>
     </md-dialog-content>
@@ -57,6 +54,7 @@ export default {
   name: "ChallengeInfoDialog",
   props: ["info", "onClose"],
   data: () => ({
+    flagFormat: config.flagFormat,
     flag: "",
     loading: true,
     description: "",
