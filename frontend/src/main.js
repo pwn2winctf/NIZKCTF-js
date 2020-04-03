@@ -10,6 +10,8 @@ import messages from "@/internationalization";
 import "vue-material/dist/vue-material.min.css";
 import "@/themes.scss";
 
+console.info(`VERSION: ${process.env.VUE_APP_VERSION}`);
+
 Vue.config.productionTip = false;
 
 Vue.use(VueMaterial);
