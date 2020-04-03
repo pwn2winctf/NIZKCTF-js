@@ -106,6 +106,8 @@ export default {
     info: function(info) {
       if (info.isOpen) {
         this.loadDescription(this.info.id);
+      }else{
+        this.flag = ""
       }
     }
   }
