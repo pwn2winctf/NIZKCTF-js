@@ -2,6 +2,7 @@
   <md-dialog :md-active="info.isOpen" @md-clicked-outside="onClose">
     <md-dialog-title>{{ info.title }}</md-dialog-title>
     <md-dialog-content v-if="loading" class="spinner">
+      <p v-if="sendingFlag">{{ $t("verifyingFlag") }}</p>
       <md-progress-spinner md-mode="indeterminate" />
     </md-dialog-content>
     <md-dialog-content v-else>
@@ -56,6 +57,7 @@ export default {
   data: () => ({
     flagFormat: config.flagFormat,
     flag: "",
+    sendingFlag: false,
     loading: true,
     description: "",
     converter: new showdown.Converter(),
@@ -83,12 +85,16 @@ export default {
         repository: config.submissionsRepo
       };
       this.loading = true;
+      this.sendingFlag = true;
       const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
       nizkctf
         .submitFlag(this.flag, this.info)
         .then(() => this.showMessage(this.$t("flagFound")))
         .catch(err => this.showMessage(err))
-        .finally(() => (this.loading = false));
+        .finally(() => {
+          this.loading = false;
+          this.sendingFlag = false;
+        });
     },
     showMessage(message) {
       this.message = message;
@@ -106,6 +112,7 @@ export default {
         this.loadDescription(this.info.id);
       } else {
         this.flag = "";
+        this.showSnackbar = false;
       }
     }
   }
@@ -115,6 +122,7 @@ export default {
 <style type="sass" scoped>
 .spinner {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }

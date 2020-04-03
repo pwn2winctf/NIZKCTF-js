@@ -33,6 +33,7 @@ export default {
     submit: "Submit",
     fixErrors: "Please fix the following error(s):",
     teamPrivateKey: "Team private key",
+    verifyingFlag: "Please wait, we are checking the flag against the hash.",
     flagFound: "Flag found, submitted!",
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!  This key is stored in the browser and is not linked to your GitHub account.",
@@ -88,6 +89,7 @@ export default {
     fixErrors: "Por favor, corrija o(s) seguinte(s) erro(s):",
     teamPrivateKey: "Chave privada do time",
     flagFound: "Flag encontrada, enviado!",
+    verifyingFlag: "Aguarde, estamos comparando a flag com a hash.",
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenada no seu navegador e não está vinculada a sua conta do GitHub.",
     teamCreated: "Time criado",
