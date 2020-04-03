@@ -37,7 +37,7 @@
     </md-dialog-actions>
     <md-snackbar
       md-position="center"
-      :md-duration="4000"
+      :md-duration="5000"
       :md-active.sync="showSnackbar"
     >
       <span>{{ message }}</span>
@@ -106,8 +106,8 @@ export default {
     info: function(info) {
       if (info.isOpen) {
         this.loadDescription(this.info.id);
-      }else{
-        this.flag = ""
+      } else {
+        this.flag = "";
       }
     }
   }
