@@ -25,6 +25,11 @@
         <label>{{ $t("teamPrivateKey") }}</label>
         <md-textarea v-model="encodedTeam" readonly rows="4"></md-textarea>
       </md-field>
+      <div class="center">
+        <md-button class="md-raised md-primary" @click="clearTeamSecret">
+          {{ $t("clearTeam") }}
+        </md-button>
+      </div>
     </div>
   </md-content>
 </template>
@@ -56,7 +61,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(["setTheme", "setLanguage"]),
+    ...mapActions(["setTheme", "setLanguage", "setTeam"]),
     toggleTheme(value) {
       const theme = value ? "dark" : "default";
       this.setTheme(theme);
@@ -64,7 +69,18 @@ export default {
     changeLanguage(language) {
       this.$i18n.locale = language;
       this.setLanguage(language);
+    },
+    clearTeamSecret() {
+      this.setTeam(null);
     }
   }
 };
 </script>
+
+<style type="sass" scoped>
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

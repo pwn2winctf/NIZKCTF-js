@@ -19,6 +19,7 @@ export default {
     gettingInformations: "Getting informations",
     login: "Register / Login",
     logout: "Logout",
+    clearTeam: "Clear the team's key",
     gettingToken: "Getting token",
     gettingTokenInfo:
       "This token will be used to fork the submissions repository, to commit to it on your behalf and to make pull requests.",
@@ -74,6 +75,7 @@ export default {
     gettingInformations: "Obtendo informações",
     login: "Registrar / Logar",
     logout: "Sair",
+    clearTeam: "Remover a chave do time",
     gettingToken: "Obtendo token",
     gettingTokenInfo:
       "Esse token será usado para criar o fork do repositório de submissões, para fazer commits em seu nome e criar pull requests. Este token está armazenado no local storage, ou seja, não está vinculada a sua conta do GitHub.",
