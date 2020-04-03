@@ -19,6 +19,9 @@ export default {
     gettingInformations: "Getting informations",
     login: "Register / Login",
     logout: "Logout",
+    warning: "Warning",
+    warningLogout:
+      "The team's key is <strong>still saved</strong>. If you want to delete it, do so in the settings",
     clearTeam: "Clear the team's key",
     gettingToken: "Getting token",
     gettingTokenInfo:
@@ -75,6 +78,9 @@ export default {
     gettingInformations: "Obtendo informações",
     login: "Registrar / Logar",
     logout: "Sair",
+    warning: "Warning",
+    warningLogout:
+      "A chave do time ainda <strong>permanece salvo</strong>. Caso queira apagá-lo faça isso nas configurações",
     clearTeam: "Remover a chave do time",
     gettingToken: "Obtendo token",
     gettingTokenInfo:
