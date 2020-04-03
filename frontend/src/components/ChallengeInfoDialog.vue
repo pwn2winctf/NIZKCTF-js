@@ -24,7 +24,7 @@
     </md-dialog-content>
     <md-dialog-actions>
       <md-button
-        v-if="!loading && !info.solved"
+        v-if="!loading && teamKey && !info.solved"
         class="md-raised md-accent"
         @click="submitFlag"
         >{{ $t("submit") }}</md-button
