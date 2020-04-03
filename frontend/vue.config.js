@@ -6,11 +6,9 @@ module.exports = {
     devtool: "source-map"
   },
   chainWebpack: config => {
-    config
-      .plugin('html')
-      .tap(args => {
-        args[0].title = configJson.title
-        return args
-      })
+    config.plugin("html").tap(args => {
+      args[0].title = configJson.title;
+      return args;
+    });
   }
 };
