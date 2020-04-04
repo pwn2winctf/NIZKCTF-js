@@ -1,6 +1,8 @@
 <template>
-  <md-content v-if="encodedTeam && team.option == 'create'">
+<md-concent>
+  <md-content v-if="encodedTeam">
     <md-dialog-alert
+      v-if="team.option == 'create'"
       :md-active.sync="createdTeam"
       :md-title="$t('teamCreated')"
       :md-content="$t('saveYourTeamSecret')"
@@ -51,10 +53,10 @@
           <li v-for="(error, idx) in errors.team" :key="idx">{{ error }}</li>
         </ul>
         <div>
-          <md-radio v-model="team.option" value="create">{{
+          <md-radio v-model="team.option" value="create" :disabled="alreadyForked">{{
             $t("createTeam")
           }}</md-radio>
-          <md-radio v-model="team.option" value="join">{{
+          <md-radio v-model="team.option" value="join" :disabled="alreadyForked">{{
             $t("joinTeam")
           }}</md-radio>
         </div>
@@ -94,7 +96,7 @@
         <div v-else>
           <md-field>
             <label>{{ $t("teamPrivateKey") }}</label>
-            <md-input v-model="encodedTeam" required></md-input>
+            <md-input v-model="encodedTeamInput" required></md-input>
           </md-field>
           <div style="display:flex; justify-content:center;">
             <md-button class="md-raised md-primary" type="submit">
@@ -104,14 +106,15 @@
         </div>
       </form>
     </md-step>
-    <md-snackbar
-      md-position="center"
-      :md-duration="4000"
-      :md-active.sync="showSnackbar"
-    >
-      <span>{{ message }}</span>
-    </md-snackbar>
   </md-steppers>
+  <md-snackbar
+    md-position="center"
+    :md-duration="4000"
+    :md-active.sync="showSnackbar"
+  >
+    <span>{{ message }}</span>
+  </md-snackbar>
+</md-concent>
 </template>
 
 <script>
@@ -134,6 +137,7 @@ export default {
   components: { CountryFlag },
   data: () => ({
     createdTeam: false,
+    alreadyForked: false,
     active: "token",
     errors: {
       token: undefined,
@@ -146,6 +150,7 @@ export default {
       countries: [],
       privateKey: ""
     },
+    encodedTeamInput: null,
     encodedTeam: null,
     countries: undefined,
     countryFilter: "",
@@ -222,7 +227,7 @@ export default {
         return true;
       } else {
         try {
-          JSON.parse(Buffer(this.encodedTeam, "base64").toString());
+          JSON.parse(Buffer(this.encodedTeamInput, "base64").toString());
           return true;
         } catch (err) {
           this.showMessage(this.$t("errors.privateKey"));
@@ -257,9 +262,10 @@ export default {
         });
     },
     joinTeam() {
-      const team = JSON.parse(Buffer(this.encodedTeam, "base64").toString());
+      const team = JSON.parse(Buffer(this.encodedTeamInput, "base64").toString());
       this.setTeam(team);
       this.showMessage("Joined the team");
+      this.encodedTeam = this.encodedTeamInput;
     },
     getInfo() {
       if (!this.token) {
@@ -276,12 +282,22 @@ export default {
             this.setNextStepper("fork");
           })
           .catch(() => (this.errors.avatar = "Try refresh page"));
-      } else if (!this.repository) {
-        this.createFork(this.token)
-          .then(repo => {
-            this.setRepository(repo);
+      } else if (!this.repository || (!this.encodedTeam && !this.encodedTeamInput && !this.teamKey)) {
+        this.verifyFork(this.token).then(alreadyForked => {
+          this.alreadyForked = alreadyForked;
+          this.team.option = "join";
+
+          if (!alreadyForked) {
+            this.createFork(this.token)
+            .then(repo => {
+              this.setRepository(repo);
+              this.setNextStepper("team");
+            })
+          }else {
+            this.setRepository(config.submissionsRepo);
             this.setNextStepper("team");
-          })
+          }
+        })
           .catch(() => (this.errors.fork = "Try again later"));
       } else if (!this.encodedTeam && this.teamKey) {
         this.encodedTeam = Buffer.from(JSON.stringify(this.teamKey)).toString(
@@ -308,6 +324,15 @@ export default {
         config.submissionsRepo
       );
       return name;
+    },
+    async verifyFork(token) {
+      const github = new GitHub(token);
+      const content = await github.getContents(
+        this.user.login,
+        config.submissionsRepo
+      );
+
+      return !!content;
     }
   },
   watch: {
