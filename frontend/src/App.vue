@@ -111,7 +111,7 @@ export default {
       this.cardVisible = !this.cardVisible;
     },
     logout() {
-      this.popupVisible = true;
+      this.popupVisible = !!this.teamName;
       this.setUser(null);
       this.setToken(null);
       this.setRepository(null);
