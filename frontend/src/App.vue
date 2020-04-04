@@ -73,6 +73,11 @@
       </md-list>
     </md-app-drawer>
     <md-app-content>
+      <md-dialog-alert
+        :md-active.sync="popupVisible"
+        :md-title="$t('warning')"
+        :md-content="$t('warningLogout')"
+      />
       <router-view />
     </md-app-content>
   </md-app>
@@ -86,6 +91,7 @@ import config from "@/config.json";
 export default {
   name: "App",
   data: () => ({
+    popupVisible: false,
     menuVisible: false,
     cardVisible: false,
     authLink: config.authLink
@@ -105,6 +111,7 @@ export default {
       this.cardVisible = !this.cardVisible;
     },
     logout() {
+      this.popupVisible = !!this.teamName;
       this.setUser(null);
       this.setToken(null);
       this.setRepository(null);

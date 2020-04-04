@@ -1,4 +1,5 @@
 {
+  "title": "PWN2WIN",
   "submissionsBasePath": "https://ctf-br.github.io/ranking_submissions",
   "challegesBasePath": "https://ctf-br.github.io/ranking",
   "faqBasePath": "https://pwn2.win/NIZKCTF-js/",
@@ -13,6 +14,7 @@
   "submissionsRepo": "ranking_submissions",
   "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
   "deployPath": "/NIZKCTF-js",
+  "flagFormat": "CTF-BR{...}",
   "maxMembers": 5,
   "maxTeamNameLength": 30
 }

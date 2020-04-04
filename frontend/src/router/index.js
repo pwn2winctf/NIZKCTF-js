@@ -9,6 +9,7 @@ import Challenges from "../views/Challenges.vue";
 import AfterLogin from "../views/AfterLogin.vue";
 import Faq from "../views/Faq.vue";
 
+import store from "../store";
 import config from "@/config.json";
 
 Vue.use(VueRouter);
@@ -31,6 +32,11 @@ const routes = [
   },
   {
     path: "/challenges",
+    name: "Challenges",
+    component: Challenges
+  },
+  {
+    path: "/challenges/:id",
     name: "Challenges",
     component: Challenges
   },
@@ -64,6 +70,18 @@ const router = new VueRouter({
   base: config.deployPath,
   mode: "history",
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  if (
+    store.getters.token &&
+    !store.getters.team &&
+    to.path !== "/after-login"
+  ) {
+    next("/after-login");
+  } else {
+    next();
+  }
 });
 
 export default router;

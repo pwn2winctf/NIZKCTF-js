@@ -19,6 +19,10 @@ export default {
     gettingInformations: "Getting informations",
     login: "Register / Login",
     logout: "Logout",
+    warning: "Warning",
+    warningLogout:
+      "The team's key is <strong>still saved</strong>. If you want to delete it, do so in the settings",
+    clearTeam: "Clear the team's key",
     gettingToken: "Getting token",
     gettingTokenInfo:
       "This token will be used to fork the submissions repository, to commit to it on your behalf and to make pull requests.",
@@ -33,10 +37,10 @@ export default {
     submit: "Submit",
     fixErrors: "Please fix the following error(s):",
     teamPrivateKey: "Team private key",
+    verifyingFlag: "Please wait, we are checking the flag against the hash.",
     flagFound: "Flag found, submitted!",
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!  This key is stored in the browser and is not linked to your GitHub account.",
-    submitFlagField: "Type the flag here",
     teamCreated: "Team created",
     saveYourTeamSecret: "Save <strong>NOW</strong> your team's private key!",
     router: {
@@ -74,6 +78,10 @@ export default {
     gettingInformations: "Obtendo informações",
     login: "Registrar / Logar",
     logout: "Sair",
+    warning: "Warning",
+    warningLogout:
+      "A chave do time ainda <strong>permanece salvo</strong>. Caso queira apagá-lo faça isso nas configurações",
+    clearTeam: "Remover a chave do time",
     gettingToken: "Obtendo token",
     gettingTokenInfo:
       "Esse token será usado para criar o fork do repositório de submissões, para fazer commits em seu nome e criar pull requests. Este token está armazenado no local storage, ou seja, não está vinculada a sua conta do GitHub.",
@@ -89,9 +97,9 @@ export default {
     fixErrors: "Por favor, corrija o(s) seguinte(s) erro(s):",
     teamPrivateKey: "Chave privada do time",
     flagFound: "Flag encontrada, enviado!",
+    verifyingFlag: "Aguarde, estamos comparando a flag com a hash.",
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenada no seu navegador e não está vinculada a sua conta do GitHub.",
-    submitFlagField: "Escreva a flag aqui",
     teamCreated: "Time criado",
     saveYourTeamSecret:
       "Salve <strong>AGORA</strong> a chave privada do seu time!",

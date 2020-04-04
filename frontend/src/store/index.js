@@ -72,7 +72,8 @@ export default new Vuex.Store({
   },
   getters: {
     language: state => state.language,
-    token: state => state.token
+    token: state => state.token,
+    team: state => state.team
   },
   modules: {},
   plugins

@@ -1,109 +1,118 @@
 <template>
-  <md-content v-if="encodedTeam && team.option == 'create'">
-    <md-dialog-alert
-      :md-active.sync="createdTeam"
-      :md-title="$t('teamCreated')"
-      :md-content="$t('saveYourTeamSecret')"
-    />
-    <p>{{ $t("encodedTeam") }}</p>
-    <md-field>
-      <md-textarea v-model="encodedTeam" md-autogrow disabled></md-textarea>
-    </md-field>
-  </md-content>
-  <md-steppers v-else :md-active-step.sync="active" md-vertical md-linear>
-    <md-step
-      id="token"
-      :md-label="$t('gettingToken')"
-      :md-editable="false"
-      :md-done="!!this.token"
-      :md-error="this.errors.token"
-    >
-      <p>{{ $t("gettingTokenInfo") }}</p>
-    </md-step>
-    <md-step
-      id="user"
-      :md-label="$t('gettingUser')"
-      :md-editable="false"
-      :md-done="!!this.user"
-      :md-error="this.errors.user"
-    >
-      <p>{{ $t("gettingUserInfo") }}</p>
-    </md-step>
-    <md-step
-      id="fork"
-      :md-label="$t('creatingFork')"
-      :md-editable="false"
-      :md-done="!!this.repository"
-    >
-      <p>{{ $t("creatingFork") }}</p>
-    </md-step>
-    <md-step
-      id="team"
-      :md-label="$t('team')"
-      :md-editable="false"
-      :md-done="!!teamKey"
-    >
-      <form @submit="submit">
-        <p v-if="errors.team.length">
-          <b>{{ $t("fixErrors") }}</b>
-        </p>
-        <ul>
-          <li v-for="(error, idx) in errors.team" :key="idx">{{ error }}</li>
-        </ul>
-        <div>
-          <md-radio v-model="team.option" value="create">{{
-            $t("createTeam")
-          }}</md-radio>
-          <md-radio v-model="team.option" value="join">{{
-            $t("joinTeam")
-          }}</md-radio>
-        </div>
-        <div v-if="team.option === 'create'">
-          <md-field>
-            <label>{{ $t("teamName") }}</label>
-            <md-input
-              v-model="team.name"
-              :maxlength="maxTeamNameLength"
-              required
-            ></md-input>
-          </md-field>
-          <md-content class="md-scrollbar">
-            <h2 class="md-title">{{ $t("teamCountries") }}</h2>
+  <md-concent>
+    <md-content v-if="encodedTeam">
+      <md-dialog-alert
+        v-if="team.option == 'create'"
+        :md-active.sync="createdTeam"
+        :md-title="$t('teamCreated')"
+        :md-content="$t('saveYourTeamSecret')"
+      />
+      <p>{{ $t("encodedTeam") }}</p>
+      <md-field>
+        <md-textarea v-model="encodedTeam" md-autogrow disabled></md-textarea>
+      </md-field>
+    </md-content>
+    <md-steppers v-else :md-active-step.sync="active" md-vertical md-linear>
+      <md-step
+        id="token"
+        :md-label="$t('gettingToken')"
+        :md-editable="false"
+        :md-done="!!this.token"
+        :md-error="this.errors.token"
+      >
+        <p>{{ $t("gettingTokenInfo") }}</p>
+      </md-step>
+      <md-step
+        id="user"
+        :md-label="$t('gettingUser')"
+        :md-editable="false"
+        :md-done="!!this.user"
+        :md-error="this.errors.user"
+      >
+        <p>{{ $t("gettingUserInfo") }}</p>
+      </md-step>
+      <md-step
+        id="fork"
+        :md-label="$t('creatingFork')"
+        :md-editable="false"
+        :md-done="!!this.repository"
+      >
+        <p>{{ $t("creatingFork") }}</p>
+      </md-step>
+      <md-step
+        id="team"
+        :md-label="$t('team')"
+        :md-editable="false"
+        :md-done="!!teamKey"
+      >
+        <form @submit="submit">
+          <p v-if="errors.team.length">
+            <b>{{ $t("fixErrors") }}</b>
+          </p>
+          <ul>
+            <li v-for="(error, idx) in errors.team" :key="idx">{{ error }}</li>
+          </ul>
+          <div>
+            <md-radio
+              v-model="team.option"
+              value="create"
+              :disabled="alreadyForked"
+              >{{ $t("createTeam") }}</md-radio
+            >
+            <md-radio
+              v-model="team.option"
+              value="join"
+              :disabled="alreadyForked"
+              >{{ $t("joinTeam") }}</md-radio
+            >
+          </div>
+          <div v-if="team.option === 'create'">
             <md-field>
-              <md-icon>search</md-icon>
+              <label>{{ $t("teamName") }}</label>
               <md-input
-                v-model="countryFilter"
-                placeholder="ex. Japan"
+                v-model="team.name"
+                :maxlength="maxTeamNameLength"
+                required
               ></md-input>
             </md-field>
-            <md-list style="height:300px; overflow:scroll">
-              <md-list-item v-for="item in filteredCountries" :key="item.key">
-                <md-checkbox v-model="team.countries" :value="item.key">
-                  {{ item.name }}
-                </md-checkbox>
-                <country-flag :country="item.key" size="normal" />
-              </md-list-item>
-            </md-list>
-          </md-content>
-          <div style="display:flex; justify-content:center;">
-            <md-button class="md-raised md-primary" type="submit">{{
-              $t("submit")
-            }}</md-button>
+            <md-content class="md-scrollbar">
+              <h2 class="md-title">{{ $t("teamCountries") }}</h2>
+              <md-field>
+                <md-icon>search</md-icon>
+                <md-input
+                  v-model="countryFilter"
+                  placeholder="ex. Japan"
+                ></md-input>
+              </md-field>
+              <md-list style="height:300px; overflow:scroll">
+                <md-list-item v-for="item in filteredCountries" :key="item.key">
+                  <md-checkbox v-model="team.countries" :value="item.key">
+                    {{ item.name }}
+                  </md-checkbox>
+                  <country-flag :country="item.key" size="normal" />
+                </md-list-item>
+              </md-list>
+            </md-content>
+            <div style="display:flex; justify-content:center;">
+              <md-button class="md-raised md-primary" type="submit">{{
+                $t("submit")
+              }}</md-button>
+            </div>
           </div>
-        </div>
-        <div v-else>
-          <md-field>
-            <label>{{ $t("teamPrivateKey") }}</label>
-            <md-input v-model="encodedTeam" required></md-input>
-          </md-field>
-          <div style="display:flex; justify-content:center;">
-            <md-button class="md-raised md-primary" type="submit">
-              {{ $t("submit") }}
-            </md-button>
+          <div v-else>
+            <md-field>
+              <label>{{ $t("teamPrivateKey") }}</label>
+              <md-input v-model="encodedTeamInput" required></md-input>
+            </md-field>
+            <div style="display:flex; justify-content:center;">
+              <md-button class="md-raised md-primary" type="submit">
+                {{ $t("submit") }}
+              </md-button>
+            </div>
           </div>
-        </div>
-      </form>
-    </md-step>
+        </form>
+      </md-step>
+    </md-steppers>
     <md-snackbar
       md-position="center"
       :md-duration="4000"
@@ -111,7 +120,7 @@
     >
       <span>{{ message }}</span>
     </md-snackbar>
-  </md-steppers>
+  </md-concent>
 </template>
 
 <script>
@@ -134,6 +143,7 @@ export default {
   components: { CountryFlag },
   data: () => ({
     createdTeam: false,
+    alreadyForked: false,
     active: "token",
     errors: {
       token: undefined,
@@ -146,6 +156,7 @@ export default {
       countries: [],
       privateKey: ""
     },
+    encodedTeamInput: null,
     encodedTeam: null,
     countries: undefined,
     countryFilter: "",
@@ -173,6 +184,14 @@ export default {
   },
   mounted() {
     this.getInfo();
+    if (this.token) {
+      this.verifyFork(this.token).then(alreadyForked => {
+        if (alreadyForked) {
+          this.alreadyForked = alreadyForked;
+          this.team.option = "join";
+        }
+      });
+    }
   },
   updated() {
     this.getInfo();
@@ -222,7 +241,7 @@ export default {
         return true;
       } else {
         try {
-          JSON.parse(Buffer(this.encodedTeam, "base64").toString());
+          JSON.parse(Buffer(this.encodedTeamInput, "base64").toString());
           return true;
         } catch (err) {
           this.showMessage(this.$t("errors.privateKey"));
@@ -257,9 +276,12 @@ export default {
         });
     },
     joinTeam() {
-      const team = JSON.parse(Buffer(this.encodedTeam, "base64").toString());
+      const team = JSON.parse(
+        Buffer(this.encodedTeamInput, "base64").toString()
+      );
       this.setTeam(team);
       this.showMessage("Joined the team");
+      this.encodedTeam = this.encodedTeamInput;
     },
     getInfo() {
       if (!this.token) {
@@ -277,10 +299,19 @@ export default {
           })
           .catch(() => (this.errors.avatar = "Try refresh page"));
       } else if (!this.repository) {
-        this.createFork(this.token)
-          .then(repo => {
-            this.setRepository(repo);
-            this.setNextStepper("team");
+        this.verifyFork(this.token)
+          .then(alreadyForked => {
+            if (!alreadyForked) {
+              this.createFork(this.token).then(repo => {
+                this.setRepository(repo);
+                this.setNextStepper("team");
+              });
+            } else {
+              this.alreadyForked = alreadyForked;
+              this.team.option = "join";
+              this.setRepository(config.submissionsRepo);
+              this.setNextStepper("team");
+            }
           })
           .catch(() => (this.errors.fork = "Try again later"));
       } else if (!this.encodedTeam && this.teamKey) {
@@ -308,6 +339,18 @@ export default {
         config.submissionsRepo
       );
       return name;
+    },
+    async verifyFork(token) {
+      const github = new GitHub(token);
+      try {
+        const content = await github.getContents(
+          this.user.login,
+          config.submissionsRepo
+        );
+        return !!content;
+      } catch (err) {
+        return false;
+      }
     }
   },
   watch: {
@@ -315,6 +358,16 @@ export default {
       this.filteredCountries = this.countries.filter(
         item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
       );
+    },
+    token(value) {
+      if (value) {
+        this.verifyFork(value).then(alreadyForked => {
+          if (alreadyForked) {
+            this.alreadyForked = alreadyForked;
+            this.team.option = "join";
+          }
+        });
+      }
     }
   }
 };
