@@ -184,6 +184,14 @@ export default {
   },
   mounted() {
     this.getInfo();
+    if (this.token) {
+      this.verifyFork(this.token).then(alreadyForked => {
+        if (alreadyForked) {
+          this.alreadyForked = alreadyForked;
+          this.team.option = "join";
+        }
+      });
+    }
   },
   updated() {
     this.getInfo();
@@ -290,21 +298,17 @@ export default {
             this.setNextStepper("fork");
           })
           .catch(() => (this.errors.avatar = "Try refresh page"));
-      } else if (
-        !this.repository ||
-        (!this.encodedTeam && !this.encodedTeamInput && !this.teamKey)
-      ) {
+      } else if (!this.repository) {
         this.verifyFork(this.token)
           .then(alreadyForked => {
-            this.alreadyForked = alreadyForked;
-            this.team.option = "join";
-
             if (!alreadyForked) {
               this.createFork(this.token).then(repo => {
                 this.setRepository(repo);
                 this.setNextStepper("team");
               });
             } else {
+              this.alreadyForked = alreadyForked;
+              this.team.option = "join";
               this.setRepository(config.submissionsRepo);
               this.setNextStepper("team");
             }
@@ -338,12 +342,15 @@ export default {
     },
     async verifyFork(token) {
       const github = new GitHub(token);
-      const content = await github.getContents(
-        this.user.login,
-        config.submissionsRepo
-      );
-
-      return !!content;
+      try {
+        const content = await github.getContents(
+          this.user.login,
+          config.submissionsRepo
+        );
+        return !!content;
+      } catch (err) {
+        return false;
+      }
     }
   },
   watch: {
@@ -351,6 +358,16 @@ export default {
       this.filteredCountries = this.countries.filter(
         item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
       );
+    },
+    token(value) {
+      if (value) {
+        this.verifyFork(value).then(alreadyForked => {
+          if (alreadyForked) {
+            this.alreadyForked = alreadyForked;
+            this.team.option = "join";
+          }
+        });
+      }
     }
   }
 };
