@@ -49,6 +49,29 @@ export default class GitHub {
     return response.data;
   }
 
+  async listPullRequests(owner, repo, username = null, state = "open") {
+    const response = await this.octokit.pulls.list({
+      owner,
+      repo,
+      head: username,
+      state
+    });
+
+    return response.data;
+  }
+
+  async checkState(owner, repo, pull_number) {
+    const { data } = await this.octokit.pulls.get({
+      owner,
+      repo,
+      pull_number
+    });
+
+    const { state, merged, title } = data;
+
+    return { title, state: merged ? "merged" : state };
+  }
+
   async mergePullRequest(owner, repo, pull_number) {
     const response = await this.octokit.pulls.merge({
       owner,
