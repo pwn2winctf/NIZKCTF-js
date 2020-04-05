@@ -1,5 +1,5 @@
 <template>
-  <md-concent>
+  <md-content>
     <md-content v-if="encodedTeam">
       <md-dialog-alert
         v-if="team.option == 'create'"
@@ -120,7 +120,7 @@
     >
       <span>{{ message }}</span>
     </md-snackbar>
-  </md-concent>
+  </md-content>
 </template>
 
 <script>
