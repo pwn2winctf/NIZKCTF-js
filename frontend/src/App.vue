@@ -254,7 +254,10 @@ export default {
       );
     },
     user(value) {
-      if (value && (!this.poolingPullRequests || !this.poolingPullRequests.running)) {
+      if (
+        value &&
+        (!this.poolingPullRequests || !this.poolingPullRequests.running)
+      ) {
         this.createPullRequestsPooling();
         this.poolingPullRequests.start();
       } else {
