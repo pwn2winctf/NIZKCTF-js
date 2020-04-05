@@ -239,8 +239,10 @@ export default {
     }
   },
   mounted() {
-    this.createPullRequestsPooling();
-    this.poolingPullRequests.start();
+    if (this.user) {
+      this.createPullRequestsPooling();
+      this.poolingPullRequests.start();
+    }
   },
   beforeDestroy() {
     this.poolingPullRequests.stop();
@@ -251,9 +253,14 @@ export default {
         item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
       );
     },
-    teamName(value) {
-      if (value && this.token && !this.poolingPullRequests.running) {
+    user(value) {
+      if (value && (!this.poolingPullRequests || !this.poolingPullRequests.running)) {
         this.createPullRequestsPooling();
+        this.poolingPullRequests.start();
+      } else {
+        if (this.poolingPullRequests.running) {
+          this.poolingPullRequests.stop();
+        }
       }
     }
   }
