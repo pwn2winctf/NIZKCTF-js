@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import showdown from "showdown";
 
 import { API } from "@/services/api";
@@ -72,6 +72,7 @@ export default {
     repository: state => state.repository
   }),
   methods: {
+    ...mapActions(["addPullRequestToPending"]),
     loadDescription(challenge) {
       API.getChallengeDescription(challenge, this.language).then(({ data }) => {
         this.description = this.converter.makeHtml(data);
@@ -89,7 +90,10 @@ export default {
       const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
       nizkctf
         .submitFlag(this.flag, this.info)
-        .then(() => this.showMessage(this.$t("flagFound")))
+        .then(data => {
+          this.addPullRequestToPending(data.number),
+            this.showMessage(this.$t("flagFound"));
+        })
         .catch(err => this.showMessage(err))
         .finally(() => {
           this.loading = false;
