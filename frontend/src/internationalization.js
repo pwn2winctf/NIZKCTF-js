@@ -39,6 +39,10 @@ export default {
     teamPrivateKey: "Team private key",
     verifyingFlag: "Please wait, we are checking the flag against the hash.",
     flagFound: "Flag found, submitted!",
+    acceptedChallenges:
+      "The {challenges} submission(s) was accepted. In a few minutes it will count.",
+    notAcceptedChallenges:
+      "Challenge submissions were not accepted. Please contact support.",
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!  This key is stored in the browser and is not linked to your GitHub account.",
     teamCreated: "Team created",
@@ -97,6 +101,10 @@ export default {
     fixErrors: "Por favor, corrija o(s) seguinte(s) erro(s):",
     teamPrivateKey: "Chave privada do time",
     flagFound: "Flag encontrada, enviado!",
+    acceptedChallenges:
+      "The {challenges} submission(s) was accepted. In a few minutes it will count.",
+    notAcceptedChallenges:
+      "As submissões dos desafios não foram aceitos. Entre em contato com o suporte.",
     verifyingFlag: "Aguarde, estamos comparando a flag com a hash.",
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenada no seu navegador e não está vinculada a sua conta do GitHub.",

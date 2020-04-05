@@ -74,10 +74,46 @@
     </md-app-drawer>
     <md-app-content>
       <md-dialog-alert
-        :md-active.sync="popupVisible"
+        :md-active.sync="popupLogoutVisible"
         :md-title="$t('warning')"
         :md-content="$t('warningLogout')"
       />
+      <md-snackbar
+        md-position="center"
+        :md-duration="10000"
+        :md-active.sync="toastMergeds.visible"
+        md-persistent
+      >
+        <span>{{ toastMergeds.content }}</span>
+      </md-snackbar>
+      <md-dialog :md-active.sync="alertClosedPullRequests.visible">
+        <md-dialog-title>{{ $t("warning") }}</md-dialog-title>
+        <md-dialog-content>
+          <p>{{ alertClosedPullRequests.content }}</p>
+          <ul>
+            <li
+              v-for="item in alertClosedPullRequests.challenges"
+              :key="item.id"
+            >
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                :href="
+                  `https://github.com/${owner}/${submissionsRepo}/pull/${item.number}`
+                "
+                >{{ item.id }}</a
+              >
+            </li>
+          </ul>
+        </md-dialog-content>
+        <md-dialog-actions>
+          <md-button
+            class="md-primary"
+            @click="alertClosedPullRequests.visible = false"
+            >{{ $t("close") }}</md-button
+          >
+        </md-dialog-actions>
+      </md-dialog>
       <router-view />
     </md-app-content>
   </md-app>
@@ -85,25 +121,110 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { createPolling } from "@/utils";
+import { GitHub } from "@/services/nizkctf";
 
 import config from "@/config.json";
 
 export default {
   name: "App",
   data: () => ({
-    popupVisible: false,
+    owner: config.owner,
+    submissionsRepo: config.submissionsRepo,
+    poolingPullRequests: undefined,
+    popupLogoutVisible: false,
     menuVisible: false,
     cardVisible: false,
-    authLink: config.authLink
+    authLink: config.authLink,
+    toastMergeds: {
+      visible: false,
+      content: null,
+      challenges: ""
+    },
+    alertClosedPullRequests: {
+      visible: false,
+      content: null,
+      challenges: []
+    }
   }),
   computed: mapState({
     theme: state => state.theme,
     user: state => state.user,
     token: state => state.token,
-    teamName: state => state.team && state.team.name
+    teamName: state => state.team && state.team.name,
+    pendingPullRequests: state => state.pendingPullRequests
   }),
   methods: {
-    ...mapActions(["setUser", "setToken", "setRepository"]),
+    ...mapActions([
+      "setUser",
+      "setToken",
+      "setRepository",
+      "setPendingPullRequests",
+      "removePullRequestFromPending"
+    ]),
+    async checkPullRequestsState(github, list) {
+      const states = await Promise.all(
+        list.map(item =>
+          github
+            .checkState(config.owner, config.submissionsRepo, item)
+            .then(({ state, title }) => ({ number: item, state, title }))
+        )
+      );
+      return states;
+    },
+    setListOfPendingPullRequests(github) {
+      github
+        .listPullRequests(config.owner, config.submissionsRepo, this.user.login)
+        .then(data => {
+          const list = data.map(item => item.number);
+          list.length > 0 && this.setPendingPullRequests(list);
+        });
+    },
+    updateListOfPendingPullRequests(github) {
+      this.checkPullRequestsState(github, this.pendingPullRequests)
+        .then(list => {
+          this.toastMergeds.content = null;
+          this.toastMergeds.challenges = [];
+          this.alertClosedPullRequests.challenges = [];
+          list.forEach(item => {
+            const challenge = item.title.replace("Proof: found flag for", "");
+            if (item.state === "merged") {
+              this.toastMergeds.challenges.push(challenge);
+              this.removePullRequestFromPending(item.number);
+            } else if (item.state === "closed") {
+              this.alertClosedPullRequests.challenges.push({
+                id: challenge,
+                number: item.number
+              });
+              this.removePullRequestFromPending(item.number);
+            }
+          });
+        })
+        .finally(() => {
+          if (this.toastMergeds.challenges.length > 0) {
+            this.toastMergeds.content = this.$t("acceptedChallenges", {
+              challenges: this.toastMergeds.challenges
+            });
+            this.toastMergeds.visible = true;
+          }
+
+          if (this.alertClosedPullRequests.challenges.length > 0) {
+            this.alertClosedPullRequests.content = this.$t(
+              "notAcceptedChallenges"
+            );
+            this.alertClosedPullRequests.visible = true;
+          }
+        });
+    },
+    createPullRequestsPooling() {
+      const github = new GitHub(this.token);
+      const callback = () =>
+        this.pendingPullRequests.length > 0
+          ? this.updateListOfPendingPullRequests(github)
+          : this.setListOfPendingPullRequests(github);
+
+      this.poolingPullRequests = createPolling(callback, 15000); // 15s
+    },
     toggleMenu() {
       this.menuVisible = !this.menuVisible;
     },
@@ -111,10 +232,29 @@ export default {
       this.cardVisible = !this.cardVisible;
     },
     logout() {
-      this.popupVisible = !!this.teamName;
+      this.popupLogoutVisible = !!this.teamName;
       this.setUser(null);
       this.setToken(null);
       this.setRepository(null);
+    }
+  },
+  mounted() {
+    this.createPullRequestsPooling();
+    this.poolingPullRequests.start();
+  },
+  beforeDestroy() {
+    this.poolingPullRequests.stop();
+  },
+  watch: {
+    countryFilter(value) {
+      this.filteredCountries = this.countries.filter(
+        item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
+      );
+    },
+    teamName(value) {
+      if (value && this.token && !this.poolingPullRequests.running) {
+        this.createPullRequestsPooling();
+      }
     }
   }
 };
