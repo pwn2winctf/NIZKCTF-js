@@ -4,7 +4,7 @@
       <md-dialog-alert
         v-if="team.option == 'create'"
         :md-active.sync="createdTeam"
-        :md-title="$t('teamCreated')"
+        :md-title="$t('backupTeamPrivateKey')"
         :md-content="$t('saveYourTeamSecret')"
       />
       <p>{{ $t("encodedTeam") }}</p>
@@ -204,9 +204,10 @@ export default {
   methods: {
     ...mapActions(["setToken", "setUser", "setRepository", "setTeam"]),
     copyTeamSecret() {
-      navigator.clipboard.writeText(this.encodedTeam)
-      .then(()=>this.showMessage(this.$t("teamKeysCopied")))
-      .catch(()=>this.showMessage("Oops, unable to copy"))
+      navigator.clipboard
+        .writeText(this.encodedTeam)
+        .then(() => this.showMessage(this.$t("teamKeysCopied")))
+        .catch(() => this.showMessage("Oops, unable to copy"));
     },
     setNextStepper(index) {
       if (index) {
