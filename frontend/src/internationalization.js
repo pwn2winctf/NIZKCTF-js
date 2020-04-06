@@ -46,6 +46,7 @@ export default {
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!  This key is stored in the browser and is not linked to your GitHub account.",
     teamCreated: "Team created",
+    teamKeysCopied: "Team private key was copied to clipboard",
     saveYourTeamSecret: `Backup the team private key now. Please note that for security reasons, we do not store it to your GitHub account. If you ever clean your browser's private data, it will be lost unless you have a backup.
 You will need the team private key to:
 <ul>
@@ -116,6 +117,8 @@ You will need the team private key to:
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenada no seu navegador e não está vinculada a sua conta do GitHub.",
     teamCreated: "Time criado",
+    teamKeysCopied:
+      "A chave privada da equipe foi copiada para a área de transferência",
     saveYourTeamSecret: `Faça backup da chave privada da equipe agora. Observe que, por razões de segurança, não o armazenamos na sua conta do GitHub. Se você limpar os dados particulares do seu navegador, eles serão perdidos, a menos que você tenha um backup.
 Você precisará da chave privada da equipe para:
 <ul>
