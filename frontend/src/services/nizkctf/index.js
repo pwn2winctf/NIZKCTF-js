@@ -201,12 +201,12 @@ const cryptoPwhash = (password, salt, opslimit, memlimit) =>
       });
     };
 
-    const onCompleted = () => {
+    const onCompleted = (event) => {
       worker.terminate();
       resolve(event.data.result);
     };
 
-    const onError = () => {
+    const onError = (event) => {
       worker.terminate();
       reject(event.data.result);
     };
@@ -214,7 +214,7 @@ const cryptoPwhash = (password, salt, opslimit, memlimit) =>
     const action = { ready: onReady, completed: onCompleted, error: onError };
 
     worker.onmessage = event => {
-      action[event.data.message]();
+      action[event.data.message](event);
     };
   });
 
