@@ -28,9 +28,16 @@ export default class NIZKCTF {
     const message = `Register team ${name}`;
 
     const content = JSON.stringify(team);
-
-    await this._push(message, path, content, "team.json");
-    return keys;
+    try {
+      await this._push(message, path, content, "team.json");
+      return keys;
+    } catch (err) {
+      if (err.message.includes('"sha" wasn\'t supplied.')) {
+        throw new Error("There is already a team with that name");
+      } else {
+        throw new Error(err);
+      }
+    }
   }
 
   async submitFlag(flag, challenge) {
