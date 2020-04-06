@@ -46,7 +46,14 @@ export default {
     encodedTeam:
       "This is your team's private key. Share with your team so they can join the team!  This key is stored in the browser and is not linked to your GitHub account.",
     teamCreated: "Team created",
-    saveYourTeamSecret: "Save <strong>NOW</strong> your team's private key!",
+    saveYourTeamSecret: `Backup the team private key now. Please note that for security reasons, we do not store it to your GitHub account. If you ever clean your browser's private data, it will be lost unless you have a backup.
+You will need the team private key to:
+<ul>
+<li> Get other members to join your team. </li>
+<li> Log in to your account on another machine. </li>
+<li> Log in to your account on another web browser. </li>
+<li> Log in to your account after cleaning your web browser's private data. </li>
+</ul>`,
     router: {
       Home: "Home",
       Challenges: "Challenges",
@@ -109,8 +116,14 @@ export default {
     encodedTeam:
       "Essa é  a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam entrar na equipe! Esta chave está armazenada no seu navegador e não está vinculada a sua conta do GitHub.",
     teamCreated: "Time criado",
-    saveYourTeamSecret:
-      "Salve <strong>AGORA</strong> a chave privada do seu time!",
+    saveYourTeamSecret: `Faça backup da chave privada da equipe agora. Observe que, por razões de segurança, não o armazenamos na sua conta do GitHub. Se você limpar os dados particulares do seu navegador, eles serão perdidos, a menos que você tenha um backup.
+Você precisará da chave privada da equipe para:
+<ul>
+<li> Faça com que outros membros se juntem à sua equipe. </li>
+<li> Faça login na sua conta em outra máquina. </li>
+<li> Faça login na sua conta em outro navegador da web. </li>
+<li> Faça login na sua conta depois de limpar os dados particulares do seu navegador. </li>
+</ul>`,
     router: {
       Home: "Início",
       Challenges: "Desafios",
