@@ -201,12 +201,12 @@ const cryptoPwhash = (password, salt, opslimit, memlimit) =>
       });
     };
 
-    const onCompleted = (event) => {
+    const onCompleted = event => {
       worker.terminate();
       resolve(event.data.result);
     };
 
-    const onError = (event) => {
+    const onError = event => {
       worker.terminate();
       reject(event.data.result);
     };
