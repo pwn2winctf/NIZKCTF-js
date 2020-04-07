@@ -26,6 +26,15 @@ Sentry.init({
   attachStacktrace: true
 });
 
+if(store.getters.user){
+  Sentry.withScope(function(scope) {
+    scope.setUser({
+      id: store.getters.user.login,
+      username: store.getters.user.name
+    });
+  });
+}
+
 Vue.use(VueMaterial);
 Vue.use(VueI18n);
 
