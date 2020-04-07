@@ -132,7 +132,9 @@ export default {
                 if (challenge) {
                   this.selectChallenge(challenge);
                 } else {
-                  this.$router.push("/challenges");
+                  this.$router.push({
+                    name: "Challenges"
+                  });
                 }
               }
 
@@ -157,7 +159,12 @@ export default {
       );
     },
     selectChallenge(challenge) {
-      this.$router.push(`/challenges/${challenge.id}`);
+      if (!this.$route.params.id) {
+        this.$router.push({
+          name: "ChallengesInfo",
+          params: { id: challenge.id }
+        });
+      }
       this.popup.id = challenge.id;
       this.popup.title = challenge.title;
       this.popup.tags = challenge.tags;
