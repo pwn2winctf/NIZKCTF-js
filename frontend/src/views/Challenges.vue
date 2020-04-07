@@ -129,7 +129,11 @@ export default {
                 const challenge = this.challenges.find(
                   ({ id }) => id === this.$route.params.id
                 );
-                challenge && this.selectChallenge(challenge);
+                if (challenge) {
+                  this.selectChallenge(challenge);
+                } else {
+                  this.$router.push("/challenges");
+                }
               }
 
               this.filteredChallenges = this.challenges;
