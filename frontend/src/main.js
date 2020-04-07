@@ -26,7 +26,7 @@ Sentry.init({
   attachStacktrace: true
 });
 
-if(store.getters.user){
+if (store.getters.user) {
   Sentry.withScope(function(scope) {
     scope.setUser({
       id: store.getters.user.login,
