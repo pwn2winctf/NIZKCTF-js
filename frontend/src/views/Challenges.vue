@@ -157,6 +157,7 @@ export default {
       );
     },
     selectChallenge(challenge) {
+      this.$router.push(`/challenges/${challenge.id}`);
       this.popup.id = challenge.id;
       this.popup.title = challenge.title;
       this.popup.tags = challenge.tags;
