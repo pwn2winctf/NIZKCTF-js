@@ -1,5 +1,5 @@
 <template>
-  <md-dialog :md-active="info.isOpen" @md-clicked-outside="onClose">
+  <md-dialog :md-active="info.isOpen" @md-clicked-outside="close">
     <md-dialog-title>{{ info.title }}</md-dialog-title>
     <md-dialog-content v-if="loading" class="spinner">
       <p v-if="sendingFlag">{{ $t("verifyingFlag") }}</p>
@@ -29,7 +29,7 @@
         @click="submitFlag"
         >{{ $t("submit") }}</md-button
       >
-      <md-button class="md-primary" @click="onClose">
+      <md-button class="md-primary" @click="close">
         {{ $t("close") }}
       </md-button>
     </md-dialog-actions>
@@ -73,6 +73,12 @@ export default {
   }),
   methods: {
     ...mapActions(["addPullRequestToPending"]),
+    close() {
+      if (this.$route.params.id) {
+        this.$router.push("/challenges");
+      }
+      this.onClose();
+    },
     loadDescription(challenge) {
       API.getChallengeDescription(challenge, this.language).then(({ data }) => {
         this.description = this.converter.makeHtml(data);
