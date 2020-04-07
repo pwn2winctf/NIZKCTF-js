@@ -1,5 +1,5 @@
 <template>
-  <md-dialog :md-active="info.isOpen" @md-clicked-outside="onClose">
+  <md-dialog :md-active="info.isOpen" @md-clicked-outside="close">
     <md-dialog-title>{{ info.title }}</md-dialog-title>
     <md-dialog-content v-if="loading" class="spinner">
       <p v-if="sendingFlag">{{ $t("verifyingFlag") }}</p>
@@ -29,7 +29,7 @@
         @click="submitFlag"
         >{{ $t("submit") }}</md-button
       >
-      <md-button class="md-primary" @click="onClose">
+      <md-button class="md-primary" @click="close">
         {{ $t("close") }}
       </md-button>
     </md-dialog-actions>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import showdown from "showdown";
 
 import { API } from "@/services/api";
@@ -72,6 +72,13 @@ export default {
     repository: state => state.repository
   }),
   methods: {
+    ...mapActions(["addPullRequestToPending"]),
+    close() {
+      if (this.$route.params.id) {
+        this.$router.push("/challenges");
+      }
+      this.onClose();
+    },
     loadDescription(challenge) {
       API.getChallengeDescription(challenge, this.language).then(({ data }) => {
         this.description = this.converter.makeHtml(data);
@@ -89,7 +96,10 @@ export default {
       const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
       nizkctf
         .submitFlag(this.flag, this.info)
-        .then(() => this.showMessage(this.$t("flagFound")))
+        .then(data => {
+          this.addPullRequestToPending(data.number),
+            this.showMessage(this.$t("flagFound"));
+        })
         .catch(err => this.showMessage(err))
         .finally(() => {
           this.loading = false;

@@ -37,7 +37,7 @@ const routes = [
   },
   {
     path: "/challenges/:id",
-    name: "Challenges",
+    name: "ChallengesInfo",
     component: Challenges
   },
   {

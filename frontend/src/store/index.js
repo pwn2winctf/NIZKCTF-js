@@ -28,7 +28,8 @@ export default new Vuex.Store({
     token: null,
     user: null,
     team: null,
-    repository: null
+    repository: null,
+    pendingPullRequests: []
   },
   mutations: {
     setTheme(state, theme) {
@@ -48,6 +49,18 @@ export default new Vuex.Store({
     },
     setRepository(state, repository) {
       state.repository = repository;
+    },
+    setPendingPullRequests(state, pendingPullRequests) {
+      state.pendingPullRequests = pendingPullRequests;
+    },
+    addPullRequestToPending(state, pullRequest) {
+      state.pendingPullRequests = [...state.pendingPullRequests, pullRequest];
+    },
+    removePullRequestFromPending(state, pullRequest) {
+      const list = [...state.pendingPullRequests];
+      const index = list.indexOf(pullRequest);
+      list.splice(index, 1);
+      state.pendingPullRequests = list;
     }
   },
   actions: {
@@ -68,12 +81,22 @@ export default new Vuex.Store({
     },
     setRepository(context, repository) {
       context.commit("setRepository", repository);
+    },
+    setPendingPullRequests(context, pendingPullRequests) {
+      context.commit("setPendingPullRequests", pendingPullRequests);
+    },
+    addPullRequestToPending(context, pullRequest) {
+      context.commit("addPullRequestToPending", pullRequest);
+    },
+    removePullRequestFromPending(context, pullRequest) {
+      context.commit("removePullRequestFromPending", pullRequest);
     }
   },
   getters: {
     language: state => state.language,
     token: state => state.token,
-    team: state => state.team
+    team: state => state.team,
+    user: state => state.user
   },
   modules: {},
   plugins

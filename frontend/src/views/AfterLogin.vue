@@ -1,15 +1,20 @@
 <template>
-  <md-concent>
+  <md-content>
     <md-content v-if="encodedTeam">
       <md-dialog-alert
         v-if="team.option == 'create'"
         :md-active.sync="createdTeam"
-        :md-title="$t('teamCreated')"
+        :md-title="$t('backupTeamPrivateKey')"
         :md-content="$t('saveYourTeamSecret')"
       />
       <p>{{ $t("encodedTeam") }}</p>
       <md-field>
-        <md-textarea v-model="encodedTeam" md-autogrow disabled></md-textarea>
+        <md-textarea
+          v-model="encodedTeam"
+          md-autogrow
+          id="team-secret"
+          readonly
+        ></md-textarea>
       </md-field>
     </md-content>
     <md-steppers v-else :md-active-step.sync="active" md-vertical md-linear>
@@ -120,7 +125,7 @@
     >
       <span>{{ message }}</span>
     </md-snackbar>
-  </md-concent>
+  </md-content>
 </template>
 
 <script>
@@ -198,6 +203,12 @@ export default {
   },
   methods: {
     ...mapActions(["setToken", "setUser", "setRepository", "setTeam"]),
+    copyTeamSecret() {
+      navigator.clipboard
+        .writeText(this.encodedTeam)
+        .then(() => this.showMessage(this.$t("teamKeysCopied")))
+        .catch(() => this.showMessage("Oops, unable to copy"));
+    },
     setNextStepper(index) {
       if (index) {
         this.active = index;
@@ -269,6 +280,7 @@ export default {
           );
           this.showMessage(this.$t("teamCreated"));
           this.createdTeam = true;
+          this.copyTeamSecret();
         })
         .catch(err => {
           this.showMessage(err);

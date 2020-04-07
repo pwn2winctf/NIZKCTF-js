@@ -129,7 +129,13 @@ export default {
                 const challenge = this.challenges.find(
                   ({ id }) => id === this.$route.params.id
                 );
-                challenge && this.selectChallenge(challenge);
+                if (challenge) {
+                  this.selectChallenge(challenge);
+                } else {
+                  this.$router.push({
+                    name: "Challenges"
+                  });
+                }
               }
 
               this.filteredChallenges = this.challenges;
@@ -153,6 +159,12 @@ export default {
       );
     },
     selectChallenge(challenge) {
+      if (!this.$route.params.id) {
+        this.$router.push({
+          name: "ChallengesInfo",
+          params: { id: challenge.id }
+        });
+      }
       this.popup.id = challenge.id;
       this.popup.title = challenge.title;
       this.popup.tags = challenge.tags;

@@ -28,9 +28,16 @@ export default class NIZKCTF {
     const message = `Register team ${name}`;
 
     const content = JSON.stringify(team);
-
-    await this._push(message, path, content, "team.json");
-    return keys;
+    try {
+      await this._push(message, path, content, "team.json");
+      return keys;
+    } catch (err) {
+      if (err.message.includes('"sha" wasn\'t supplied.')) {
+        throw new Error("There is already a team with that name");
+      } else {
+        throw new Error(err);
+      }
+    }
   }
 
   async submitFlag(flag, challenge) {
@@ -50,29 +57,29 @@ export default class NIZKCTF {
     let currentContent = newProof;
     let shaOfFile = undefined;
 
-    return this.github
-      .getContents(
+    try {
+      const { sha, content } = await this.github.getContents(
         this.upstream.owner,
         this.upstream.repository,
         `${path}/submissions.csv`
-      )
-      .then(({ sha, content }) => {
-        const decodedContent = new Buffer.from(content, "base64").toString();
-        shaOfFile = sha;
+      );
 
-        currentContent = currentContent.concat("\n", decodedContent);
-      })
-      .catch(() => {})
-      .finally(() => {
-        return this._push(
-          message,
-          path,
-          currentContent,
-          "submissions.csv",
-          true,
-          shaOfFile
-        );
-      });
+      const decodedContent = new Buffer.from(content, "base64").toString();
+      shaOfFile = sha;
+
+      currentContent = currentContent.concat("\n", decodedContent);
+    } catch (err) {
+      console.error(err);
+    }
+
+    return this._push(
+      message,
+      path,
+      currentContent,
+      "submissions.csv",
+      true,
+      shaOfFile
+    );
   }
 
   async _lookupFlag(flag, challenge) {
@@ -149,12 +156,13 @@ export default class NIZKCTF {
     );
 
     if (pullRequest) {
-      await this.github.createPullRequest(
+      const response = await this.github.createPullRequest(
         this.upstream.owner,
         this.upstream.repository,
         message,
         `${this.local.owner}:${branch}`
       );
+      return response;
     }
   }
 
@@ -193,12 +201,12 @@ const cryptoPwhash = (password, salt, opslimit, memlimit) =>
       });
     };
 
-    const onCompleted = () => {
+    const onCompleted = event => {
       worker.terminate();
       resolve(event.data.result);
     };
 
-    const onError = () => {
+    const onError = event => {
       worker.terminate();
       reject(event.data.result);
     };
@@ -206,7 +214,7 @@ const cryptoPwhash = (password, salt, opslimit, memlimit) =>
     const action = { ready: onReady, completed: onCompleted, error: onError };
 
     worker.onmessage = event => {
-      action[event.data.message]();
+      action[event.data.message](event);
     };
   });
 
