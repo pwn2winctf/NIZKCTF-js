@@ -6,15 +6,18 @@ process.env.VUE_APP_VERSION = version;
 
 module.exports = {
   publicPath: configJson.deployPath,
-  configureWebpack: {
-    devtool: "source-map",
-    plugins: [
-      new SentryPlugin({
-        release: `web-client@${process.env.VUE_APP_VERSION}`,
-        include: "./dist",
-        ignore: ["node_modules", "vue.config.js"]
-      })
-    ]
+  configureWebpack: config => {
+    config.devtool = "source-map";
+
+    if (process.env.NODE_ENV === "production") {
+      config.plugins.push(
+        new SentryPlugin({
+          release: `web-client@${process.env.VUE_APP_VERSION}`,
+          include: "./dist",
+          ignore: ["node_modules", "vue.config.js"]
+        })
+      );
+    }
   },
   chainWebpack: config => {
     config.plugin("html").tap(args => {
