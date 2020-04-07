@@ -262,7 +262,7 @@ export default {
       }
     },
     async createTeam() {
-      const local = { owner: this.user.login, repository: this.repository };
+      const local = { owner: this.user.username, repository: this.repository };
       const upstream = {
         owner: config.owner,
         repository: config.submissionsRepo

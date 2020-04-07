@@ -175,7 +175,11 @@ export default {
     },
     setListOfPendingPullRequests(github) {
       github
-        .listPullRequests(config.owner, config.submissionsRepo, this.user.login)
+        .listPullRequests(
+          config.owner,
+          config.submissionsRepo,
+          this.user.username
+        )
         .then(data => {
           const list = data.map(item => item.number);
           list.length > 0 && this.setPendingPullRequests(list);
@@ -260,7 +264,7 @@ export default {
       if (value) {
         Sentry.configureScope(scope => {
           scope.setUser({
-            id: value.login,
+            id: value.username,
             username: value.name
           });
         });
