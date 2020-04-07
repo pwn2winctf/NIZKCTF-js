@@ -19,6 +19,7 @@ Vue.config.productionTip = false;
 Sentry.init({
   dsn:
     "https://2140e0ab448b4b8a9d256b2fc0f0df30@o374062.ingest.sentry.io/5191556",
+  environment: process.env.NODE_ENV || "staging",
   logLevel: Sentry.Severity.Debug,
   integrations: [new Integrations.Vue({ Vue, attachProps: true })],
   release: `web-client@${process.env.VUE_APP_VERSION}`,
