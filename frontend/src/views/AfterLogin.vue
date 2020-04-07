@@ -346,11 +346,8 @@ export default {
     },
     async createFork(token) {
       const github = new GitHub(token);
-      const { name } = await github.createFork(
-        config.owner,
-        config.submissionsRepo
-      );
-      return name;
+      const { path } = await github.createFork(config.submissionsRepo);
+      return path;
     },
     async verifyFork(token) {
       const github = new GitHub(token);

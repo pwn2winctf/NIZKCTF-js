@@ -1,5 +1,10 @@
 import { Octokit } from "@octokit/rest";
 
+const repoNameHandler = repoName => {
+  const [owner, repo] = repoName.split("/");
+  return { owner, repo };
+};
+
 export default class GitHub {
   constructor(token) {
     this.octokit = new Octokit({
@@ -16,9 +21,12 @@ export default class GitHub {
     return { avatar_url, name, username };
   }
 
-  async createFork(owner, repo) {
-    const response = await this.octokit.repos.createFork({ owner, repo });
-    return response.data;
+  async createFork(repoName) {
+    const { owner, repo } = repoNameHandler(repoName);
+
+    const { data } = await this.octokit.repos.createFork({ owner, repo });
+
+    return { path: data.full_name };
   }
 
   async createOrUpdateFile(
