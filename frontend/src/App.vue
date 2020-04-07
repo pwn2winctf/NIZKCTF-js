@@ -123,6 +123,7 @@
 import { mapState, mapActions } from "vuex";
 import { createPolling } from "@/utils";
 import { GitHub } from "@/services/nizkctf";
+import * as Sentry from "@sentry/browser";
 
 import config from "@/config.json";
 
@@ -245,7 +246,9 @@ export default {
     }
   },
   beforeDestroy() {
-    this.poolingPullRequests.stop();
+    if (this.poolingPullRequests) {
+      this.poolingPullRequests.stop();
+    }
   },
   watch: {
     countryFilter(value) {
@@ -254,6 +257,15 @@ export default {
       );
     },
     user(value) {
+      if (value) {
+        Sentry.configureScope(scope => {
+          scope.setUser({
+            id: value.login,
+            username: value.name
+          });
+        });
+      }
+
       if (
         value &&
         (!this.poolingPullRequests || !this.poolingPullRequests.running)

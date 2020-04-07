@@ -13,7 +13,7 @@ module.exports = {
       config.plugins.push(
         new SentryPlugin({
           release: `web-client@${process.env.VUE_APP_VERSION}`,
-          include: "./dist",
+          include: ".",
           ignore: ["node_modules", "vue.config.js"]
         })
       );
