@@ -44,7 +44,8 @@ export default class GitHub {
       repo,
       title,
       head,
-      base
+      base,
+      maintainer_can_modify: false
     });
     return response.data;
   }
