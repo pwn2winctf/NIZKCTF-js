@@ -9,6 +9,7 @@
 		"deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
 	},
 	"dependencies": {
+		"@gitbeaker/node": "^17.0.1",
 		"@octokit/rest": "^17.1.4",
 		"@sentry/browser": "^5.15.4",
 		"@sentry/integrations": "^5.15.4",
@@ -41,6 +42,7 @@
 		"eslint": "^6.7.2",
 		"eslint-plugin-prettier": "^3.1.1",
 		"eslint-plugin-vue": "^6.2.2",
+		"esm": "^3.2.25",
 		"lint-staged": "^9.5.0",
 		"node-sass": "^4.13.1",
 		"prettier": "^1.19.1",
