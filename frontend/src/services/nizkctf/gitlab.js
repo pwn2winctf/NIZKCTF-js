@@ -19,7 +19,7 @@ export default class GitLab {
       return { path: response[0].path_with_namespace };
     } catch (error) {
       const response = await this.api.Projects.forks(repo, { owned: true });
-      return { path: response[0].path_with_namespace };
+      return { path: response[0].id };
     }
   }
 
