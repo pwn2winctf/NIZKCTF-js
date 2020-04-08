@@ -78,11 +78,19 @@ export default class GitLab {
       head_sha: diff_refs.head_sha
     };
   }
-  //----
+  async listPullRequests(projectId, authorUsername, state) {
+    const response = await this.api.MergeRequests.all({
+      projectId,
+      authorUsername,
+      state
+    });
 
-  // TODO
-  async listPullRequests(owner, repo, username = null, state = "open") {
-    console.log(owner, repo, username, state);
+    return response.map(({ iid, title, state, web_url }) => ({
+      number: iid,
+      title,
+      state,
+      url: web_url
+    }));
   }
 
   // TODO
