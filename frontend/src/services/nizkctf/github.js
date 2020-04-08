@@ -30,15 +30,15 @@ export default class GitHub {
   }
 
   async createOrUpdateFile(
-    owner,
-    repo,
+    repoName,
     path,
     message,
     content,
     branch = "master",
     sha = undefined
   ) {
-    const response = await this.octokit.repos.createOrUpdateFile({
+    const { owner, repo } = repoNameHandler(repoName);
+    const { data } = await this.octokit.repos.createOrUpdateFile({
       owner,
       repo,
       path,
@@ -47,7 +47,7 @@ export default class GitHub {
       sha,
       branch
     });
-    return response.data;
+    return { path: data.content.path };
   }
 
   async createPullRequest(owner, repo, title, head, base = "master") {

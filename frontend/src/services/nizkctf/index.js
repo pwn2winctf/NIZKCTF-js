@@ -146,7 +146,6 @@ export default class NIZKCTF {
     );
 
     await this.github.createOrUpdateFile(
-      this.local.owner,
       this.local.repository,
       file,
       message,
