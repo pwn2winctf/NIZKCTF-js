@@ -38,7 +38,8 @@ export default {
     fixErrors: "Please fix the following error(s):",
     teamPrivateKey: "Team private key",
     verifyingFlag: "Please wait, we are checking the flag against the hash.",
-    flagFound: "Flag found, submitted!",
+    flagFound:
+      "Flag found, submitted! You will receive a notification about the submission status in a few seconds.",
     acceptedChallenges:
       "The {challenges} submission(s) was accepted. In a few minutes it will count.",
     notAcceptedChallenges:
@@ -109,7 +110,8 @@ export default {
     submit: "Enviar",
     fixErrors: "Por favor, corrija o(s) seguinte(s) erro(s):",
     teamPrivateKey: "Chave privada do time",
-    flagFound: "Flag encontrada, enviado!",
+    flagFound:
+      "Flag encontrada, enviada! Você receberá uma notificação sobre o status do envio em alguns segundos.",
     acceptedChallenges:
       "The {challenges} submission(s) was accepted. In a few minutes it will count.",
     notAcceptedChallenges:

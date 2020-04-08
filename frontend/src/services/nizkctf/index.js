@@ -172,7 +172,9 @@ export default class NIZKCTF {
 
     return this.github
       .createPullRequest(this.upstream, "master", title, this.local, "master")
-      .catch(() => {})
+      .catch(err => {
+        console.error("Error on update from upstream:" + err);
+      })
       .then(({ head }) => {
         return this.github.updateRef(
           this.local.owner,

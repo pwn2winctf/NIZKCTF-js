@@ -249,9 +249,7 @@ export default {
             data: this.scoreAxis[item.team]
           }));
 
-          this.data.labels = this.timeAxis;
-
-          this.data.datasets = datasets;
+          this.data = { labels: this.timeAxis, datasets };
         })
         .finally(() => (this.firstLoad = false));
     }

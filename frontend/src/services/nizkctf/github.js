@@ -67,7 +67,8 @@ export default class GitHub {
       repo,
       title,
       head,
-      base: targetBranch
+      base: targetBranch,
+      maintainer_can_modify: false
     });
     return {
       number: data.number,
