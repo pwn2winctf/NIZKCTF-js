@@ -50,15 +50,30 @@ export default class GitHub {
     return { path: data.content.path };
   }
 
-  async createPullRequest(owner, repo, title, head, base = "master") {
-    const response = await this.octokit.pulls.create({
+  async createPullRequest(
+    sourceRepo,
+    sourceBranch,
+    title,
+    targetRepo,
+    targetBranch
+  ) {
+    const sourceRepoInfo = repoNameHandler(sourceRepo);
+    const { owner, repo } = repoNameHandler(targetRepo);
+
+    const head = `${sourceRepoInfo.owner}:${sourceBranch}`;
+
+    const { data } = await this.octokit.pulls.create({
       owner,
       repo,
       title,
       head,
-      base
+      base: targetBranch
     });
-    return response.data;
+    return {
+      number: data.number,
+      head_sha: data.head.sha,
+      base_sha: data.base.sha
+    };
   }
 
   async listPullRequests(owner, repo, username = null, state = "open") {

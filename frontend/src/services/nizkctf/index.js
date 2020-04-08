@@ -1,14 +1,15 @@
 import GitHub from "./github";
+import GitLab from "./gitlab";
 import libsodium from "./libsodium";
 import { getTeamPath } from "../../utils";
 
-import { deployPath } from "@/config";
+import { deployPath } from "../../config";
 
 export default class NIZKCTF {
   constructor(token, local, upstream, team = undefined) {
     this.token = token;
     this.local = { owner: local.owner, repository: local.repository };
-    this.upstream = { owner: upstream.owner, repository: upstream.repository };
+    this.upstream = upstream.repository;
 
     this.github = new GitHub(this.token);
     this.team = team;
@@ -156,10 +157,11 @@ export default class NIZKCTF {
 
     if (pullRequest) {
       const response = await this.github.createPullRequest(
-        this.upstream.owner,
-        this.upstream.repository,
+        this.local,
+        branch,
         message,
-        `${this.local.owner}:${branch}`
+        this.upstream,
+        "master"
       );
       return response;
     }
@@ -167,10 +169,9 @@ export default class NIZKCTF {
 
   async _pull() {
     const title = "Update from upstream";
-    const head = `${this.upstream.owner}:master`;
 
     return this.github
-      .createPullRequest(this.local.owner, this.local.repository, title, head)
+      .createPullRequest(this.upstream, "master", title, this.local, "master")
       .catch(() => {})
       .then(({ head }) => {
         return this.github.updateRef(
@@ -217,4 +218,4 @@ const cryptoPwhash = (password, salt, opslimit, memlimit) =>
     };
   });
 
-export { GitHub, libsodium };
+export { GitHub, GitLab, libsodium };
