@@ -91,11 +91,6 @@ export default class GitLab {
   }
 
   // TODO
-  async mergePullRequest(owner, repo, pull_number) {
-    console.log(owner, repo, pull_number);
-  }
-
-  // TODO
   async getRef(owner, repo, ref) {
     console.log(owner, repo, ref);
   }
