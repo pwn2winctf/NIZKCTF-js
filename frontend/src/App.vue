@@ -175,11 +175,7 @@ export default {
     },
     setListOfPendingPullRequests(github) {
       github
-        .listPullRequests(
-          config.owner,
-          config.submissionsRepo,
-          this.user.username
-        )
+        .listPullRequests(config.submissionsRepo, this.user.username, "opened")
         .then(data => {
           const list = data.map(item => item.number);
           list.length > 0 && this.setPendingPullRequests(list);

@@ -77,15 +77,23 @@ export default class GitHub {
     };
   }
 
-  async listPullRequests(owner, repo, username = null, state = "open") {
-    const response = await this.octokit.pulls.list({
+  async listPullRequests(repoName, username = null, state) {
+    const status = state === "opened" ? "open" : state;
+
+    const { owner, repo } = repoNameHandler(repoName);
+    const { data } = await this.octokit.pulls.list({
       owner,
       repo,
       head: username,
-      state
+      state: status
     });
 
-    return response.data;
+    return data.map((item) => ({
+      number:item.number,
+      state: item.state === "open" ? "opened" : item.state,
+      title: item.title,
+      url: item.html_url
+    }));
   }
 
   async checkState(owner, repo, pull_number) {
