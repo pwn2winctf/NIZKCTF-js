@@ -88,8 +88,8 @@ export default class GitHub {
       state: status
     });
 
-    return data.map((item) => ({
-      number:item.number,
+    return data.map(item => ({
+      number: item.number,
       state: item.state === "open" ? "opened" : item.state,
       title: item.title,
       url: item.html_url
