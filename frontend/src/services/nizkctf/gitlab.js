@@ -122,16 +122,6 @@ export default class GitLab {
     }));
   }
 
-  // TODO
-  async getRef(owner, repo, ref) {
-    console.log(owner, repo, ref);
-  }
-
-  // TODO
-  async updateRef(owner, repo, ref, sha) {
-    console.log(owner, repo, ref, sha);
-  }
-
   async getContents(repo) {
     const response = await this.api.Repositories.tree(repo);
 
