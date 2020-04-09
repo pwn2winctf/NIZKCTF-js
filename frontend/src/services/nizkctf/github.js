@@ -124,12 +124,18 @@ export default class GitHub {
     return { name: branchName, url };
   }
 
-  async listBranches(owner, repo) {
-    const response = await this.octokit.repos.listBranches({
+  async listBranches(repoName) {
+    const { owner, repo } = repoNameHandler(repoName);
+    const { data } = await this.octokit.repos.listBranches({
       owner,
       repo
     });
-    return response.data;
+
+    return data.map(({ name, commit }) => ({
+      name,
+      sha: commit.sha,
+      url: commit.url
+    }));
   }
 
   async getRef(owner, repo, ref) {
