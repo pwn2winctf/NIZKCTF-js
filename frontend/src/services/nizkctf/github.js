@@ -153,12 +153,15 @@ export default class GitHub {
     return response.data;
   }
 
-  async getContents(owner, repo, path) {
-    const response = await this.octokit.repos.getContents({
+  async getContents(repoName) {
+    const { owner, repo } = repoNameHandler(repoName);
+    const path = "";
+
+    const { data } = await this.octokit.repos.getContents({
       owner,
       repo,
       path
     });
-    return response.data;
+    return data.map(({ name, sha, type }) => ({ name, sha, type }));
   }
 }
