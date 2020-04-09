@@ -137,9 +137,29 @@ export default class GitLab {
 
     return response.map(({ id, name, type }) => ({ sha: id, name, type }));
   }
+
+  async __deleteBranch(repo, branch) {
+    return this.api.Branches.remove(repo, branch);
   }
 
+  async __closePullRequest(repo, number) {
+    return this.api.MergeRequests.remove(repo, number);
   }
 
+  async updateFromUpstream(originRepo, upstreamRepo, upstreamBranch) {
+    const originBranch = "master";
+    const title = "Update from upstream";
+
+    const { number, head_sha } = await this.createPullRequest(
+      upstreamRepo,
+      upstreamBranch,
+      title,
+      originRepo,
+      originBranch
+    );
+    await this.__deleteBranch(originRepo, "upstream");
+
+    await this.createBranch(originRepo, "upstream", head_sha);
+    await this.__closePullRequest(originRepo, number);
   }
 }

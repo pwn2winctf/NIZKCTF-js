@@ -138,21 +138,6 @@ export default class GitHub {
     }));
   }
 
-  async getRef(owner, repo, ref) {
-    const response = await this.octokit.git.getRef({ owner, repo, ref });
-    return response.data;
-  }
-
-  async updateRef(owner, repo, ref, sha) {
-    const response = await this.octokit.git.updateRef({
-      owner,
-      repo,
-      ref,
-      sha
-    });
-    return response.data;
-  }
-
   async getContents(repoName) {
     const { owner, repo } = repoNameHandler(repoName);
     const path = "";
@@ -163,5 +148,40 @@ export default class GitHub {
       path
     });
     return data.map(({ name, sha, type }) => ({ name, sha, type }));
+  }
+
+  async updateFromUpstream(originRepo, upstreamRepo, upstreamBranch) {
+    const title = "Update from upstream";
+
+    const { owner, repo } = repoNameHandler(originRepo);
+
+    try {
+      const { head_sha } = await this.createPullRequest(
+        upstreamRepo,
+        upstreamBranch,
+        title,
+        originRepo,
+        "upstream"
+      );
+      await this.__updateRef(owner, repo, "heads/upstream", head_sha);
+    } catch (err) {
+      if (
+        !err.errors ||
+        err.errors.length !== 1 ||
+        !err.errors[0].message.startsWith("No commits between")
+      ) {
+        console.error(err);
+      }
+    }
+  }
+
+  async __updateRef(owner, repo, ref, sha) {
+    const response = await this.octokit.git.updateRef({
+      owner,
+      repo,
+      ref,
+      sha
+    });
+    return response.data;
   }
 }
