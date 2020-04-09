@@ -107,6 +107,21 @@ export default class GitLab {
     };
   }
 
+  async createBranch(repo, branch, sha) {
+    const { name, commit } = await this.api.Branches.create(repo, branch, sha);
+    return { name, url: commit.web_url };
+  }
+
+  async listBranches(repo) {
+    const response = await this.api.Branches.all(repo);
+
+    return response.map(({ name, commit }) => ({
+      name,
+      url: commit.web_url,
+      sha: commit.id
+    }));
+  }
+
   // TODO
   async getRef(owner, repo, ref) {
     console.log(owner, repo, ref);
@@ -122,13 +137,7 @@ export default class GitLab {
     console.log(owner, repo, path);
   }
 
-  async createBranch(repo, branch, sha) {
-    const { name, commit } = await this.api.Branches.create(repo, branch, sha);
-    return { name, url: commit.web_url };
   }
 
-  // TODO
-  async listBranches(repo) {
-    console.log(repo);
   }
 }
