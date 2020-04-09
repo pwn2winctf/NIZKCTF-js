@@ -93,9 +93,18 @@ export default class GitLab {
     }));
   }
 
-  // TODO
-  async checkState(owner, repo, pull_number) {
-    console.log(owner, repo, pull_number);
+  async checkState(repo, number) {
+    const { iid, title, state, web_url } = await this.api.MergeRequests.show(
+      repo,
+      number
+    );
+
+    return {
+      number: iid,
+      title,
+      state,
+      url: web_url
+    };
   }
 
   // TODO
