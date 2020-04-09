@@ -111,14 +111,17 @@ export default class GitHub {
     return { title, state: status, url: html_url, number };
   }
 
-  async createBranch(owner, repo, ref, sha) {
-    const response = await this.octokit.git.createRef({
+  async createBranch(repoName, branchName, sha) {
+    const { owner, repo } = repoNameHandler(repoName);
+    const ref = `refs/heads/${branchName}`;
+
+    const { url } = await this.octokit.git.createRef({
       owner,
       repo,
       ref,
       sha
     });
-    return response.data;
+    return { name: branchName, url };
   }
 
   async listBranches(owner, repo) {
