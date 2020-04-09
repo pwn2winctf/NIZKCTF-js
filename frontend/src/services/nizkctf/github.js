@@ -96,16 +96,19 @@ export default class GitHub {
     }));
   }
 
-  async checkState(owner, repo, pull_number) {
+  async checkState(repoName, pull_number) {
+    const { owner, repo } = repoNameHandler(repoName);
+
     const { data } = await this.octokit.pulls.get({
       owner,
       repo,
       pull_number
     });
 
-    const { state, merged, title } = data;
+    const { state, number, merged, title, html_url } = data;
+    const status = merged ? "merged" : state === "open" ? "opened" : state;
 
-    return { title, state: merged ? "merged" : state };
+    return { title, state: status, url: html_url, number };
   }
 
   async createBranch(owner, repo, ref, sha) {
