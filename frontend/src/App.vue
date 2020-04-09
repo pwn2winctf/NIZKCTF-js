@@ -167,7 +167,7 @@ export default {
       const states = await Promise.all(
         list.map(item =>
           github
-            .checkState(config.owner, config.submissionsRepo, item)
+            .checkState(config.submissionsRepo, item)
             .then(({ state, title }) => ({ number: item, state, title }))
         )
       );

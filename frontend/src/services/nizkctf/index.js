@@ -8,8 +8,8 @@ import { deployPath } from "../../config";
 export default class NIZKCTF {
   constructor(token, local, upstream, team = undefined) {
     this.token = token;
-    this.local = { owner: local.owner, repository: local.repository };
-    this.upstream = upstream.repository;
+    this.local = local;
+    this.upstream = upstream;
 
     this.github = new GitHub(this.token);
     this.team = team;
@@ -36,6 +36,7 @@ export default class NIZKCTF {
       if (err.message.includes('"sha" wasn\'t supplied.')) {
         throw new Error("There is already a team with that name");
       } else {
+        console.error(err);
         throw new Error(err);
       }
     }
@@ -60,8 +61,7 @@ export default class NIZKCTF {
 
     try {
       const { sha, content } = await this.github.getContents(
-        this.upstream.owner,
-        this.upstream.repository,
+        this.upstream,
         `${path}/submissions.csv`
       );
 
@@ -128,26 +128,16 @@ export default class NIZKCTF {
 
     const branch = await libsodium.randomString(10);
 
-    const ref = `refs/heads/${branch}`;
     const file = `${path}/${fileName}`;
 
-    const branches = await this.github.listBranches(
-      this.local.owner,
-      this.local.repository
-    );
+    const branches = await this.github.listBranches(this.local);
 
-    const shaOfMaster = branches.find(item => item.name === "master").commit
-      .sha;
+    const shaOfUpstream = branches.find(item => item.name === "upstream").sha;
 
-    await this.github.createBranch(
-      this.local.owner,
-      this.local.repository,
-      ref,
-      shaOfMaster
-    );
+    await this.github.createBranch(this.local, branch, shaOfUpstream);
 
     await this.github.createOrUpdateFile(
-      this.local.repository,
+      this.local,
       file,
       message,
       encodedContent,
@@ -168,22 +158,11 @@ export default class NIZKCTF {
   }
 
   async _pull() {
-    const title = "Update from upstream";
-
     return this.github
-      .createPullRequest(this.upstream, "master", title, this.local, "master")
+      .updateFromUpstream(this.local, this.upstream, "master")
       .catch(err => {
-        console.error("Error on update from upstream:" + err);
-      })
-      .then(({ head }) => {
-        return this.github.updateRef(
-          this.local.owner,
-          this.local.repository,
-          "heads/master",
-          head.sha
-        );
-      })
-      .catch(() => {});
+        console.error(err);
+      });
   }
 }
 

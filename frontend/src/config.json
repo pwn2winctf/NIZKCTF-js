@@ -9,9 +9,8 @@
     "minpts": 50,
     "maxpts": 500
   },
-  "authLink": " https://github.com/login/oauth/authorize?client_id=9428a38e889e92919c92&scope=public_repo",
-  "owner": "ctf-br",
-  "submissionsRepo": "ranking_submissions",
+  "authLink": "https://github.com/login/oauth/authorize?client_id=9428a38e889e92919c92&scope=public_repo",
+  "submissionsRepo": "ctf-br/ranking_submissions",
   "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
   "deployPath": "/NIZKCTF-js",
   "flagFormat": "CTF-BR{...}",

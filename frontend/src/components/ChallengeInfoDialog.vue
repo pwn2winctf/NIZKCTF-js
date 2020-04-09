@@ -86,14 +86,14 @@ export default {
       });
     },
     submitFlag() {
-      const local = { owner: this.user.username, repository: this.repository };
-      const upstream = {
-        owner: config.owner,
-        repository: config.submissionsRepo
-      };
       this.loading = true;
       this.sendingFlag = true;
-      const nizkctf = new NIZKCTF(this.token, local, upstream, this.teamKey);
+      const nizkctf = new NIZKCTF(
+        this.token,
+        this.repository,
+        config.submissionsRepo,
+        this.teamKey
+      );
       nizkctf
         .submitFlag(this.flag, this.info)
         .then(data => {

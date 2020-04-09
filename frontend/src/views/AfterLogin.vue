@@ -137,6 +137,7 @@ import { API } from "@/services/api";
 import { validCountries } from "@/utils";
 
 import NIZKCTF, { GitHub } from "@/services/nizkctf";
+import { repoNameHandler } from "@/services/nizkctf/github";
 
 import config from "@/config.json";
 
@@ -197,9 +198,6 @@ export default {
         }
       });
     }
-  },
-  updated() {
-    this.getInfo();
   },
   methods: {
     ...mapActions(["setToken", "setUser", "setRepository", "setTeam"]),
@@ -262,13 +260,11 @@ export default {
       }
     },
     async createTeam() {
-      const local = { owner: this.user.username, repository: this.repository };
-      const upstream = {
-        owner: config.owner,
-        repository: config.submissionsRepo
-      };
-
-      const nizkctf = new NIZKCTF(this.token, local, upstream);
+      const nizkctf = new NIZKCTF(
+        this.token,
+        this.repository,
+        config.submissionsRepo
+      );
       nizkctf
         .createTeam(this.team)
         .then(keys => {
@@ -319,9 +315,10 @@ export default {
                 this.setNextStepper("team");
               });
             } else {
+              const { repo } = repoNameHandler(config.submissionsRepo);
               this.alreadyForked = alreadyForked;
               this.team.option = "join";
-              this.setRepository(config.submissionsRepo);
+              this.setRepository(`${this.user.username}/${repo}`);
               this.setNextStepper("team");
             }
           })
@@ -347,14 +344,26 @@ export default {
     async createFork(token) {
       const github = new GitHub(token);
       const { path } = await github.createFork(config.submissionsRepo);
+
+      const branches = await github.listBranches(path);
+      if (!branches.find(item => item.name === "upstream")) {
+        const shaOfMaster = branches.find(item => item.name === "master").sha;
+
+        await github.createBranch(
+          config.submissionsRepo,
+          "upstream",
+          shaOfMaster
+        );
+      }
+
       return path;
     },
     async verifyFork(token) {
       const github = new GitHub(token);
+      const { repo } = repoNameHandler(config.submissionsRepo);
       try {
         const content = await github.getContents(
-          this.user.login,
-          config.submissionsRepo
+          `${this.user.username}/${repo}`
         );
         return !!content;
       } catch (err) {
@@ -368,15 +377,8 @@ export default {
         item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
       );
     },
-    token(value) {
-      if (value) {
-        this.verifyFork(value).then(alreadyForked => {
-          if (alreadyForked) {
-            this.alreadyForked = alreadyForked;
-            this.team.option = "join";
-          }
-        });
-      }
+    active() {
+      this.getInfo();
     }
   }
 };

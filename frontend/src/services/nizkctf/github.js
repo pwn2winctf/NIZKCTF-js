@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/rest";
 
-const repoNameHandler = repoName => {
+export const repoNameHandler = repoName => {
   const [owner, repo] = repoName.split("/");
   return { owner, repo };
 };
@@ -77,7 +77,7 @@ export default class GitHub {
     };
   }
 
-  async listPullRequests(repoName, username = null, state) {
+  async listPullRequests(repoName, username, state) {
     const status = state === "opened" ? "open" : state;
 
     const { owner, repo } = repoNameHandler(repoName);
@@ -138,16 +138,17 @@ export default class GitHub {
     }));
   }
 
-  async getContents(repoName) {
+  async getContents(repoName, path = "") {
     const { owner, repo } = repoNameHandler(repoName);
-    const path = "";
 
     const { data } = await this.octokit.repos.getContents({
       owner,
       repo,
       path
     });
-    return data.map(({ name, sha, type }) => ({ name, sha, type }));
+    return Array.isArray(data)
+      ? data.map(({ name, sha, content }) => ({ name, sha, content }))
+      : { name: data.name, sha: data.sha, content: data.content };
   }
 
   async updateFromUpstream(originRepo, upstreamRepo, upstreamBranch) {
@@ -171,6 +172,7 @@ export default class GitHub {
         !err.errors[0].message.startsWith("No commits between")
       ) {
         console.error(err);
+        throw new Error(err);
       }
     }
   }

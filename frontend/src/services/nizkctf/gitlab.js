@@ -122,10 +122,15 @@ export default class GitLab {
     }));
   }
 
-  async getContents(repo) {
-    const response = await this.api.Repositories.tree(repo);
+  async getContents(repo, path = ".gitignore") {
+    const ref = "master";
+    const response = await this.api.RepositoryFiles.show(repo, path, ref);
 
-    return response.map(({ id, name, type }) => ({ sha: id, name, type }));
+    return response.map(({ commit_id, file_name, content }) => ({
+      sha: commit_id,
+      name: file_name,
+      content
+    }));
   }
 
   async __deleteBranch(repo, branch) {
