@@ -132,9 +132,11 @@ export default class GitLab {
     console.log(owner, repo, ref, sha);
   }
 
-  // TODO
-  async getContents(owner, repo, path) {
-    console.log(owner, repo, path);
+  async getContents(repo) {
+    const response = await this.api.Repositories.tree(repo);
+
+    return response.map(({ id, name, type }) => ({ sha: id, name, type }));
+  }
   }
 
   }
