@@ -122,10 +122,9 @@ export default class GitLab {
     console.log(owner, repo, path);
   }
 
-  // TODO CHECK
   async createBranch(repo, branch, sha) {
-    const response = await this.api.Branches.create(repo, branch, sha);
-    return response;
+    const { name, commit } = await this.api.Branches.create(repo, branch, sha);
+    return { name, url: commit.web_url };
   }
 
   // TODO
