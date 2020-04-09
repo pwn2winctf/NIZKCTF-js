@@ -9,7 +9,7 @@
 		"deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
 	},
 	"dependencies": {
-		"@gitbeaker/node": "^17.0.1",
+		"@gitbeaker/browser": "^17.0.1",
 		"@octokit/rest": "^17.2.0",
 		"@sentry/browser": "^5.15.4",
 		"@sentry/integrations": "^5.15.4",
