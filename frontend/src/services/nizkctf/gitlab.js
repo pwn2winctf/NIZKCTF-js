@@ -31,6 +31,8 @@ export default class GitLab {
     branch = "master",
     sha = undefined
   ) {
+    const encoding = "base64";
+
     try {
       const response = await this.api.RepositoryFiles.edit(
         repo,
@@ -39,7 +41,8 @@ export default class GitLab {
         content,
         message,
         {
-          last_commit_id: sha
+          last_commit_id: sha,
+          encoding
         }
       );
       return { path: response.file_path };
@@ -49,7 +52,10 @@ export default class GitLab {
         path,
         branch,
         content,
-        message
+        message,
+        {
+          encoding
+        }
       );
       return { path: response.file_path };
     }
