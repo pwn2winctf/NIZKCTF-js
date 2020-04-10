@@ -1,4 +1,4 @@
-import { Gitlab } from "@gitbeaker/browser";
+import { Gitlab } from "gitlab";
 
 export default class GitLab {
   constructor(token) {
