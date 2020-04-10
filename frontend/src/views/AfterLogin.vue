@@ -406,15 +406,22 @@ export default {
       }
     },
     async verifyFork(token) {
-      const github = new GitHub(token);
-      const { repo } = repoNameHandler(config.submissionsRepo);
-      try {
-        const content = await github.getContents(
-          `${this.user.username}/${repo}`
-        );
-        return !!content;
-      } catch (err) {
+      if (config.repohost === "github") {
+        const github = new GitHub(token);
+        const { repo } = repoNameHandler(config.submissionsRepo);
+        try {
+          const content = await github.getContents(
+            `${this.user.username}/${repo}`
+          );
+          return !!content;
+        } catch (err) {
+          return false;
+        }
+      } else if (config.repohost === "gitlab") {
+        console.error("Cannot verify fork");
         return false;
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
       }
     }
   },
