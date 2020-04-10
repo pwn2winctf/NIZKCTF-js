@@ -95,14 +95,9 @@
               v-for="item in alertClosedPullRequests.challenges"
               :key="item.id"
             >
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                :href="
-                  `https://github.com/${submissionsRepo}/pull/${item.number}`
-                "
-                >{{ item.id }}</a
-              >
+              <a target="_blank" rel="noopener noreferrer" :href="item.url">{{
+                item.id
+              }}</a>
             </li>
           </ul>
         </md-dialog-content>
@@ -122,7 +117,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { createPolling } from "@/utils";
-import { GitHub } from "@/services/nizkctf";
+import { GitHub, GitLab } from "@/services/nizkctf";
 import * as Sentry from "@sentry/browser";
 
 import config from "@/config.json";
@@ -163,26 +158,31 @@ export default {
       "setPendingPullRequests",
       "removePullRequestFromPending"
     ]),
-    async checkPullRequestsState(github, list) {
+    async checkPullRequestsState(repohost, list) {
       const states = await Promise.all(
         list.map(item =>
-          github
+          repohost
             .checkState(config.submissionsRepo, item)
-            .then(({ state, title }) => ({ number: item, state, title }))
+            .then(({ state, title, url }) => ({
+              number: item,
+              state,
+              title,
+              url
+            }))
         )
       );
       return states;
     },
-    setListOfPendingPullRequests(github) {
-      github
+    setListOfPendingPullRequests(repohost) {
+      repohost
         .listPullRequests(config.submissionsRepo, this.user.username, "opened")
         .then(data => {
           const list = data.map(item => item.number);
           list.length > 0 && this.setPendingPullRequests(list);
         });
     },
-    updateListOfPendingPullRequests(github) {
-      this.checkPullRequestsState(github, this.pendingPullRequests)
+    updateListOfPendingPullRequests(repohost) {
+      this.checkPullRequestsState(repohost, this.pendingPullRequests)
         .then(list => {
           this.toastMergeds.content = null;
           this.toastMergeds.challenges = [];
@@ -195,7 +195,8 @@ export default {
             } else if (item.state === "closed") {
               this.alertClosedPullRequests.challenges.push({
                 id: challenge,
-                number: item.number
+                number: item.number,
+                url: item.url
               });
               this.removePullRequestFromPending(item.number);
             }
@@ -218,13 +219,25 @@ export default {
         });
     },
     createPullRequestsPooling() {
-      const github = new GitHub(this.token);
-      const callback = () =>
-        this.pendingPullRequests.length > 0
-          ? this.updateListOfPendingPullRequests(github)
-          : this.setListOfPendingPullRequests(github);
+      if (config.repohost === "github") {
+        const github = new GitHub(this.token);
+        const callback = () =>
+          this.pendingPullRequests.length > 0
+            ? this.updateListOfPendingPullRequests(github)
+            : this.setListOfPendingPullRequests(github);
 
-      this.poolingPullRequests = createPolling(callback, 15000); // 15s
+        this.poolingPullRequests = createPolling(callback, 15000); // 15s
+      } else if (config.repohost === "gitlab") {
+        const gitlab = new GitLab(this.token);
+        const callback = () =>
+          this.pendingPullRequests.length > 0
+            ? this.updateListOfPendingPullRequests(gitlab)
+            : this.setListOfPendingPullRequests(gitlab);
+
+        this.poolingPullRequests = createPolling(callback, 15000); // 15s
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
+      }
     },
     toggleMenu() {
       this.menuVisible = !this.menuVisible;
