@@ -278,7 +278,6 @@ export default {
           );
           this.showMessage(this.$t("teamCreated"));
           this.createdTeam = true;
-          this.copyTeamSecret();
         })
         .catch(err => {
           this.showMessage(err);
@@ -427,6 +426,11 @@ export default {
     },
     active() {
       this.getInfo();
+    },
+    createdTeam(value) {
+      if (!value) {
+        this.copyTeamSecret();
+      }
     }
   }
 };
