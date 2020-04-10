@@ -137,6 +137,7 @@ import { API } from "@/services/api";
 import { validCountries } from "@/utils";
 
 import NIZKCTF, { GitHub } from "@/services/nizkctf";
+import GitLab from "@/services/nizkctf/gitlab";
 import { repoNameHandler } from "@/services/nizkctf/github";
 
 import config from "@/config.json";
@@ -263,7 +264,8 @@ export default {
       const nizkctf = new NIZKCTF(
         this.token,
         this.repository,
-        config.submissionsRepo
+        config.submissionsRepo,
+        config.repohost
       );
       nizkctf
         .createTeam(this.team)
@@ -329,34 +331,80 @@ export default {
         );
       }
     },
-    async getToken() {
+    async githubGetToken() {
       const { data } = await API.getAccessToken(this.$route.query.code);
       if (data.error) {
         throw Error(data.error);
       }
       return data.token;
     },
+    async gitlabGetToken() {
+      const query = this.$route.hash.substring(1);
+      const data = JSON.parse(
+        '{"' +
+          decodeURI(query)
+            .replace(/"/g, '\\"')
+            .replace(/&/g, '","')
+            .replace(/=/g, '":"') +
+          '"}'
+      );
+      return data.access_token;
+    },
+    async getToken() {
+      if (config.repohost === "github") {
+        return this.githubGetToken();
+      } else if (config.repohost === "gitlab") {
+        return this.gitlabGetToken();
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
+      }
+    },
     async getUser(token) {
-      const github = new GitHub(token);
-      const data = await github.getUser();
-      return data;
+      if (config.repohost === "github") {
+        const github = new GitHub(token);
+        const data = await github.getUser();
+        return data;
+      } else if (config.repohost === "gitlab") {
+        const gitlab = new GitLab(token);
+        return await gitlab.getUser();
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
+      }
     },
     async createFork(token) {
-      const github = new GitHub(token);
-      const { path } = await github.createFork(config.submissionsRepo);
+      if (config.repohost === "github") {
+        const github = new GitHub(token);
+        const { path } = await github.createFork(config.submissionsRepo);
 
-      const branches = await github.listBranches(path);
-      if (!branches.find(item => item.name === "upstream")) {
-        const shaOfMaster = branches.find(item => item.name === "master").sha;
+        const branches = await github.listBranches(path);
+        if (!branches.find(item => item.name === "upstream")) {
+          const shaOfMaster = branches.find(item => item.name === "master").sha;
 
-        await github.createBranch(
-          config.submissionsRepo,
-          "upstream",
-          shaOfMaster
-        );
+          await github.createBranch(
+            config.submissionsRepo,
+            "upstream",
+            shaOfMaster
+          );
+        }
+        return path;
+      } else if (config.repohost === "gitlab") {
+        const gitlab = new GitLab(token);
+        const { path } = await gitlab.createFork(config.submissionsRepo);
+        const branches = await gitlab.listBranches(path);
+
+        if (!branches.find(item => item.name === "upstream")) {
+          const shaOfMaster = branches.find(item => item.name === "master").sha;
+
+          await gitlab.createBranch(
+            config.submissionsRepo,
+            "upstream",
+            shaOfMaster
+          );
+        }
+        return path;
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
       }
-
-      return path;
     },
     async verifyFork(token) {
       const github = new GitHub(token);

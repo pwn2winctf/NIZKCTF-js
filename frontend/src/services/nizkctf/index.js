@@ -5,13 +5,18 @@ import { getTeamPath } from "../../utils";
 
 import { deployPath } from "../../config";
 
+const repohostDict = { github: GitHub, gitlab: GitLab };
+
 export default class NIZKCTF {
-  constructor(token, local, upstream, team = undefined) {
+  constructor(token, local, upstream, repohost, team = undefined) {
+    if (!repohostDict[repohost]) {
+      throw new TypeError(`Invalid repohost: ${repohost}`);
+    }
     this.token = token;
     this.local = local;
     this.upstream = upstream;
 
-    this.github = new GitHub(this.token);
+    this.api = new repohostDict[repohost](this.token);
     this.team = team;
   }
 
@@ -60,7 +65,7 @@ export default class NIZKCTF {
     let shaOfFile = undefined;
 
     try {
-      const { sha, content } = await this.github.getContents(
+      const { sha, content } = await this.api.getContents(
         this.upstream,
         `${path}/submissions.csv`
       );
@@ -130,13 +135,13 @@ export default class NIZKCTF {
 
     const file = `${path}/${fileName}`;
 
-    const branches = await this.github.listBranches(this.local);
+    const branches = await this.api.listBranches(this.local);
 
     const shaOfUpstream = branches.find(item => item.name === "upstream").sha;
 
-    await this.github.createBranch(this.local, branch, shaOfUpstream);
+    await this.api.createBranch(this.local, branch, shaOfUpstream);
 
-    await this.github.createOrUpdateFile(
+    await this.api.createOrUpdateFile(
       this.local,
       file,
       message,
@@ -146,7 +151,7 @@ export default class NIZKCTF {
     );
 
     if (pullRequest) {
-      const response = await this.github.createPullRequest(
+      const response = await this.api.createPullRequest(
         this.local,
         branch,
         message,
@@ -158,7 +163,7 @@ export default class NIZKCTF {
   }
 
   async _pull() {
-    return this.github
+    return this.api
       .updateFromUpstream(this.local, this.upstream, "master")
       .catch(err => {
         console.error(err);

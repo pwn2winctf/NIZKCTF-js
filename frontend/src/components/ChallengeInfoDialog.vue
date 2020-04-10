@@ -92,6 +92,7 @@ export default {
         this.token,
         this.repository,
         config.submissionsRepo,
+        config.repohost,
         this.teamKey
       );
       nizkctf

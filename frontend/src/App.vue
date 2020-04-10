@@ -99,7 +99,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 :href="
-                  `https://github.com/${owner}/${submissionsRepo}/pull/${item.number}`
+                  `https://github.com/${submissionsRepo}/pull/${item.number}`
                 "
                 >{{ item.id }}</a
               >
