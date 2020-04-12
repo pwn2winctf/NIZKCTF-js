@@ -132,11 +132,17 @@ export default class GitLab {
     const ref = "master";
     const response = await this.api.RepositoryFiles.show(repo, path, ref);
 
-    return response.map(({ commit_id, file_name, content }) => ({
-      sha: commit_id,
-      name: file_name,
-      content
-    }));
+    return Array.isArray(response)
+      ? response.map(({ last_commit_id, file_name, content }) => ({
+          sha: last_commit_id,
+          name: file_name,
+          content
+        }))
+      : {
+          sha: response.last_commit_id,
+          name: response.file_name,
+          content: response.content
+        };
   }
 
   async __deleteBranch(repo, branch) {
