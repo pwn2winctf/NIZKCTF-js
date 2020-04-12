@@ -11,7 +11,7 @@
   },
   "repohost":"gitlab",
   "authLink": "https://gitlab.com/oauth/authorize?client_id=9519203b9e9c4473a10a02fde2e7a5060b9c733bdaaa557b93dd47ac91d3299a&scope=api+write_repository&response_type=token&redirect_uri=http://localhost:8080/NIZKCTF-js/after-login",
-  "submissionsRepo": "ctf-br/ranking_submissions",
+  "submissionsRepo": "17624875",
   "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
   "deployPath": "/NIZKCTF-js",
   "flagFormat": "CTF-BR{...}",
