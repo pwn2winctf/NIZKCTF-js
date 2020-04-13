@@ -169,4 +169,10 @@ export default class GitLab {
     await this.createBranch(originRepo, "upstream", head_sha);
     await this.__closePullRequest(originRepo, number);
   }
+
+  async verifyFork(repo) {
+    const options = { owned: true };
+    const response = await this.api.Projects.forks(repo, options);
+    return response[0].id;
+  }
 }
