@@ -192,10 +192,12 @@ export default {
   mounted() {
     this.getInfo();
     if (this.token) {
-      this.verifyFork(this.token).then(alreadyForked => {
-        if (alreadyForked) {
-          this.alreadyForked = alreadyForked;
-          this.team.option = "join";
+      this.verifyFork(this.token).then(repoForked => {
+        if (repoForked) {
+          this.alreadyForked = !!repoForked;
+          if (config.repohost === "github") {
+            this.team.option = "join";
+          }
         }
       });
     }
@@ -309,17 +311,18 @@ export default {
           .catch(() => (this.errors.avatar = "Try refresh page"));
       } else if (!this.repository) {
         this.verifyFork(this.token)
-          .then(alreadyForked => {
-            if (!alreadyForked) {
+          .then(repoForked => {
+            if (!repoForked) {
               this.createFork(this.token).then(repo => {
                 this.setRepository(repo);
                 this.setNextStepper("team");
               });
             } else {
-              const { repo } = repoNameHandler(config.submissionsRepo);
-              this.alreadyForked = alreadyForked;
+              if (config.repohost === "github") {
+                this.alreadyForked = !!repoForked;
+              }
               this.team.option = "join";
-              this.setRepository(`${this.user.username}/${repo}`);
+              this.setRepository(repoForked);
               this.setNextStepper("team");
             }
           })
@@ -388,9 +391,9 @@ export default {
         return path;
       } else if (config.repohost === "gitlab") {
         const gitlab = new GitLab(token);
+
         const { path } = await gitlab.createFork(config.submissionsRepo);
         const branches = await gitlab.listBranches(path);
-
         if (!branches.find(item => item.name === "upstream")) {
           const shaOfMaster = branches.find(item => item.name === "master").sha;
 
@@ -413,13 +416,18 @@ export default {
           const content = await github.getContents(
             `${this.user.username}/${repo}`
           );
-          return !!content;
+          return !!content && `${this.user.username}/${repo}`;
         } catch (err) {
           return false;
         }
       } else if (config.repohost === "gitlab") {
-        console.error("Cannot verify fork");
-        return false;
+        const gitlab = new GitLab(token);
+        try {
+          const response = await gitlab.verifyFork(config.submissionsRepo);
+          return response;
+        } catch (err) {
+          return false;
+        }
       } else {
         throw new TypeError(`Invalid repohost: ${config.repohost}`);
       }
