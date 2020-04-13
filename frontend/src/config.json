@@ -1,6 +1,6 @@
 {
   "title": "PWN2WIN",
-  "submissionsBasePath": "https://ctf-br.github.io/ranking_submissions",
+  "submissionsBasePath": "https://ctf-br.gitlab.io/ranking_submissions",
   "challegesBasePath": "https://ctf-br.gitlab.io/ranking",
   "faqBasePath": "https://pwn2.win/NIZKCTF-js/",
   "dynamic_scoring": {
