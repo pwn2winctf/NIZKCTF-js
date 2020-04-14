@@ -31,6 +31,7 @@ export default {
       <li>Your token</li>
       <li>Your account details</li>
     </ul>
+    <strong>You will NOT be able to recover your team private key unless you have a backup.</strong>
 `,
     gettingToken: "Getting token",
     gettingTokenInfo:
