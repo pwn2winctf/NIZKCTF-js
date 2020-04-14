@@ -1,6 +1,6 @@
 <template>
   <md-content>
-    <md-dialog :md-active.sync="showDialog">
+    <md-dialog :md-active="showDialog">
       <md-dialog-title>{{ $t("deleteAllPrivateData") }}?</md-dialog-title>
       <md-dialog-content>
         <p v-html="$t('deleteAllPrivateDataDescription')" />
@@ -127,11 +127,11 @@ export default {
       this.setLanguage(language);
     },
     deleteDate() {
+      this.showDialog = false;
       this.setTeam(null);
       this.setToken(null);
       this.setUser(null);
       this.Repository(null);
-      this.showDialog = false;
     }
   }
 };
