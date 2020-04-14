@@ -446,11 +446,6 @@ export default {
     },
     active() {
       this.getInfo();
-    },
-    createdTeam(value) {
-      if (!value) {
-        this.copyTeamSecret();
-      }
     }
   }
 };
