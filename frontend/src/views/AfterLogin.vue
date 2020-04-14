@@ -1,6 +1,9 @@
 <template>
   <md-content>
-    <md-content v-if="encodedTeam">
+    <md-dialog-content v-if="loading" class="spinner">
+      <md-progress-spinner md-mode="indeterminate" />
+    </md-dialog-content>
+    <md-content v-else-if="encodedTeam">
       <md-dialog-alert
         v-if="team.option == 'create'"
         :md-active.sync="createdTeam"
@@ -154,6 +157,7 @@ export default {
   name: "AfterLogin",
   components: { CountryFlag },
   data: () => ({
+    loading: false,
     createdTeam: false,
     alreadyForked: false,
     active: "token",
@@ -274,6 +278,8 @@ export default {
         config.submissionsRepo,
         config.repohost
       );
+
+      this.loading = true;
       nizkctf
         .createTeam(this.team)
         .then(keys => {
@@ -289,7 +295,8 @@ export default {
         .catch(err => {
           this.showMessage(err);
           console.error(err);
-        });
+        })
+        .finally(() => (this.loading = false));
     },
     joinTeam() {
       const team = JSON.parse(
@@ -456,5 +463,11 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>
