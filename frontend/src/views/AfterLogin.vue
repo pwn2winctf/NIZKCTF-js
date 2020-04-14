@@ -90,6 +90,14 @@
             </md-field>
             <md-content class="md-scrollbar">
               <h2 class="md-title">{{ $t("teamCountries") }}</h2>
+              <div class="flags-container">
+                <country-flag
+                  v-for="(item, index) in team.countries"
+                  :key="index"
+                  :country="item"
+                  size="normal"
+                />
+              </div>
               <md-field>
                 <md-icon>search</md-icon>
                 <md-input
@@ -463,6 +471,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.flags-container {
+  display: flex;
+  flex-direction: row;
 }
 .spinner {
   display: flex;
