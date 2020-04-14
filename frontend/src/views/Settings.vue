@@ -1,5 +1,20 @@
 <template>
   <md-content>
+    <md-dialog :md-active.sync="showDialog">
+      <md-dialog-title>{{ $t("deleteAllPrivateData") }}?</md-dialog-title>
+      <md-dialog-content>
+        <p v-html="$t('deleteAllPrivateDataDescription')" />
+      </md-dialog-content>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="showDialog = false">{{
+          $t("cancel")
+        }}</md-button>
+        <md-button class="md-raised md-accent" @click="deleteDate">
+          {{ $t("delete") }}
+        </md-button>
+      </md-dialog-actions>
+    </md-dialog>
     <md-field>
       <label for="language">{{ $t("language") }}</label>
       <md-select
@@ -26,11 +41,32 @@
         <md-textarea v-model="encodedTeam" readonly rows="4"></md-textarea>
       </md-field>
       <div class="center">
-        <md-button class="md-raised md-primary" @click="clearTeamSecret">
-          {{ $t("clearTeam") }}
-        </md-button>
+        <div class="fit">
+          <div class="width100">
+            <md-button
+              class="md-raised md-primary width100"
+              @click="copyTeamSecret"
+              >{{ $t("copyToClipboard") }}</md-button
+            >
+          </div>
+          <div class="width100">
+            <md-button
+              class="md-raised md-accent width100"
+              @click="showDialog = true"
+            >
+              {{ $t("deleteAllPrivateData") }}
+            </md-button>
+          </div>
+        </div>
       </div>
     </div>
+    <md-snackbar
+      md-position="center"
+      :md-duration="4000"
+      :md-active.sync="showSnackbar"
+    >
+      <span>{{ message }}</span>
+    </md-snackbar>
   </md-content>
 </template>
 
@@ -42,6 +78,9 @@ import messages from "@/internationalization";
 export default {
   name: "Settings",
   data: () => ({
+    showSnackbar: false,
+    message: "",
+    showDialog: false,
     languages: Object.keys(messages).map(item => ({
       language: item,
       label: messages[item].label
@@ -61,7 +100,24 @@ export default {
     })
   },
   methods: {
-    ...mapActions(["setTheme", "setLanguage", "setTeam"]),
+    ...mapActions([
+      "setTheme",
+      "setLanguage",
+      "setTeam",
+      "setUser",
+      "setToken",
+      "setRepository"
+    ]),
+    showMessage(message) {
+      this.message = message;
+      this.showSnackbar = true;
+    },
+    copyTeamSecret() {
+      navigator.clipboard
+        .writeText(this.encodedTeam)
+        .then(() => this.showMessage(this.$t("teamKeysCopied")))
+        .catch(() => this.showMessage("Oops, unable to copy"));
+    },
     toggleTheme(value) {
       const theme = value ? "dark" : "default";
       this.setTheme(theme);
@@ -70,17 +126,27 @@ export default {
       this.$i18n.locale = language;
       this.setLanguage(language);
     },
-    clearTeamSecret() {
+    deleteDate() {
       this.setTeam(null);
+      this.setToken(null);
+      this.setUser(null);
+      this.Repository(null);
+      this.showDialog = false;
     }
   }
 };
 </script>
 
 <style type="sass" scoped>
+.width100 {
+  width: 100%;
+}
 .center {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.fit {
+  width: fit-content;
 }
 </style>
