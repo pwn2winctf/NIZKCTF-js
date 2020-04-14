@@ -1,8 +1,8 @@
 <template>
   <md-content>
-    <md-dialog-content v-if="loading" class="spinner">
+    <md-content v-if="loading" class="spinner">
       <md-progress-spinner md-mode="indeterminate" />
-    </md-dialog-content>
+    </md-content>
     <md-content v-else-if="encodedTeam">
       <md-dialog-alert
         v-if="team.option == 'create'"
