@@ -16,6 +16,11 @@
           readonly
         ></md-textarea>
       </md-field>
+      <div class="center">
+        <md-button class="md-raised md-primary" @click="copyTeamSecret">{{
+          $t("copyToClipboard")
+        }}</md-button>
+      </div>
     </md-content>
     <md-steppers v-else :md-active-step.sync="active" md-vertical md-linear>
       <md-step
@@ -450,3 +455,11 @@ export default {
   }
 };
 </script>
+
+<style type="sass" scoped>
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

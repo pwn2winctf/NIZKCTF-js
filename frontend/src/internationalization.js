@@ -49,6 +49,7 @@ export default {
     teamCreated: "Team created",
     backupTeamPrivateKey: "Backup the team private key now",
     teamKeysCopied: "Team private key was copied to clipboard",
+    copyToClipboard: "Copy to clipboard",
     saveYourTeamSecret: `Please note that for security reasons, we do not store the team private key to your GitHub account. If you ever clean your browser's private data, it will be lost unless you have a backup.
 <strong>You will need the team private key to</strong>:
 <ul>
@@ -123,6 +124,7 @@ export default {
     backupTeamPrivateKey: "Faça backup da chave privada da equipe agora",
     teamKeysCopied:
       "A chave privada da equipe foi copiada para a área de transferência",
+    copyToClipboard: "Copiar para a área de transferência",
     saveYourTeamSecret: `Observe que, por razões de segurança, não o armazenamos na sua conta do GitHub. Se você limpar os dados particulares do seu navegador, eles serão perdidos, a menos que você tenha um backup.
 <strong>Você precisará da chave privada da equipe para</strong>:
 <ul>
