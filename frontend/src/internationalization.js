@@ -16,13 +16,22 @@ export default {
     challenge: "Challenge",
     time: "Time",
     close: "Close",
+    cancel: "Cancel",
     gettingInformations: "Getting informations",
     login: "Register / Login",
     logout: "Logout",
     warning: "Warning",
     warningLogout:
       "The team's key is <strong>still saved</strong>. If you want to delete it, do so in the settings",
-    clearTeam: "Clear the team's key",
+    delete: "Delete",
+    deleteAllPrivateData: "Delete all private data",
+    deleteAllPrivateDataDescription: `This <strong>will delete</strong> the following information from the local storage:
+    <ul>
+      <li>The team's private key</li>
+      <li>Your token</li>
+      <li>Your account details</li>
+    </ul>
+`,
     gettingToken: "Getting token",
     gettingTokenInfo:
       "This token will be used to fork the submissions repository, to commit to it on your behalf and to make pull requests.",
@@ -90,13 +99,23 @@ export default {
     challenge: "Desafio",
     time: "Hora",
     close: "Fechar",
+    cancel: "Cancelar",
     gettingInformations: "Obtendo informações",
     login: "Registrar / Logar",
     logout: "Sair",
     warning: "Warning",
     warningLogout:
       "A chave do time ainda <strong>permanece salvo</strong>. Caso queira apagá-lo faça isso nas configurações",
-    clearTeam: "Remover a chave do time",
+    delete: "Remover",
+    deleteAllPrivateData: "Remover todos os dados privados",
+    deleteAllPrivateDataDescription: `Isso <strong> removerá </strong> as seguintes informações do local storage:
+<ul>
+<li>A chave privada do seu time</li>
+<li>Seu token</li>
+<li>Dados da sua conta</li>
+</ul>
+<strong>Você NÃO poderá recuperar a chave privada da sua equipe, a menos que tenha um backup.</strong>
+`,
     gettingToken: "Obtendo token",
     gettingTokenInfo:
       "Esse token será usado para criar o fork do repositório de submissões, para fazer commits em seu nome e criar pull requests. Este token está armazenado no local storage, ou seja, não está vinculada a sua conta do GitHub.",
