@@ -10,7 +10,7 @@
         <md-button class="md-primary" @click="showDialog = false">{{
           $t("cancel")
         }}</md-button>
-        <md-button class="md-raised md-accent" @click="deleteDate">
+        <md-button class="md-raised md-accent" @click="deleteData">
           {{ $t("delete") }}
         </md-button>
       </md-dialog-actions>
@@ -126,12 +126,12 @@ export default {
       this.$i18n.locale = language;
       this.setLanguage(language);
     },
-    deleteDate() {
+    deleteData() {
       this.showDialog = false;
       this.setTeam(null);
       this.setToken(null);
       this.setUser(null);
-      this.Repository(null);
+      this.setRepository(null);
     }
   }
 };
