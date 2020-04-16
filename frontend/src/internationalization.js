@@ -80,7 +80,8 @@ export default {
     errors: {
       teamName: "Invalid team name.",
       privateKey: "Private key is invalid.",
-      maxMembers: "Invalid number of country flags. Up to {max} country flags are allowed."
+      maxMembers:
+        "Invalid number of country flags. Up to {max} country flags are allowed."
     }
   },
   pt: {

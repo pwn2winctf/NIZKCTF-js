@@ -153,6 +153,8 @@ import { API } from "@/services/api";
 import { validCountries } from "@/utils";
 
 import NIZKCTF, { GitHub } from "@/services/nizkctf";
+import GitLab from "@/services/nizkctf/gitlab";
+import { repoNameHandler } from "@/services/nizkctf/github";
 
 import config from "@/config.json";
 
@@ -207,16 +209,15 @@ export default {
   mounted() {
     this.getInfo();
     if (this.token) {
-      this.verifyFork(this.token).then(alreadyForked => {
-        if (alreadyForked) {
-          this.alreadyForked = alreadyForked;
-          this.team.option = "join";
+      this.verifyFork(this.token).then(repoForked => {
+        if (repoForked) {
+          this.alreadyForked = !!repoForked;
+          if (config.repohost === "github") {
+            this.team.option = "join";
+          }
         }
       });
     }
-  },
-  updated() {
-    this.getInfo();
   },
   methods: {
     ...mapActions(["setToken", "setUser", "setRepository", "setTeam"]),
@@ -279,13 +280,13 @@ export default {
       }
     },
     async createTeam() {
-      const local = { owner: this.user.login, repository: this.repository };
-      const upstream = {
-        owner: config.owner,
-        repository: config.submissionsRepo
-      };
+      const nizkctf = new NIZKCTF(
+        this.token,
+        this.repository,
+        config.submissionsRepo,
+        config.repohost
+      );
 
-      const nizkctf = new NIZKCTF(this.token, local, upstream);
       this.loading = true;
       nizkctf
         .createTeam(this.team)
@@ -330,16 +331,18 @@ export default {
           .catch(() => (this.errors.avatar = "Try refresh page"));
       } else if (!this.repository) {
         this.verifyFork(this.token)
-          .then(alreadyForked => {
-            if (!alreadyForked) {
+          .then(repoForked => {
+            if (!repoForked) {
               this.createFork(this.token).then(repo => {
                 this.setRepository(repo);
                 this.setNextStepper("team");
               });
             } else {
-              this.alreadyForked = alreadyForked;
+              if (config.repohost === "github") {
+                this.alreadyForked = !!repoForked;
+              }
               this.team.option = "join";
-              this.setRepository(config.submissionsRepo);
+              this.setRepository(repoForked);
               this.setNextStepper("team");
             }
           })
@@ -350,36 +353,103 @@ export default {
         );
       }
     },
-    async getToken() {
+    async githubGetToken() {
       const { data } = await API.getAccessToken(this.$route.query.code);
       if (data.error) {
         throw Error(data.error);
       }
       return data.token;
     },
+    async gitlabGetToken() {
+      const query = this.$route.hash.substring(1);
+      const data = JSON.parse(
+        '{"' +
+          decodeURI(query)
+            .replace(/"/g, '\\"')
+            .replace(/&/g, '","')
+            .replace(/=/g, '":"') +
+          '"}'
+      );
+      return data.access_token;
+    },
+    async getToken() {
+      if (config.repohost === "github") {
+        return this.githubGetToken();
+      } else if (config.repohost === "gitlab") {
+        return this.gitlabGetToken();
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
+      }
+    },
     async getUser(token) {
-      const github = new GitHub(token);
-      const data = await github.getUser();
-      return data;
+      if (config.repohost === "github") {
+        const github = new GitHub(token);
+        const data = await github.getUser();
+        return data;
+      } else if (config.repohost === "gitlab") {
+        const gitlab = new GitLab(token);
+        return await gitlab.getUser();
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
+      }
     },
     async createFork(token) {
-      const github = new GitHub(token);
-      const { name } = await github.createFork(
-        config.owner,
-        config.submissionsRepo
-      );
-      return name;
+      if (config.repohost === "github") {
+        const github = new GitHub(token);
+        const { path } = await github.createFork(config.submissionsRepo);
+
+        const branches = await github.listBranches(path);
+        if (!branches.find(item => item.name === "upstream")) {
+          const shaOfMaster = branches.find(item => item.name === "master").sha;
+
+          await github.createBranch(
+            config.submissionsRepo,
+            "upstream",
+            shaOfMaster
+          );
+        }
+        return path;
+      } else if (config.repohost === "gitlab") {
+        const gitlab = new GitLab(token);
+
+        const { path } = await gitlab.createFork(config.submissionsRepo);
+        const branches = await gitlab.listBranches(path);
+        if (!branches.find(item => item.name === "upstream")) {
+          const shaOfMaster = branches.find(item => item.name === "master").sha;
+
+          await gitlab.createBranch(
+            config.submissionsRepo,
+            "upstream",
+            shaOfMaster
+          );
+        }
+        return path;
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
+      }
     },
     async verifyFork(token) {
-      const github = new GitHub(token);
-      try {
-        const content = await github.getContents(
-          this.user.login,
-          config.submissionsRepo
-        );
-        return !!content;
-      } catch (err) {
-        return false;
+      if (config.repohost === "github") {
+        const github = new GitHub(token);
+        const { repo } = repoNameHandler(config.submissionsRepo);
+        try {
+          const content = await github.getContents(
+            `${this.user.username}/${repo}`
+          );
+          return !!content && `${this.user.username}/${repo}`;
+        } catch (err) {
+          return false;
+        }
+      } else if (config.repohost === "gitlab") {
+        const gitlab = new GitLab(token);
+        try {
+          const response = await gitlab.verifyFork(config.submissionsRepo);
+          return response;
+        } catch (err) {
+          return false;
+        }
+      } else {
+        throw new TypeError(`Invalid repohost: ${config.repohost}`);
       }
     }
   },
@@ -389,15 +459,8 @@ export default {
         item => item.name.toUpperCase().indexOf(value.toUpperCase()) > -1
       );
     },
-    token(value) {
-      if (value) {
-        this.verifyFork(value).then(alreadyForked => {
-          if (alreadyForked) {
-            this.alreadyForked = alreadyForked;
-            this.team.option = "join";
-          }
-        });
-      }
+    active() {
+      this.getInfo();
     }
   }
 };

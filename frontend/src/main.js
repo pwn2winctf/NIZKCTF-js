@@ -30,7 +30,7 @@ Sentry.init({
 if (store.getters.user) {
   Sentry.configureScope(scope => {
     scope.setUser({
-      id: store.getters.user.login,
+      id: store.getters.user.username,
       username: store.getters.user.name
     });
   });

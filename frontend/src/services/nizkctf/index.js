@@ -1,16 +1,22 @@
 import GitHub from "./github";
+import GitLab from "./gitlab";
 import libsodium from "./libsodium";
 import { getTeamPath } from "../../utils";
 
-import { deployPath } from "@/config";
+import { deployPath } from "../../config";
+
+const repohostDict = { github: GitHub, gitlab: GitLab };
 
 export default class NIZKCTF {
-  constructor(token, local, upstream, team = undefined) {
+  constructor(token, local, upstream, repohost, team = undefined) {
+    if (!repohostDict[repohost]) {
+      throw new TypeError(`Invalid repohost: ${repohost}`);
+    }
     this.token = token;
-    this.local = { owner: local.owner, repository: local.repository };
-    this.upstream = { owner: upstream.owner, repository: upstream.repository };
+    this.local = local;
+    this.upstream = upstream;
 
-    this.github = new GitHub(this.token);
+    this.api = new repohostDict[repohost](this.token);
     this.team = team;
   }
 
@@ -35,6 +41,7 @@ export default class NIZKCTF {
       if (err.message.includes('"sha" wasn\'t supplied.')) {
         throw new Error("There is already a team with that name");
       } else {
+        console.error(err);
         throw new Error(err);
       }
     }
@@ -58,9 +65,8 @@ export default class NIZKCTF {
     let shaOfFile = undefined;
 
     try {
-      const { sha, content } = await this.github.getContents(
-        this.upstream.owner,
-        this.upstream.repository,
+      const { sha, content } = await this.api.getContents(
+        this.upstream,
         `${path}/submissions.csv`
       );
 
@@ -127,27 +133,16 @@ export default class NIZKCTF {
 
     const branch = await libsodium.randomString(10);
 
-    const ref = `refs/heads/${branch}`;
     const file = `${path}/${fileName}`;
 
-    const branches = await this.github.listBranches(
-      this.local.owner,
-      this.local.repository
-    );
+    const branches = await this.api.listBranches(this.local);
 
-    const shaOfMaster = branches.find(item => item.name === "master").commit
-      .sha;
+    const shaOfUpstream = branches.find(item => item.name === "upstream").sha;
 
-    await this.github.createBranch(
-      this.local.owner,
-      this.local.repository,
-      ref,
-      shaOfMaster
-    );
+    await this.api.createBranch(this.local, branch, shaOfUpstream);
 
-    await this.github.createOrUpdateFile(
-      this.local.owner,
-      this.local.repository,
+    await this.api.createOrUpdateFile(
+      this.local,
       file,
       message,
       encodedContent,
@@ -156,34 +151,23 @@ export default class NIZKCTF {
     );
 
     if (pullRequest) {
-      const response = await this.github.createPullRequest(
-        this.upstream.owner,
-        this.upstream.repository,
+      const response = await this.api.createPullRequest(
+        this.local,
+        branch,
         message,
-        `${this.local.owner}:${branch}`
+        this.upstream,
+        "master"
       );
       return response;
     }
   }
 
   async _pull() {
-    const title = "Update from upstream";
-    const head = `${this.upstream.owner}:master`;
-
-    return this.github
-      .createPullRequest(this.local.owner, this.local.repository, title, head)
+    return this.api
+      .updateFromUpstream(this.local, this.upstream, "master")
       .catch(err => {
-        console.error("Error on update from upstream:" + err);
-      })
-      .then(({ head }) => {
-        return this.github.updateRef(
-          this.local.owner,
-          this.local.repository,
-          "heads/master",
-          head.sha
-        );
-      })
-      .catch(() => {});
+        console.error(err);
+      });
   }
 }
 
@@ -220,4 +204,4 @@ const cryptoPwhash = (password, salt, opslimit, memlimit) =>
     };
   });
 
-export { GitHub, libsodium };
+export { GitHub, GitLab, libsodium };
