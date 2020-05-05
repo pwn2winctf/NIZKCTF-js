@@ -29,9 +29,7 @@
         @click="submitFlag"
         >{{ $t("submit") }}</md-button
       >
-      <md-button class="md-primary" @click="close">
-        {{ $t("close") }}
-      </md-button>
+      <md-button class="md-primary" @click="close">{{ $t("close") }}</md-button>
     </md-dialog-actions>
     <md-snackbar
       md-position="center"
@@ -101,7 +99,10 @@ export default {
           this.addPullRequestToPending(data.number),
             this.showMessage(this.$t("flagFound"));
         })
-        .catch(err => this.showMessage(err))
+        .catch(err => {
+          this.showMessage(err);
+          console.error(err);
+        })
         .finally(() => {
           this.loading = false;
           this.sendingFlag = false;

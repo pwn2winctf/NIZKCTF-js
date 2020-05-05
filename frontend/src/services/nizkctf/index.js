@@ -163,11 +163,7 @@ export default class NIZKCTF {
   }
 
   async _pull() {
-    return this.api
-      .updateFromUpstream(this.local, this.upstream, "master")
-      .catch(err => {
-        console.error(err);
-      });
+    return this.api.updateFromUpstream(this.local, this.upstream, "master");
   }
 }
 
