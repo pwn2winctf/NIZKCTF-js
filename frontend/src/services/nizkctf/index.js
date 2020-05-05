@@ -67,7 +67,7 @@ export default class NIZKCTF {
     try {
       const { sha, content } = await this.api.getContents(
         this.upstream,
-        `${path}/submissions.csv`
+        `${path}/${challenge.id}.csv`
       );
 
       const decodedContent = new Buffer.from(content, "base64").toString();
@@ -82,7 +82,7 @@ export default class NIZKCTF {
       message,
       path,
       currentContent,
-      "submissions.csv",
+      `${challenge.id}.csv`,
       true,
       shaOfFile
     );
