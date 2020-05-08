@@ -128,7 +128,7 @@ export default class NIZKCTF {
     pullRequest = true,
     shaOfFile = undefined
   ) {
-    await this._pull();
+    //await this._pull();
     const encodedContent = Buffer.from(content).toString("base64");
 
     const branch = await libsodium.randomString(10);
