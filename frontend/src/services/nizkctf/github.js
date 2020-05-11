@@ -151,6 +151,22 @@ export default class GitHub {
       : { name: data.name, sha: data.sha, content: data.content };
   }
 
+  async getPullRequest(repoName, pullNumber) {
+    const { owner, repo } = repoNameHandler(repoName);
+
+    const { data } = await this.octokit.pulls.get({
+      owner,
+      repo,
+      pull_number: pullNumber
+    });
+
+    return {
+      number: data.number,
+      head_sha: data.head.sha,
+      base_sha: data.base.sha
+    };
+  }
+
   async updateFromUpstream(originRepo, upstreamRepo, upstreamBranch) {
     const title = "Update from upstream";
 
@@ -167,12 +183,18 @@ export default class GitHub {
       await this.__updateRef(owner, repo, "heads/upstream", head_sha);
     } catch (err) {
       if (
-        !err.errors ||
-        err.errors.length !== 1 ||
-        !err.errors[0].message.startsWith("No commits between")
+        err.errors[0].message.startsWith("A pull request already exists for")
       ) {
-        console.error(err);
-        throw new Error(err);
+        const pullRequest = (
+          await this.listPullRequests(originRepo, owner, "opened")
+        )[0];
+        const { head_sha } = await this.getPullRequest(
+          originRepo,
+          pullRequest.number
+        );
+        await this.__updateRef(owner, repo, "heads/upstream", head_sha);
+      } else if (!err.errors[0].message.startsWith("No commits between")) {
+        throw err;
       }
     }
   }
