@@ -16,5 +16,16 @@
   "deployPath": "/NIZKCTF-js",
   "flagFormat": "CTF-BR{...}",
   "maxMembers": 5,
-  "maxTeamNameLength": 30
+  "maxTeamNameLength": 30,
+
+  "firebaseConfig" : {
+    "apiKey": "apiKey",
+    "authDomain": "authDomain",
+    "databaseURL": "databaseURL",
+    "projectId": "projectId",
+    "storageBucket": "storageBucket",
+    "messagingSenderId": "messagingSenderId",
+    "appId": "appId",
+    "measurementId": "measurementId"
+  }
 }
