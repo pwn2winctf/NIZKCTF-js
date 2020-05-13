@@ -3,12 +3,12 @@
     <md-toolbar md-elevation="1">
       <span class="md-title">{{ $t("solves") }}</span>
     </md-toolbar>
-    <md-content v-if="firstLoad" class="spinner">
+    <md-content v-if="solvedChallenges.length == 0" class="spinner">
       <md-progress-spinner md-mode="indeterminate" />
     </md-content>
     <md-content v-else class="container md-scrollbar">
       <transition-group name="list">
-        <p v-for="item in challenges" v-bind:key="item.datetime">
+        <p v-for="item in solvedChallenges" v-bind:key="item.datetime">
           <span class="item-date">[{{ item.date }}] {{ item.team }}</span>
           solved {{ item.challenge }}
         </p>
@@ -18,54 +18,15 @@
 </template>
 
 <script>
-import fromUnixTime from "date-fns/fromUnixTime";
-
-import { API } from "@/services/api";
-import { createPolling } from "@/utils";
+import { mapState } from "vuex";
 
 export default {
   name: "SolvedChallenges",
-  data: () => ({
-    challenges: [],
-    firstLoad: true
-  }),
-  created() {
-    this.solvedChallengesPolling = createPolling(this.loadSolvedChallenges);
-    this.solvedChallengesPolling.start();
-  },
-  methods: {
-    loadSolvedChallenges() {
-      API.listSolvedChallenges()
-        .then(({ data }) => {
-          const datas = data.standings
-            ? data.standings
-                .reduce((reducer, { taskStats, team }) => {
-                  Object.keys(taskStats).forEach(challenge => {
-                    reducer.push({
-                      team,
-                      challenge,
-                      datetime: taskStats[challenge].time,
-                      date: fromUnixTime(
-                        taskStats[challenge].time
-                      ).toLocaleString()
-                    });
-                  });
-                  return reducer;
-                }, [])
-                .sort((a, b) => b.datetime - a.datetime)
-            : [];
-          this.challenges = datas;
-        })
-        .finally(() => (this.firstLoad = false));
-    }
-  },
-  beforeDestroy() {
-    this.solvedChallengesPolling.stop();
-  }
+  computed: mapState(["solvedChallenges"])
 };
 </script>
 
-<style type="sass" scoped>
+<style lang="css" scoped>
 .container {
   padding-left: 16px;
   padding-right: 16px;

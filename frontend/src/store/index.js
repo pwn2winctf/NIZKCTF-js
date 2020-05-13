@@ -2,6 +2,9 @@ import Vue from "vue";
 import Vuex from "vuex";
 import createLogger from "vuex/dist/logger";
 import VuexPersist from "vuex-persist";
+import fromUnixTime from "date-fns/fromUnixTime";
+
+import { acceptedSubmissions } from "@/services/firebase";
 
 const plugins = [];
 
@@ -29,6 +32,7 @@ export default new Vuex.Store({
     user: null,
     team: null,
     repository: null,
+    solvedChallenges: [],
     pendingPullRequests: []
   },
   mutations: {
@@ -61,6 +65,23 @@ export default new Vuex.Store({
       const index = list.indexOf(pullRequest);
       list.splice(index, 1);
       state.pendingPullRequests = list;
+    },
+    setSolvedChallenges(state, acceptedSubmissions) {
+      state.solvedChallenges = acceptedSubmissions
+        ? acceptedSubmissions
+            .reduce((reducer, { taskStats, team }) => {
+              Object.keys(taskStats).forEach(challenge => {
+                reducer.push({
+                  team,
+                  challenge,
+                  datetime: taskStats[challenge].time,
+                  date: fromUnixTime(taskStats[challenge].time).toLocaleString()
+                });
+              });
+              return reducer;
+            }, [])
+            .sort((a, b) => b.datetime - a.datetime)
+        : [];
     }
   },
   actions: {
@@ -90,13 +111,19 @@ export default new Vuex.Store({
     },
     removePullRequestFromPending(context, pullRequest) {
       context.commit("removePullRequestFromPending", pullRequest);
+    },
+    startFirebaseConnection(context) {
+      acceptedSubmissions.on("value", snapshot => {
+        context.commit("setSolvedChallenges", snapshot.val());
+      });
     }
   },
   getters: {
     language: state => state.language,
     token: state => state.token,
     team: state => state.team,
-    user: state => state.user
+    user: state => state.user,
+    solvedChallenges: state => state.solvedChallenges
   },
   modules: {},
   plugins

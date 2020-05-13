@@ -156,7 +156,8 @@ export default {
       "setToken",
       "setRepository",
       "setPendingPullRequests",
-      "removePullRequestFromPending"
+      "removePullRequestFromPending",
+      "startFirebaseConnection"
     ]),
     async checkPullRequestsState(repohost, list) {
       const states = await Promise.all(
@@ -253,6 +254,7 @@ export default {
     }
   },
   mounted() {
+    this.startFirebaseConnection();
     if (this.user) {
       this.createPullRequestsPooling();
       this.poolingPullRequests.start();
