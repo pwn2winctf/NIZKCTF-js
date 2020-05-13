@@ -1,4 +1,4 @@
-import { dynamic_scoring } from "@/config.json";
+import { dynamic_scoring } from "./config.json";
 import { sha256 } from "js-sha256";
 
 export const createPolling = (callback, milliseconds = 60000) => {
