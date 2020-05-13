@@ -9,7 +9,7 @@
     "minpts": 50,
     "maxpts": 500
   },
-  "repohost":"github",
+  "repohost": "github",
   "authLink": "https://github.com/login/oauth/authorize?client_id=9428a38e889e92919c92&scope=public_repo",
   "submissionsRepo": "ctf-br/ranking_submissions",
   "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
@@ -17,15 +17,14 @@
   "flagFormat": "CTF-BR{...}",
   "maxMembers": 5,
   "maxTeamNameLength": 30,
-
-  "firebaseConfig" : {
-    "apiKey": "apiKey",
-    "authDomain": "authDomain",
-    "databaseURL": "databaseURL",
-    "projectId": "projectId",
-    "storageBucket": "storageBucket",
-    "messagingSenderId": "messagingSenderId",
-    "appId": "appId",
-    "measurementId": "measurementId"
+  "firebaseConfig": {
+    "apiKey": "AIzaSyCSUmch0zHcV-Vu0iyfR6uB2K2sWZXrcJ4",
+    "authDomain": "ethereal-casing-270417.firebaseapp.com",
+    "databaseURL": "https://ethereal-casing-270417.firebaseio.com",
+    "projectId": "ethereal-casing-270417",
+    "storageBucket": "ethereal-casing-270417.appspot.com",
+    "messagingSenderId": "517262739877",
+    "appId": "1:517262739877:web:b796ce4dda2936964c004c",
+    "measurementId": "G-E90RQRV942"
   }
 }
