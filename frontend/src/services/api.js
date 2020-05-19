@@ -8,13 +8,11 @@ const api = axios.create({
   baseURL: config.submissionsBasePath
 });
 
-const now = (timer = 1000 * 60 * 10) =>
-  Math.floor(+getTime(new Date()) / timer);
+const now = (timer = 1000 * 10) => Math.floor(+getTime(new Date()) / timer);
 
 export const API = {
-  listNews: () => api.get(`/news.json?_${now(1000 * 60)}`),
-  listSolvedChallenges: () =>
-    api.get(`/accepted-submissions.json?_${now(1000 * 60)}`),
+  listNews: () => api.get(`/news.json?_${now()}`),
+  listSolvedChallenges: () => api.get(`/accepted-submissions.json?_${now()}`),
   getChallenges: () =>
     api.get(`/challenges/index.json?_${now()}`, {
       baseURL: config.challegesBasePath
