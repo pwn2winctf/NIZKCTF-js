@@ -74,7 +74,8 @@ export default {
   }),
   computed: {
     ...mapState({
-      theme: state => state.theme
+      theme: state => state.theme,
+      solvedChallenges: state => state.solvedChallenges
     }),
     chartOptions: function() {
       return {
@@ -133,7 +134,7 @@ export default {
     }
   },
   created() {
-    this.rankPolling = createPolling(this.loadSolvedChallenges);
+    this.rankPolling = createPolling(() => this.loadSolvedChallenges());
     this.rankPolling.start();
   },
   methods: {
@@ -150,8 +151,8 @@ export default {
     closePopup() {
       this.popup.isOpen = false;
     },
-    calculateScore(data) {
-      const standings = data.standings;
+    calculateScore() {
+      const standings = JSON.parse(JSON.stringify(this.solvedChallenges));
       standings.sort((a, b) => a.pos - b.pos);
 
       const allSolves = standings.reduce(
@@ -207,55 +208,52 @@ export default {
       this.topStandings = topStandings;
       this.timeAxis = timeAxis;
     },
-    loadSolvedChallenges() {
-      API.listSolvedChallenges()
-        .then(async ({ data }) => {
-          if (!data.standings || data.standings.length === 0) {
-            this.firstLoad = false;
-            return;
-          }
+    async loadSolvedChallenges() {
+      this.calculateScore();
 
-          this.calculateScore(data);
-
-          const teams = await Promise.all(
-            data.standings.map(async ({ team, score, pos, taskStats }) => {
-              const teamResponse = await API.getTeam(team);
-              const teamMembersResponse = await API.getTeamMembers(team);
-              return {
-                pos,
-                score,
-                ...teamResponse.data,
-                members: teamMembersResponse.data,
-                solvedChallenges: Object.entries(taskStats).map(item => ({
-                  name: item[0],
-                  ...item[1]
-                }))
-              };
-            })
-          );
-          this.teams = teams;
-
-          const defaultOptions = {
-            fill: false,
-            lineTension: 0,
-            pointRadius: 0,
-            borderWidth: 2
+      const teams = await Promise.all(
+        this.solvedChallenges.map(async ({ team, score, pos, taskStats }) => {
+          const teamResponse = await API.getTeam(team);
+          const teamMembersResponse = await API.getTeamMembers(team);
+          return {
+            pos,
+            score,
+            ...teamResponse.data,
+            members: teamMembersResponse.data,
+            solvedChallenges: Object.entries(taskStats).map(item => ({
+              name: item[0],
+              ...item[1]
+            }))
           };
-
-          const datasets = this.topStandings.map((item, index) => ({
-            label: item.team,
-            borderColor: colors[index],
-            ...defaultOptions,
-            data: this.scoreAxis[item.team]
-          }));
-
-          this.data = { labels: this.timeAxis, datasets };
         })
-        .finally(() => (this.firstLoad = false));
+      );
+      this.teams = teams;
+
+      const defaultOptions = {
+        fill: false,
+        lineTension: 0,
+        pointRadius: 0,
+        borderWidth: 2
+      };
+
+      const datasets = this.topStandings.map((item, index) => ({
+        label: item.team,
+        borderColor: colors[index],
+        ...defaultOptions,
+        data: this.scoreAxis[item.team]
+      }));
+
+      this.data = { labels: this.timeAxis, datasets };
+      this.firstLoad = false;
     }
   },
   beforeDestroy() {
     this.rankPolling.stop();
+  },
+  watch: {
+    solvedChallenges() {
+      this.loadSolvedChallenges();
+    }
   }
 };
 </script>
