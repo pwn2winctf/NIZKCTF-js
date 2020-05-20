@@ -9,8 +9,8 @@ export default class GitLab {
 
   async getUser() {
     const response = await this.api.Users.current();
-    const { avatar_url, name, username } = response;
-    return { avatar_url, name, username };
+    const { avatar_url, name, username, id } = response;
+    return { avatar_url, name, username, id };
   }
 
   async createFork(repo) {

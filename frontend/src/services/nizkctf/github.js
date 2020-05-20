@@ -16,9 +16,9 @@ export default class GitHub {
     const { data } = await this.octokit.request("/user");
 
     const username = data.login;
-    const { name, avatar_url } = data;
+    const { name, avatar_url, id } = data;
 
-    return { avatar_url, name, username };
+    return { avatar_url, name, username, id };
   }
 
   async createFork(repoName) {
