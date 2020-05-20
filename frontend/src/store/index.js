@@ -10,7 +10,7 @@ const DEV = process.env.NODE_ENV !== "production";
 Vue.use(Vuex);
 
 const vuexLocalStorage = new VuexPersist({
-  key: "pw2winctf",
+  key: "pw2winctf-2020",
   storage: window.localStorage
 });
 plugins.push(vuexLocalStorage.plugin);
