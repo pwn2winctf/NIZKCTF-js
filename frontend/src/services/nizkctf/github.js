@@ -138,6 +138,21 @@ export default class GitHub {
     }));
   }
 
+  async getBranch(repoName, branch) {
+    const { owner, repo } = repoNameHandler(repoName);
+    const { data } = await this.octokit.repos.getBranch({
+      owner,
+      repo,
+      branch
+    });
+
+    return {
+      name: data.name,
+      sha: data.commit.sha,
+      url: data.commit.url
+    };
+  }
+
   async getContents(repoName, path = "") {
     const { owner, repo } = repoNameHandler(repoName);
 
