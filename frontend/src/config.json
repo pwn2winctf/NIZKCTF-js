@@ -1,7 +1,7 @@
 {
   "title": "PWN2WIN",
-  "submissionsBasePath": "https://ctf-br.github.io/ranking_submissions",
-  "challegesBasePath": "https://ctf-br.github.io/ranking",
+  "submissionsBasePath": "https://pwn2.win/2020submissions",
+  "challegesBasePath": "https://pwn2.win/2020",
   "faqBasePath": "https://pwn2.win/NIZKCTF-js/",
   "dynamic_scoring": {
     "K": 80.0,
@@ -9,10 +9,10 @@
     "minpts": 50,
     "maxpts": 500
   },
-  "repohost":"github",
-  "authLink": "https://github.com/login/oauth/authorize?client_id=9428a38e889e92919c92&scope=public_repo",
-  "submissionsRepo": "ctf-br/ranking_submissions",
-  "gatekeeperBasePath": "https://nizkctf.herokuapp.com/",
+  "repohost": "github",
+  "authLink": "https://github.com/login/oauth/authorize?client_id=ce950fa9924a8f182a9a&scope=public_repo",
+  "submissionsRepo": "pwn2winctf/2020",
+  "gatekeeperBasePath": "https://gate.pwn2.win",
   "deployPath": "/NIZKCTF-js",
   "flagFormat": "CTF-BR{...}",
   "maxMembers": 5,
