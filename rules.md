@@ -4,16 +4,11 @@ The Pwn2Win CTF is being organized by members from '[Epic Leet Team](https://ctf
 
 ## When:
 
-May 29 (friday), to be started at 13:37 BRT (UTC -3), for 48 hours
-straight.
+May 29 (friday), to be started at 13:37 BRT (UTC -3), for 48 hours straight.
 
 ## Sign in:
 
-TBA
-
-## Play:
-
-TBA
+The registration is now open, click on the avatar in the upper right corner to sign up.
 
 ## Follow us:
 
@@ -71,7 +66,7 @@ Ok, and now, for the more informative rules...
 
 Our judges will be the operators in the **#Pwn2Win** channel (Freenode). Any Doubts, talk to them.
 
-Like in the second edition,  we'll do a **Thematic CTF**. Every challenge context will revolve around a ficticional story. Also the Jeopardy challenges, inside various categories (including subjects like **Hardware Hacking**). This time, we choose to use a dynamic scoreboard system, where all challenges starts with 500 points, and according to the amount of solves, they decrease the score.
+Like in the second edition,  we'll do a **Thematic CTF**. Every challenge context will revolve around a ficticional story. Also the Jeopardy challenges, inside various categories (including subjects like **Hardware Hacking**). We choose to use a dynamic scoreboard system, where all challenges starts with 500 points, and according to the amount of solves, they decrease the score.
 
 ## Winner:
 
