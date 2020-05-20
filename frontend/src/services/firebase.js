@@ -7,3 +7,4 @@ export const databaseInstance = firebase
   .database();
 
 export const acceptedSubmissions = databaseInstance.ref("accepted-submissions");
+export const news = databaseInstance.ref("news");

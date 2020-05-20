@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import createLogger from "vuex/dist/logger";
 import VuexPersist from "vuex-persist";
 
-import { acceptedSubmissions } from "@/services/firebase";
+import { acceptedSubmissions, news } from "@/services/firebase";
 
 const plugins = [];
 
@@ -32,6 +32,7 @@ export default new Vuex.Store({
     team: null,
     repository: null,
     solvedChallenges: [],
+    news: [],
     pendingPullRequests: []
   },
   mutations: {
@@ -97,6 +98,29 @@ export default new Vuex.Store({
       } else {
         throw new Error("Invalid polling");
       }
+    },
+    setNews(state, { value, lastUpdate, origin }) {
+      const timeOfNewsOfStorage = state.news.map(({ time }) => time);
+
+      timeOfNewsOfStorage.sort();
+      const lastNewsItemOfStorage =
+        timeOfNewsOfStorage.length > 0 ? timeOfNewsOfStorage.slice(-1)[0] : 0;
+
+      if (origin === "firebase") {
+        const newerThanStoredItems = value.filter(
+          ({ time }) => time > lastNewsItemOfStorage
+        );
+
+        state.news = [...state.news, ...newerThanStoredItems];
+      } else if (origin === "polling") {
+        const newerThanPollingItems = state.news.filter(
+          ({ time }) => time > lastUpdate
+        );
+
+        state.news = [...state.news, ...newerThanPollingItems];
+      } else {
+        throw new Error("Invalid polling");
+      }
     }
   },
   actions: {
@@ -144,6 +168,9 @@ export default new Vuex.Store({
     removePullRequestFromPending(context, pullRequest) {
       context.commit("removePullRequestFromPending", pullRequest);
     },
+    setNews(context, news) {
+      context.commit("setNews", { news, origin: "polling" });
+    },
     startFirebaseConnection(context) {
       acceptedSubmissions.on("value", snapshot => {
         const value = snapshot.val() || [];
@@ -152,7 +179,20 @@ export default new Vuex.Store({
 
         context.commit("setSolvedChallenges", {
           acceptedSubmissions: value,
-          lastUpdate: lastAcceptArray[lastAcceptArray.length - 1],
+          lastUpdate: lastAcceptArray[lastAcceptArray.length - 1] || 0,
+          origin: "firebase"
+        });
+      });
+
+      news.on("value", snapshot => {
+        const value = snapshot.val() || [];
+
+        const lastNews = value.map(({ time }) => time);
+        lastNews.sort();
+
+        context.commit("setNews", {
+          value,
+          lastUpdate: lastNews[lastNews.length - 1] || 0,
           origin: "firebase"
         });
       });
