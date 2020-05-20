@@ -457,6 +457,9 @@ export default {
       }
     },
     async alreadyRegistered() {
+      if (!this.user || !this.user.id) {
+        return false;
+      }
       try {
         const { data } = await API.getRegisteredUsers();
         return !!data[config.repohost][this.user.id];
