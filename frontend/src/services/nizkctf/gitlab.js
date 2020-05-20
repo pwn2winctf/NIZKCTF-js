@@ -128,6 +128,16 @@ export default class GitLab {
     }));
   }
 
+  async getBranch(repo, branch) {
+    const { name, commit } = await this.api.Branches.show(repo, branch);
+
+    return {
+      name,
+      url: commit.web_url,
+      sha: commit.id
+    };
+  }
+
   async getContents(repo, path = ".gitignore") {
     const ref = "master";
     const response = await this.api.RepositoryFiles.show(repo, path, ref);
