@@ -20,9 +20,9 @@
         ></md-textarea>
       </md-field>
       <div class="center">
-        <md-button class="md-raised md-primary" @click="copyTeamSecret">{{
-          $t("copyToClipboard")
-        }}</md-button>
+        <md-button class="md-raised md-primary" @click="copyTeamSecret">
+          {{ $t("copyToClipboard") }}
+        </md-button>
       </div>
     </md-content>
     <md-steppers v-else :md-active-step.sync="active" md-vertical md-linear>
@@ -69,13 +69,13 @@
             <md-radio
               v-model="team.option"
               value="create"
-              :disabled="alreadyForked"
+              :disabled="isRegistered"
               >{{ $t("createTeam") }}</md-radio
             >
             <md-radio
               v-model="team.option"
               value="join"
-              :disabled="alreadyForked"
+              :disabled="isRegistered"
               >{{ $t("joinTeam") }}</md-radio
             >
           </div>
@@ -107,17 +107,17 @@
               </md-field>
               <md-list style="height:300px; overflow:scroll">
                 <md-list-item v-for="item in filteredCountries" :key="item.key">
-                  <md-checkbox v-model="team.countries" :value="item.key">
-                    {{ item.name }}
-                  </md-checkbox>
+                  <md-checkbox v-model="team.countries" :value="item.key">{{
+                    item.name
+                  }}</md-checkbox>
                   <country-flag :country="item.key" size="normal" />
                 </md-list-item>
               </md-list>
             </md-content>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" type="submit">{{
-                $t("submit")
-              }}</md-button>
+              <md-button class="md-raised md-primary" type="submit">
+                {{ $t("submit") }}
+              </md-button>
             </div>
           </div>
           <div v-else>
@@ -126,9 +126,9 @@
               <md-input v-model="encodedTeamInput" required></md-input>
             </md-field>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" type="submit">
-                {{ $t("submit") }}
-              </md-button>
+              <md-button class="md-raised md-primary" type="submit">{{
+                $t("submit")
+              }}</md-button>
             </div>
           </div>
         </form>
@@ -167,7 +167,7 @@ export default {
   data: () => ({
     loading: false,
     createdTeam: false,
-    alreadyForked: false,
+    isRegistered: false,
     active: "token",
     errors: {
       token: undefined,
@@ -209,12 +209,10 @@ export default {
   mounted() {
     this.getInfo();
     if (this.token) {
-      this.verifyFork(this.token).then(repoForked => {
-        if (repoForked) {
-          this.alreadyForked = !!repoForked;
-          if (config.repohost === "github") {
-            this.team.option = "join";
-          }
+      this.alreadyRegistered().then(alreadyRegistered => {
+        if (alreadyRegistered) {
+          this.team.option = "join";
+          this.isRegistered = alreadyRegistered;
         }
       });
     }
@@ -332,19 +330,25 @@ export default {
       } else if (!this.repository) {
         this.verifyFork(this.token)
           .then(repoForked => {
-            if (!repoForked) {
-              this.createFork(this.token).then(repo => {
-                this.setRepository(repo);
-                this.setNextStepper("team");
+            this.alreadyRegistered()
+              .then(alreadyRegistered => {
+                if (alreadyRegistered) {
+                  this.isRegistered = alreadyRegistered;
+                  this.team.option = "join";
+                }
+              })
+              .catch(err => console.error(err))
+              .finally(() => {
+                if (!repoForked) {
+                  this.createFork(this.token).then(repo => {
+                    this.setRepository(repo);
+                    this.setNextStepper("team");
+                  });
+                } else {
+                  this.setRepository(repoForked);
+                  this.setNextStepper("team");
+                }
               });
-            } else {
-              if (config.repohost === "github") {
-                this.alreadyForked = !!repoForked;
-              }
-              this.team.option = "join";
-              this.setRepository(repoForked);
-              this.setNextStepper("team");
-            }
           })
           .catch(() => (this.errors.fork = "Try again later"));
       } else if (!this.encodedTeam && this.teamKey) {
@@ -450,6 +454,16 @@ export default {
         }
       } else {
         throw new TypeError(`Invalid repohost: ${config.repohost}`);
+      }
+    },
+    async alreadyRegistered() {
+      try {
+        const { data } = await API.getRegisteredUsers();
+        return !!data[config.repohost][this.user.id];
+      } catch (err) {
+        this.showMessage(err.message);
+        console.error(err);
+        throw err;
       }
     }
   },
