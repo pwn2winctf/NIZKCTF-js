@@ -270,7 +270,7 @@ export default {
     this.startFirebaseConnection();
     this.createPollingAcceptedSubmissions();
     this.poolingAcceptedSubmissions.start();
-    if (this.user) {
+    if (this.user && this.user.username) {
       this.createPullRequestsPooling();
       this.poolingPullRequests.start();
     }
