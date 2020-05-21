@@ -1,42 +1,48 @@
 ## GERAL:
-------
 
 ### Quem está organizando?
 
 O **CTF Pwn2Win** está sendo organizado pelos membros do [Epic Leet Team](https://epicleet.team), time brasileiro que participa de eventos do gênero.
 
+
 ### Objetivo:
 
 O principal objetivo do Pwn2Win CTF é ajudar a promover o maravilhoso mundo das competições Capture the Flag no Brasil, e mostrar que esse tipo de evento é extremamente útil para a formação intelectual e profissional dos participantes, pois exercita o raciocínio lógico, trabalho em equipe, e capacita os players a pensar "fora do caixa" na resolução de problemas diversos.
 
-Com *challenges* mais complexos do que na quarta edição, buscamos novamente encontrar os **verdadeiros *leets*** brasileiros nesta
-competição.
+Com *challenges* mais complexos do que na quarta edição, buscamos novamente encontrar os **verdadeiros *leets*** brasileiros nesta competição.
+
 
 ### Data:
 
 29/05/2019, iniciando às 13h37, por 48 horas ininterruptas.
 
+
 ### Inscrições:
 
-TBA
+Já estão abertas, clique no avatar no canto superior direito para se inscrever.
+
 
 ### Para jogar:
 
-TBA
+Apenas espere o início da competição para ver os desafios.
+
 
 ### Qual é o público alvo?
 
 Todos os interessados por desafios em geral e computação (segurança da informação, redes, sistemas operacionais, programação, etc). Nessa edição também teremos *challenges* envolvendo eletrônica, entre outros temas.
 
+
 ### Deseja ajudar na divulgação?
 
 Toda ajuda na divulgação é muito bem-vinda, e por enquanto você pode utilizar nossas redes sociais compartilhar ou retweetar as postagens referentes ao evento: [capturetheflagbr](https://facebook.com/capturetheflagbr), [eltctfbr](https://twitter.com/eltctfbr), [pwn2win](https://twitter.com/pwn2win).
 
-Também é possível colar o [cartaz da história](http://bit.ly/Illustration-Pwn2Win-2020) na sua Universidade, Local de Trabalho, divulgar em Sites e Grupos de TI e Infosec, etc.
+Também é possível colar o [cartaz da história](https://bit.ly/Illustration-Pwn2Win-2020) na sua Universidade, Local de Trabalho, divulgar em Sites e Grupos de TI e Infosec, etc.
+
 
 ### O que são CTFs?
 
 CTF significa Capture the Flag. No âmbito da informática, são competições que envolvem diversas competências dos profissionais/estudantes/entusiastas para a resolução de desafios relacionados à infosec (segurança da informação), com o objetivo de capturar a bandeira (normalmente um código) e pontuar.
+
 
 ### Tipos de CTFs:
 
@@ -48,8 +54,8 @@ Existem dois tipos de CTFs, os Jeopardy-style (estilo Quiz), que normalmente sã
 
 Para saber mais, acesse: [https://ctf-br.org/sobre](https://www.ctf-br.org/sobre).
 
+
 ## PREMIAÇÃO:
-----------
 
 **GLOBAL:**
 
@@ -71,17 +77,16 @@ Para saber mais, acesse: [https://ctf-br.org/sobre](https://www.ctf-br.org/sobre
 
  \* O **Certificado** será emitido em até duas semanas após o CTF, somente para os membros das equipes vencedoras, e são como as "medalhas" do evento, algo que você vai ter comprovando a participação e o Top 3 nessa  competição *hardcore*! :)
 
-## REGRAS:
--------
 
-Começamos pela parte burocrática, ou seja, o que você e seu time **NÃO**
-podem fazer. :)
+## REGRAS:
+
+Começamos pela parte burocrática, ou seja, o que você e seu time **NÃO** podem fazer. :)
 
 **1**.  É expressamente proibido qualquer tipo de Ataque de Negação de Serviço (DoS/DDoS) contra os Servidores ou a Infraestrutura da competição.
 
 **2**.  Não tente utilizar Brute Force no sistema de submissão das flags, pois elas são vacinadas. -.-
 
-**3**.  Não tente trocar *flags* ou *write-ups*durante a competição, nós vamos descobri-lo. ;)
+**3**.  Não tente trocar *flags* ou *write-ups* durante a competição, nós vamos descobri-lo. ;)
 
 **4**.  Não compartilhe descobertas referentes aos desafios publicamente no canal do IRC, nem de qualquer outra forma com as equipes concorrentes.
 
@@ -89,7 +94,7 @@ podem fazer. :)
 
 **6**.  Os times poderão ter quantos membros desejarem.
 
-**7**.  Dicas poderão ser ditas de forma direta ou indireta no canal, fiquem atentos! :)
+**7**.  Muitas informações relevantes serão divulgadas pelo canal de IRC, fiquem atentos! :)
 
 **8**.  O Padrão das flags será o seguinte: **CTF-BR{algo_aqui}**
 
@@ -99,26 +104,22 @@ podem fazer. :)
 
 **11**. Regra mais importante: **divirta-se e aprenda muito! :)**
 
+
 ## FUNCIONAMENTO:
---------------
 
 Os juízes serão os operadores do canal **#Pwn2Win** na Freenode. Dúvidas, converse com eles.
 
-Nosso CTF será **temático**. Todos os *challenges* estarão ambientados em um contexto específico de uma história fictícia. Dessa vez, optamos por utilizar um sistema de *scoreboard* dinâmico, onde todos *challenges* começam com 500 pontos, e conforme a quantidade de *solves*, vão diminuindo de pontuação. 
+Nosso CTF será **temático**. Todos os *challenges* estarão ambientados em um contexto específico de uma história fictícia. Dessa vez, optamos por utilizar um sistema de *scoreboard* dinâmico, no qual todos *challenges* começam com 500 pontos, e conforme a quantidade de *solves*, vão diminuindo de pontuação. 
+
 
 ## VENCEDOR:
----------
 
 A equipe vencedora será a que pontuar mais dentro das 48 horas. Em caso de empate, será campeã a que chegou em menos tempo na pontuação de primeira colocada.
 
+
 ## PATROCINADORES:
 
-![](http://pwn2win.party/imgs/aperture_science.png)
-
-
-## INFRA SPONSOR:
-
-[![](http://pwn2win.party/imgs/gcp.png)](https://g.co/cloud/)
+[![](https://pwn2win.party/imgs/gcp.png)](https://g.co/cloud/)
 
 
 ## PARCEIROS:
@@ -127,7 +128,6 @@ A equipe vencedora será a que pontuar mais dentro das 48 horas. Em caso de empa
 
 
 ## CONTATO:
---------
 
 Em caso de dúvidas, contate-nos pelo e-mail elt *at* ctf-br dot org.
 

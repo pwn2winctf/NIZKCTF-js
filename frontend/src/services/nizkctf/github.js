@@ -81,14 +81,14 @@ export default class GitHub {
     const status = state === "opened" ? "open" : state;
 
     const { owner, repo } = repoNameHandler(repoName);
-    const { data } = await this.octokit.pulls.list({
-      owner,
-      repo,
-      head: username,
-      state: status
+
+    const query = `is:pr+repo:${owner}/${repo}+author:${username}+state:${status}`;
+
+    const { data } = await this.octokit.search.issuesAndPullRequests({
+      q: query
     });
 
-    return data.map(item => ({
+    return data.items.map(item => ({
       number: item.number,
       state: item.state === "open" ? "opened" : item.state,
       title: item.title,
