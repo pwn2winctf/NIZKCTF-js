@@ -105,7 +105,6 @@ export default new Vuex.Store({
       const mostRecent = state.newsFromFirebase.filter(
         ({ time }) => time > lastNewsFromPolling
       );
-      console.log(lastNewsFromPolling, mostRecent);
 
       state.news = [...state.newsFromPolling, ...mostRecent];
     }
