@@ -40,7 +40,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(["setNews"]),
+    ...mapActions(["setNewsFromPolling"]),
     fillNews() {
       const datas = [...this.news]
         .sort((a, b) => b.time - a.time)
@@ -54,7 +54,12 @@ export default {
     },
     loadNews() {
       API.listNews()
-        .then(response => this.setNews(response.data))
+        .then(response => this.setNewsFromPolling(response.data))
+        .catch(err => {
+          if (err.response && err.response.status === 404) {
+            this.setNewsFromPolling([]);
+          }
+        })
         .finally(() => (this.firstLoad = false));
     }
   },

@@ -6,9 +6,7 @@
       </md-button>
       <span class="md-title">{{ $t(`router.${this.$route.name}`) }}</span>
       <div class="md-toolbar-section-end">
-        <div class="teamName" v-if="this.user">
-          {{ teamName }}
-        </div>
+        <div class="teamName" v-if="this.user">{{ teamName }}</div>
         <md-menu
           md-size="big"
           md-direction="top-start"
@@ -95,9 +93,9 @@
               v-for="item in alertClosedPullRequests.challenges"
               :key="item.id"
             >
-              <a target="_blank" rel="noopener noreferrer" :href="item.url">{{
-                item.id
-              }}</a>
+              <a target="_blank" rel="noopener noreferrer" :href="item.url">
+                {{ item.id }}
+              </a>
             </li>
           </ul>
         </md-dialog-content>
@@ -158,7 +156,7 @@ export default {
       "setToken",
       "setRepository",
       "setPendingPullRequests",
-      "setSolvedChallenges",
+      "setSolvedChallengesFromPolling",
       "removePullRequestFromPending",
       "startFirebaseConnection"
     ]),
@@ -226,9 +224,14 @@ export default {
       const callback = () => {
         API.listSolvedChallenges()
           .then(({ data }) => {
-            this.setSolvedChallenges(data.standings);
+            this.setSolvedChallengesFromPolling(data.standings);
           })
-          .catch(err => console.error(err));
+          .catch(err => {
+            console.error(err);
+            if (err.response && err.response.status === 404) {
+              this.setSolvedChallengesFromPolling([]);
+            }
+          });
       };
       this.poolingAcceptedSubmissions = createPolling(callback);
     },
