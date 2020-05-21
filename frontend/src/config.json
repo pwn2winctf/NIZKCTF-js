@@ -11,7 +11,7 @@
   },
   "repohost": "github",
   "authLink": "https://github.com/login/oauth/authorize?client_id=ce950fa9924a8f182a9a&scope=public_repo",
-  "submissionsRepo": "pwn2winctf/2020",
+  "submissionsRepo": "pwn2winctf/2020submissions",
   "gatekeeperBasePath": "https://gate.pwn2.win",
   "deployPath": "/NIZKCTF-js",
   "flagFormat": "CTF-BR{...}",
