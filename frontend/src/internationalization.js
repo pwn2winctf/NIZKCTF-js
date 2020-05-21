@@ -142,7 +142,8 @@ export default {
     encodedTeam:
       "Essa é a chave privada da sua equipe. Compartilhe com sua equipe para que eles possam juntar-se a você! A chave está armazenada no seu navegador e não está vinculada à sua conta do GitHub.",
     teamCreated: "Time criado",
-    backupTeamPrivateKey: "NÃO ESPERE, faça backup da chave privada da equipe AGORA",
+    backupTeamPrivateKey:
+      "NÃO ESPERE, faça backup da chave privada da equipe AGORA",
     teamKeysCopied:
       "A chave privada da equipe foi copiada para a área de transferência",
     copyToClipboard: "Copiar para a área de transferência",
