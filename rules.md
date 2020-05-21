@@ -22,7 +22,7 @@ The registration is now open, click on the avatar in the upper right corner to s
 
 ## Illustration:
 
-If you want to help us promoting the event, see the illustration of this year's story [here.](http://bit.ly/Illustration-Pwn2Win-2020)
+If you want to help us promoting the event, see the illustration of this year's story [here.](https://bit.ly/Illustration-Pwn2Win-2020)
 
 
 ## Prizes:
@@ -83,7 +83,7 @@ The winner team will be the one to score the largest within the 48 hours. In the
 
 ## Sponsors:
 
-[![](http://pwn2win.party/imgs/gcp.png)](https://g.co/cloud)
+[![](https://pwn2win.party/imgs/gcp.png)](https://g.co/cloud)
 
 
 ## Partners:

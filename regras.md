@@ -36,7 +36,7 @@ Todos os interessados por desafios em geral e computação (segurança da inform
 
 Toda ajuda na divulgação é muito bem-vinda, e por enquanto você pode utilizar nossas redes sociais compartilhar ou retweetar as postagens referentes ao evento: [capturetheflagbr](https://facebook.com/capturetheflagbr), [eltctfbr](https://twitter.com/eltctfbr), [pwn2win](https://twitter.com/pwn2win).
 
-Também é possível colar o [cartaz da história](http://bit.ly/Illustration-Pwn2Win-2020) na sua Universidade, Local de Trabalho, divulgar em Sites e Grupos de TI e Infosec, etc.
+Também é possível colar o [cartaz da história](https://bit.ly/Illustration-Pwn2Win-2020) na sua Universidade, Local de Trabalho, divulgar em Sites e Grupos de TI e Infosec, etc.
 
 
 ### O que são CTFs?
