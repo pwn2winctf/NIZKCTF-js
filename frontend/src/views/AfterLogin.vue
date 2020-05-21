@@ -464,8 +464,10 @@ export default {
         const { data } = await API.getRegisteredUsers();
         return !!data[config.repohost][this.user.id];
       } catch (err) {
-        this.showMessage(err.message);
-        console.error(err);
+        if (err.response && err.response.status !== 404) {
+          this.showMessage(err.message);
+          console.error(err);
+        }
         throw err;
       }
     }
