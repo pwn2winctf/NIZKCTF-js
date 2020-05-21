@@ -9,8 +9,8 @@ export default class GitLab {
 
   async getUser() {
     const response = await this.api.Users.current();
-    const { avatar_url, name, username } = response;
-    return { avatar_url, name, username };
+    const { avatar_url, name, username, id } = response;
+    return { avatar_url, name, username, id };
   }
 
   async createFork(repo) {
@@ -126,6 +126,16 @@ export default class GitLab {
       url: commit.web_url,
       sha: commit.id
     }));
+  }
+
+  async getBranch(repo, branch) {
+    const { name, commit } = await this.api.Branches.show(repo, branch);
+
+    return {
+      name,
+      url: commit.web_url,
+      sha: commit.id
+    };
   }
 
   async getContents(repo, path = ".gitignore") {

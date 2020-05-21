@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import createLogger from "vuex/dist/logger";
 import VuexPersist from "vuex-persist";
 
+import { acceptedSubmissions, news } from "@/services/firebase";
+
 const plugins = [];
 
 const DEV = process.env.NODE_ENV !== "production";
@@ -29,6 +31,8 @@ export default new Vuex.Store({
     user: null,
     team: null,
     repository: null,
+    solvedChallenges: [],
+    news: [],
     pendingPullRequests: []
   },
   mutations: {
@@ -61,11 +65,84 @@ export default new Vuex.Store({
       const index = list.indexOf(pullRequest);
       list.splice(index, 1);
       state.pendingPullRequests = list;
+    },
+    setSolvedChallenges(state, { acceptedSubmissions, lastUpdate, origin }) {
+      const lastAcceptArrayOfStorage = state.solvedChallenges.map(
+        ({ lastAccept }) => lastAccept
+      );
+
+      lastAcceptArrayOfStorage.sort();
+      const lastAcceptItemOfStorage =
+        lastAcceptArrayOfStorage.length > 0
+          ? lastAcceptArrayOfStorage.slice(-1)[0]
+          : 0;
+
+      if (origin === "firebase") {
+        const newerThanStoredItems = acceptedSubmissions.filter(
+          ({ lastAccept }) => lastAccept > lastAcceptItemOfStorage
+        );
+
+        const list = state.solvedChallenges.filter(
+          ({ team }) => !newerThanStoredItems.some(item => item.team === team)
+        );
+
+        state.solvedChallenges = [...list, ...newerThanStoredItems];
+      } else if (origin === "polling") {
+        const newerThanPollingItems = state.solvedChallenges.filter(
+          ({ lastAccept }) => lastAccept > lastUpdate
+        );
+        const list = acceptedSubmissions.filter(
+          ({ team }) => !newerThanPollingItems.some(item => item.team === team)
+        );
+        state.solvedChallenges = [...list, ...newerThanPollingItems];
+      } else {
+        throw new Error("Invalid polling");
+      }
+    },
+    setNews(state, { value, lastUpdate, origin }) {
+      const timeOfNewsOfStorage = state.news.map(({ time }) => time);
+
+      timeOfNewsOfStorage.sort();
+      const lastNewsItemOfStorage =
+        timeOfNewsOfStorage.length > 0 ? timeOfNewsOfStorage.slice(-1)[0] : 0;
+
+      if (origin === "firebase") {
+        const newerThanStoredItems = value.filter(
+          ({ time }) => time > lastNewsItemOfStorage
+        );
+
+        state.news = [...state.news, ...newerThanStoredItems];
+      } else if (origin === "polling") {
+        const newerThanPollingItems = state.news.filter(
+          ({ time }) => time > lastUpdate
+        );
+
+        state.news = [...state.news, ...newerThanPollingItems];
+      } else {
+        throw new Error("Invalid polling");
+      }
     }
   },
   actions: {
     setTheme(context, theme) {
       context.commit("setTheme", theme);
+    },
+    setSolvedChallenges(context, acceptedSubmissions) {
+      const lastAcceptArray = acceptedSubmissions.map(
+        ({ lastAccept }) => lastAccept
+      );
+      lastAcceptArray.sort();
+
+      const lastItem =
+        lastAcceptArray.length > 0
+          ? lastAcceptArray[lastAcceptArray.length - 1]
+          : 0;
+
+      context.commit("setSolvedChallenges", {
+        acceptedSubmissions,
+        lastUpdate: lastItem,
+        origin: "polling"
+      });
     },
     setLanguage(context, language) {
       context.commit("setLanguage", language);
@@ -90,13 +167,43 @@ export default new Vuex.Store({
     },
     removePullRequestFromPending(context, pullRequest) {
       context.commit("removePullRequestFromPending", pullRequest);
+    },
+    setNews(context, news) {
+      context.commit("setNews", { news, origin: "polling" });
+    },
+    startFirebaseConnection(context) {
+      acceptedSubmissions.on("value", snapshot => {
+        const value = snapshot.val() || [];
+        const lastAcceptArray = value.map(({ lastAccept }) => lastAccept);
+        lastAcceptArray.sort();
+
+        context.commit("setSolvedChallenges", {
+          acceptedSubmissions: value,
+          lastUpdate: lastAcceptArray[lastAcceptArray.length - 1] || 0,
+          origin: "firebase"
+        });
+      });
+
+      news.on("value", snapshot => {
+        const value = snapshot.val() || [];
+
+        const lastNews = value.map(({ time }) => time);
+        lastNews.sort();
+
+        context.commit("setNews", {
+          value,
+          lastUpdate: lastNews[lastNews.length - 1] || 0,
+          origin: "firebase"
+        });
+      });
     }
   },
   getters: {
     language: state => state.language,
     token: state => state.token,
     team: state => state.team,
-    user: state => state.user
+    user: state => state.user,
+    solvedChallenges: state => state.solvedChallenges
   },
   modules: {},
   plugins

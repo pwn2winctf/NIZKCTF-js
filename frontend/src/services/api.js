@@ -46,5 +46,6 @@ export const API = {
       baseURL: config.faqBasePath
     });
     return response.data;
-  }
+  },
+  getRegisteredUsers: () => api.get(`/registered-users.json?_${now()}`)
 };

@@ -119,6 +119,7 @@ import { mapState, mapActions } from "vuex";
 import { createPolling } from "@/utils";
 import { GitHub, GitLab } from "@/services/nizkctf";
 import * as Sentry from "@sentry/browser";
+import { API } from "@/services/api";
 
 import config from "@/config.json";
 
@@ -128,6 +129,7 @@ export default {
     owner: config.owner,
     submissionsRepo: config.submissionsRepo,
     poolingPullRequests: undefined,
+    poolingAcceptedSubmissions: undefined,
     popupLogoutVisible: false,
     menuVisible: false,
     cardVisible: false,
@@ -156,7 +158,9 @@ export default {
       "setToken",
       "setRepository",
       "setPendingPullRequests",
-      "removePullRequestFromPending"
+      "setSolvedChallenges",
+      "removePullRequestFromPending",
+      "startFirebaseConnection"
     ]),
     async checkPullRequestsState(repohost, list) {
       const states = await Promise.all(
@@ -218,6 +222,16 @@ export default {
           }
         });
     },
+    createPollingAcceptedSubmissions() {
+      const callback = () => {
+        API.listSolvedChallenges()
+          .then(({ data }) => {
+            this.setSolvedChallenges(data.standings);
+          })
+          .catch(err => console.error(err));
+      };
+      this.poolingAcceptedSubmissions = createPolling(callback);
+    },
     createPullRequestsPooling() {
       if (config.repohost === "github") {
         const github = new GitHub(this.token);
@@ -253,7 +267,10 @@ export default {
     }
   },
   mounted() {
-    if (this.user) {
+    this.startFirebaseConnection();
+    this.createPollingAcceptedSubmissions();
+    this.poolingAcceptedSubmissions.start();
+    if (this.user && this.user.username) {
       this.createPullRequestsPooling();
       this.poolingPullRequests.start();
     }
@@ -261,6 +278,9 @@ export default {
   beforeDestroy() {
     if (this.poolingPullRequests) {
       this.poolingPullRequests.stop();
+    }
+    if (this.poolingAcceptedSubmissions) {
+      this.poolingAcceptedSubmissions.stop();
     }
   },
   watch: {

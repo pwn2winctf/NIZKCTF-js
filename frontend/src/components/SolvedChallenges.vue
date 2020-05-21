@@ -3,7 +3,7 @@
     <md-toolbar md-elevation="1">
       <span class="md-title">{{ $t("solves") }}</span>
     </md-toolbar>
-    <md-content v-if="firstLoad" class="spinner">
+    <md-content v-if="!challenges" class="spinner">
       <md-progress-spinner md-mode="indeterminate" />
     </md-content>
     <md-content v-else class="container md-scrollbar">
@@ -18,54 +18,44 @@
 </template>
 
 <script>
-import fromUnixTime from "date-fns/fromUnixTime";
-
-import { API } from "@/services/api";
-import { createPolling } from "@/utils";
+import { mapState } from "vuex";
+import { fromUnixTime } from "date-fns";
 
 export default {
   name: "SolvedChallenges",
   data: () => ({
-    challenges: [],
-    firstLoad: true
+    challenges: []
   }),
-  created() {
-    this.solvedChallengesPolling = createPolling(this.loadSolvedChallenges);
-    this.solvedChallengesPolling.start();
+  computed: mapState(["solvedChallenges"]),
+  mounted() {
+    this.loadSolvedChallenges();
   },
   methods: {
     loadSolvedChallenges() {
-      API.listSolvedChallenges()
-        .then(({ data }) => {
-          const datas = data.standings
-            ? data.standings
-                .reduce((reducer, { taskStats, team }) => {
-                  Object.keys(taskStats).forEach(challenge => {
-                    reducer.push({
-                      team,
-                      challenge,
-                      datetime: taskStats[challenge].time,
-                      date: fromUnixTime(
-                        taskStats[challenge].time
-                      ).toLocaleString()
-                    });
-                  });
-                  return reducer;
-                }, [])
-                .sort((a, b) => b.datetime - a.datetime)
-            : [];
-          this.challenges = datas;
-        })
-        .finally(() => (this.firstLoad = false));
+      this.challenges = this.solvedChallenges
+        .reduce((reducer, { taskStats, team }) => {
+          Object.keys(taskStats).forEach(challenge => {
+            reducer.push({
+              team,
+              challenge,
+              datetime: taskStats[challenge].time,
+              date: fromUnixTime(taskStats[challenge].time).toLocaleString()
+            });
+          });
+          return reducer;
+        }, [])
+        .sort((a, b) => b.datetime - a.datetime);
     }
   },
-  beforeDestroy() {
-    this.solvedChallengesPolling.stop();
+  watch: {
+    solvedChallenges() {
+      this.loadSolvedChallenges();
+    }
   }
 };
 </script>
 
-<style type="sass" scoped>
+<style lang="css" scoped>
 .container {
   padding-left: 16px;
   padding-right: 16px;

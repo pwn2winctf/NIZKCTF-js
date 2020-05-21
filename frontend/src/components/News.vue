@@ -8,7 +8,7 @@
     </md-content>
     <md-content v-else class="container md-scrollbar">
       <transition-group name="list">
-        <p v-for="item in news" v-bind:key="item.datetime">
+        <p v-for="item in loadedNews" v-bind:key="item.datetime">
           <span class="item-date">[{{ item.date }}]</span>
           {{ item.text }}
         </p>
@@ -19,6 +19,7 @@
 
 <script>
 import fromUnixTime from "date-fns/fromUnixTime";
+import { mapState, mapActions } from "vuex";
 
 import { API } from "@/services/api";
 import { createPolling } from "@/utils";
@@ -26,32 +27,44 @@ import { createPolling } from "@/utils";
 export default {
   name: "News",
   data: () => ({
-    news: [],
+    loadedNews: [],
     firstLoad: true
   }),
   created() {
     this.newsPolling = createPolling(this.loadNews);
     this.newsPolling.start();
   },
+  computed: {
+    ...mapState({
+      news: state => state.news
+    })
+  },
   methods: {
+    ...mapActions(["setNews"]),
+    fillNews() {
+      const datas = [...this.news]
+        .sort((a, b) => b.time - a.time)
+        .map(item => ({
+          datetime: item.time,
+          date: fromUnixTime(item.time).toLocaleString(),
+          text: item.msg
+        }));
+
+      this.loadedNews = datas;
+    },
     loadNews() {
       API.listNews()
-        .then(response => {
-          const datas = response.data
-            .sort((a, b) => b.time - a.time)
-            .map(item => ({
-              datetime: item.time,
-              date: fromUnixTime(item.time).toLocaleString(),
-              text: item.msg
-            }));
-
-          this.news = datas;
-        })
+        .then(response => this.setNews(response.data))
         .finally(() => (this.firstLoad = false));
     }
   },
   beforeDestroy() {
     this.newsPolling.stop();
+  },
+  watch: {
+    news() {
+      this.fillNews();
+    }
   }
 };
 </script>

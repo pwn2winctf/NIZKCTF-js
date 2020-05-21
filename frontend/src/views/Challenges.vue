@@ -63,11 +63,56 @@ export default {
   }),
   computed: {
     ...mapState({
-      teamKey: state => state.team
+      teamKey: state => state.team,
+      solvedChallenges: state => state.solvedChallenges
     })
   },
   created() {
-    const getDatas = () =>
+    this.challengesPolling = createPolling(this.loadChallenges);
+    this.challengesPolling.start();
+  },
+  methods: {
+    fillList() {
+      const solves = this.solvedChallenges.reduce((reducer, { taskStats }) => {
+        Object.keys(taskStats).forEach(chall => {
+          reducer[chall]++ || (reducer[chall] = 1);
+        });
+        return reducer;
+      }, {});
+
+      const solved =
+        this.teamKey &&
+        this.solvedChallenges.some(item => item.team === this.teamKey.name)
+          ? this.solvedChallenges.find(item => item.team === this.teamKey.name)
+              .taskStats
+          : [];
+
+      const challenges = this.challenges.map(item => ({
+        ...item,
+        solved: !!solved[item.title],
+        solves: solves[item.id] || 0,
+        points: computeScore((solves[item.id] || 0) + 1)
+      }));
+      challenges.sort((a, b) => a.title.localeCompare(b.title));
+      this.challenges = challenges;
+      this.filteredChallenges = this.challenges;
+
+      if (this.$route.params.id) {
+        const challenge = this.challenges.find(
+          ({ id }) => id === this.$route.params.id
+        );
+        if (challenge) {
+          this.selectChallenge(challenge);
+        } else {
+          this.$router.push({
+            name: "Challenges"
+          });
+        }
+      }
+
+      this.filteredChallenges = this.challenges;
+    },
+    loadChallenges() {
       API.getChallenges()
         .then(response => {
           const challenges = response.data;
@@ -86,66 +131,10 @@ export default {
 
           this.challenges = datas;
           this.categories = categories;
-
-          API.listSolvedChallenges()
-            .then(({ data }) => {
-              const solves = data.standings
-                ? data.standings.reduce((reducer, { taskStats }) => {
-                    Object.keys(taskStats).forEach(chall => {
-                      reducer[chall]++ || (reducer[chall] = 1);
-                    });
-                    return reducer;
-                  }, {})
-                : [];
-
-              const solved =
-                this.teamKey &&
-                data.standings.some(item => item.team === this.teamKey.name)
-                  ? data.standings.find(item => item.team === this.teamKey.name)
-                      .taskStats
-                  : [];
-
-              const challenges = datas.map(item => ({
-                ...item,
-                solved: !!solved[item.title],
-                solves: solves[item.id] || 0,
-                points: computeScore((solves[item.id] || 0) + 1)
-              }));
-              challenges.sort((a, b) => a.title.localeCompare(b.title));
-              this.challenges = challenges;
-              this.filteredChallenges = this.challenges;
-            })
-            .catch(err => {
-              this.challenges = this.challenges.map(item => ({
-                ...item,
-                solved: false,
-                solves: 0,
-                points: computeScore(1)
-              }));
-              console.error(err);
-            })
-            .finally(() => {
-              if (this.$route.params.id) {
-                const challenge = this.challenges.find(
-                  ({ id }) => id === this.$route.params.id
-                );
-                if (challenge) {
-                  this.selectChallenge(challenge);
-                } else {
-                  this.$router.push({
-                    name: "Challenges"
-                  });
-                }
-              }
-
-              this.filteredChallenges = this.challenges;
-            });
-        });
-
-    this.challengesPolling = createPolling(getDatas);
-    this.challengesPolling.start();
-  },
-  methods: {
+          this.fillList();
+        })
+        .catch(err => console.error(err));
+    },
     filterChallenges(category) {
       if (this.selectedCategory == category) {
         this.selectedCategory = this.undefined;
@@ -183,6 +172,11 @@ export default {
   },
   beforeDestroy() {
     this.challengesPolling.stop();
+  },
+  watch: {
+    solvedChallenges() {
+      this.fillList();
+    }
   }
 };
 </script>

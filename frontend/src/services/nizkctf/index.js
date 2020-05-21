@@ -135,9 +135,8 @@ export default class NIZKCTF {
 
     const file = `${path}/${fileName}`;
 
-    const branches = await this.api.listBranches(this.local);
-
-    const shaOfUpstream = branches.find(item => item.name === "upstream").sha;
+    const shaOfUpstream = (await this.api.getBranch(this.local, "upstream"))
+      .sha;
 
     await this.api.createBranch(this.local, branch, shaOfUpstream);
 
