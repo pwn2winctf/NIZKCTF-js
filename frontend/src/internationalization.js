@@ -79,6 +79,7 @@ export default {
     },
     errors: {
       teamName: "Invalid team name.",
+      teamNameAlreadyExists: "There is already a team with this name.",
       privateKey: "Private key is invalid.",
       maxMembers:
         "Invalid number of country flags. Up to {max} country flags are allowed."
@@ -166,6 +167,7 @@ export default {
     },
     errors: {
       teamName: "Nome do time inválido.",
+      teamNameAlreadyExists: "Já existe um time com este nome.",
       privateKey: "Chave privada inválida.",
       maxMembers:
         "Número inválido de bandeiras de países. São permitidas até {max} bandeiras."

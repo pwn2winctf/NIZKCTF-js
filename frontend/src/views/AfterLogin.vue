@@ -167,6 +167,7 @@ export default {
   data: () => ({
     loading: false,
     createdTeam: false,
+    users: [],
     isRegistered: false,
     active: "token",
     errors: {
@@ -250,9 +251,19 @@ export default {
       this.errors.team = [];
       if (this.team.option === "create") {
         const { name, countries } = this.team;
+        const teams = Object.values(this.users).map(team => {
+          return team.toLowerCase();
+        });
+
         if (!name || name.length > config.maxTeamNameLength) {
           this.showMessage(this.$t("errors.teamName"));
           this.errors.team.push(this.$t("errors.teamName"));
+          return false;
+        }
+
+        if (teams.includes(name.toLowerCase())) {
+          this.showMessage(this.$t("errors.teamNameAlreadyExists"));
+          this.errors.team.push(this.$t("errors.teamNameAlreadyExists"));
           return false;
         }
 
@@ -462,6 +473,7 @@ export default {
       }
       try {
         const { data } = await API.getRegisteredUsers();
+        this.users = data[config.repohost];
         return !!data[config.repohost][this.user.id];
       } catch (err) {
         if (err.response && err.response.status !== 404) {
