@@ -227,9 +227,10 @@ export default {
             this.setSolvedChallengesFromPolling(data.standings);
           })
           .catch(err => {
-            console.error(err);
             if (err.response && err.response.status === 404) {
               this.setSolvedChallengesFromPolling([]);
+            } else {
+              console.error(err);
             }
           });
       };
