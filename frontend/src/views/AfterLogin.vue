@@ -251,9 +251,7 @@ export default {
       this.errors.team = [];
       if (this.team.option === "create") {
         const { name, countries } = this.team;
-        const teams = Object.values(this.users).map(team => {
-          return team.toLowerCase();
-        });
+        const teams = Object.values(this.users);
 
         if (!name || name.length > config.maxTeamNameLength) {
           this.showMessage(this.$t("errors.teamName"));
@@ -261,7 +259,7 @@ export default {
           return false;
         }
 
-        if (teams.includes(name.toLowerCase())) {
+        if (teams.includes(name)) {
           this.showMessage(this.$t("errors.teamNameAlreadyExists"));
           this.errors.team.push(this.$t("errors.teamNameAlreadyExists"));
           return false;
