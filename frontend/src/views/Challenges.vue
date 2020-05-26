@@ -89,7 +89,7 @@ export default {
 
       const challenges = this.challenges.map(item => ({
         ...item,
-        solved: !!solved[item.title],
+        solved: !!solved[item.id],
         solves: solves[item.id] || 0,
         points: computeScore((solves[item.id] || 0) + 1)
       }));
