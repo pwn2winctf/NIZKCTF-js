@@ -36,13 +36,13 @@
       :md-duration="5000"
       :md-active.sync="showSnackbar"
     >
-      <span>{{ message }}</span>
+      <span v-html="message" />
     </md-snackbar>
   </md-dialog>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import showdown from "showdown";
 
 import { API } from "@/services/api";
@@ -70,7 +70,6 @@ export default {
     repository: state => state.repository
   }),
   methods: {
-    ...mapActions(["addPullRequestToPending"]),
     close() {
       if (this.$route.params.id) {
         this.$router.push("/challenges");
@@ -96,8 +95,9 @@ export default {
       nizkctf
         .submitFlag(this.flag, this.info)
         .then(data => {
-          this.addPullRequestToPending(data.number),
-            this.showMessage(this.$t("flagFound"));
+          this.showMessage(
+            this.$t("flagFound", { link: data.url, id: this.info.id })
+          );
         })
         .catch(err => {
           this.showMessage(err);
