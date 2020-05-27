@@ -48,7 +48,7 @@ export default {
     fixErrors: "Please fix the following error(s):",
     teamPrivateKey: "Team private key",
     verifyingFlag: "Please wait, we are checking the flag against the hash.",
-    flagFound: `Correct flag, submitted! You can track the status of your submission `,
+    flagFound: "Correct flag, submitted! You can track the status of your submission",
     acceptedChallenges:
       "The {challenges} submission(s) was accepted. The scoreboard will refresh in a few more seconds.",
     notAcceptedChallenges:
