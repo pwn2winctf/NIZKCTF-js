@@ -1,36 +1,40 @@
 <template>
-  <md-dialog :md-active="info.isOpen" @md-clicked-outside="close">
-    <md-dialog-title>{{ info.title }}</md-dialog-title>
-    <md-dialog-content v-if="loading" class="spinner">
-      <p v-if="sendingFlag">{{ $t("verifyingFlag") }}</p>
-      <md-progress-spinner md-mode="indeterminate" />
-    </md-dialog-content>
-    <md-dialog-content v-else>
-      <p v-html="description"></p>
-      <p>ID: {{ info.id }}</p>
-      <p>{{ $t("score") }}: {{ info.points }}</p>
-      <p>{{ $t("solves") }}: {{ info.solves }}</p>
-      <md-chip
-        v-for="tag in info.tags"
-        v-bind:key="tag"
-        class="md-primary md-layout-item card-tag"
-        >{{ tag }}</md-chip
-      >
-      <div v-if="teamKey && !info.solved" class="flag-field">
-        <md-field>
-          <md-input v-model="flag" :placeholder="flagFormat"></md-input>
-        </md-field>
-      </div>
-    </md-dialog-content>
-    <md-dialog-actions>
-      <md-button
-        v-if="!loading && teamKey && !info.solved"
-        class="md-raised md-accent"
-        @click="submitFlag"
-        >{{ $t("submit") }}</md-button
-      >
-      <md-button class="md-primary" @click="close">{{ $t("close") }}</md-button>
-    </md-dialog-actions>
+  <md-content>
+    <md-dialog :md-active="info.isOpen" @md-clicked-outside="close">
+      <md-dialog-title>{{ info.title }}</md-dialog-title>
+      <md-dialog-content v-if="loading" class="spinner">
+        <p v-if="sendingFlag">{{ $t("verifyingFlag") }}</p>
+        <md-progress-spinner md-mode="indeterminate" />
+      </md-dialog-content>
+      <md-dialog-content v-else>
+        <p v-html="description"></p>
+        <p>ID: {{ info.id }}</p>
+        <p>{{ $t("score") }}: {{ info.points }}</p>
+        <p>{{ $t("solves") }}: {{ info.solves }}</p>
+        <md-chip
+          v-for="tag in info.tags"
+          v-bind:key="tag"
+          class="md-primary md-layout-item card-tag"
+          >{{ tag }}</md-chip
+        >
+        <div v-if="teamKey && !info.solved" class="flag-field">
+          <md-field>
+            <md-input v-model="flag" :placeholder="flagFormat"></md-input>
+          </md-field>
+        </div>
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button
+          v-if="!loading && teamKey && !info.solved"
+          class="md-raised md-accent"
+          @click="submitFlag"
+          >{{ $t("submit") }}</md-button
+        >
+        <md-button class="md-primary" @click="close">
+          {{ $t("close") }}
+        </md-button>
+      </md-dialog-actions>
+    </md-dialog>
     <md-snackbar
       md-position="center"
       :md-duration="5000"
@@ -48,7 +52,7 @@
         >
       </span>
     </md-snackbar>
-  </md-dialog>
+  </md-content>
 </template>
 
 <script>
