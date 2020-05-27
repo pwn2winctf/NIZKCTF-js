@@ -48,7 +48,7 @@ export default {
     fixErrors: "Please fix the following error(s):",
     teamPrivateKey: "Team private key",
     verifyingFlag: "Please wait, we are checking the flag against the hash.",
-    flagFound: `Correct flag, submitted! You can track the status of your submission at <a href={link}>here</a>.`,
+    flagFound: `Correct flag, submitted! You can track the status of your submission at`,
     acceptedChallenges:
       "The {challenges} submission(s) was accepted. The scoreboard will refresh in a few more seconds.",
     notAcceptedChallenges:
@@ -134,7 +134,7 @@ export default {
     fixErrors: "Por favor, corrija o(s) seguinte(s) erro(s):",
     teamPrivateKey: "Chave privada do time",
     flagFound:
-      "Flag encontrada, enviada! Você pode acompanhar o status do seu envio <a href={link}>aqui</a>.",
+      "Flag encontrada, enviada! Você pode acompanhar o status do seu envio",
     acceptedChallenges:
       "A submissão do(s) desafio(s) {challenges} foi aceita. Aguarde mais alguns segundos para que o placar atualize.",
     notAcceptedChallenges:

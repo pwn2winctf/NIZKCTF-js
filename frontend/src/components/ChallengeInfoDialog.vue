@@ -35,8 +35,18 @@
       md-position="center"
       :md-duration="5000"
       :md-active.sync="showSnackbar"
+      class="md-primary"
     >
-      <span v-html="message" />
+      <span>
+        {{ message }}
+        <md-button
+          v-if="link"
+          :href="link"
+          target="_blank"
+          :style="{ color: this.theme === 'dark' ? '#000' : '#fff' }"
+          >here</md-button
+        >
+      </span>
     </md-snackbar>
   </md-dialog>
 </template>
@@ -60,15 +70,19 @@ export default {
     description: "",
     converter: new showdown.Converter(),
     showSnackbar: false,
+    link: undefined,
     message: ""
   }),
-  computed: mapState({
-    language: state => state.language,
-    teamKey: state => state.team,
-    token: state => state.token,
-    user: state => state.user,
-    repository: state => state.repository
-  }),
+  computed: {
+    ...mapState({
+      theme: state => state.theme,
+      language: state => state.language,
+      teamKey: state => state.team,
+      token: state => state.token,
+      user: state => state.user,
+      repository: state => state.repository
+    })
+  },
   methods: {
     close() {
       if (this.$route.params.id) {
@@ -95,12 +109,10 @@ export default {
       nizkctf
         .submitFlag(this.flag, this.info)
         .then(data => {
-          this.showMessage(
-            this.$t("flagFound", { link: data.url, id: this.info.id })
-          );
+          this.showMessage(this.$t("flagFound"), data.url);
         })
         .catch(err => {
-          this.showMessage(err);
+          this.showMessage(err, null);
           console.error(err);
         })
         .finally(() => {
@@ -108,8 +120,9 @@ export default {
           this.sendingFlag = false;
         });
     },
-    showMessage(message) {
+    showMessage(message, link = null) {
       this.message = message;
+      this.link = link;
       this.showSnackbar = true;
     }
   },
