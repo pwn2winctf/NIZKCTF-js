@@ -70,6 +70,7 @@ export default {
     router: {
       Home: "Home",
       Challenges: "Challenges",
+      ChallengesInfo: "Challenges",
       Rank: "Rank",
       Rules: "Rules",
       Settings: "Settings",
@@ -158,6 +159,7 @@ export default {
     router: {
       Home: "Início",
       Challenges: "Desafios",
+      ChallengesInfo: "Desafios",
       Rank: "Rank",
       Rules: "Regras",
       Settings: "Configurações",
