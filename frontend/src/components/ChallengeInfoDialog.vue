@@ -1,48 +1,62 @@
 <template>
-  <md-dialog :md-active="info.isOpen" @md-clicked-outside="close">
-    <md-dialog-title>{{ info.title }}</md-dialog-title>
-    <md-dialog-content v-if="loading" class="spinner">
-      <p v-if="sendingFlag">{{ $t("verifyingFlag") }}</p>
-      <md-progress-spinner md-mode="indeterminate" />
-    </md-dialog-content>
-    <md-dialog-content v-else>
-      <p v-html="description"></p>
-      <p>ID: {{ info.id }}</p>
-      <p>{{ $t("score") }}: {{ info.points }}</p>
-      <p>{{ $t("solves") }}: {{ info.solves }}</p>
-      <md-chip
-        v-for="tag in info.tags"
-        v-bind:key="tag"
-        class="md-primary md-layout-item card-tag"
-        >{{ tag }}</md-chip
-      >
-      <div v-if="teamKey && !info.solved" class="flag-field">
-        <md-field>
-          <md-input v-model="flag" :placeholder="flagFormat"></md-input>
-        </md-field>
-      </div>
-    </md-dialog-content>
-    <md-dialog-actions>
-      <md-button
-        v-if="!loading && teamKey && !info.solved"
-        class="md-raised md-accent"
-        @click="submitFlag"
-        >{{ $t("submit") }}</md-button
-      >
-      <md-button class="md-primary" @click="close">{{ $t("close") }}</md-button>
-    </md-dialog-actions>
+  <md-content>
+    <md-dialog :md-active="info.isOpen" @md-clicked-outside="close">
+      <md-dialog-title>{{ info.title }}</md-dialog-title>
+      <md-dialog-content v-if="loading" class="spinner">
+        <p v-if="sendingFlag">{{ $t("verifyingFlag") }}</p>
+        <md-progress-spinner md-mode="indeterminate" />
+      </md-dialog-content>
+      <md-dialog-content v-else>
+        <p v-html="description"></p>
+        <p>ID: {{ info.id }}</p>
+        <p>{{ $t("score") }}: {{ info.points }}</p>
+        <p>{{ $t("solves") }}: {{ info.solves }}</p>
+        <md-chip
+          v-for="tag in info.tags"
+          v-bind:key="tag"
+          class="md-primary md-layout-item card-tag"
+          >{{ tag }}</md-chip
+        >
+        <div v-if="teamKey && !info.solved" class="flag-field">
+          <md-field>
+            <md-input v-model="flag" :placeholder="flagFormat"></md-input>
+          </md-field>
+        </div>
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button
+          v-if="!loading && teamKey && !info.solved"
+          class="md-raised md-accent"
+          @click="submitFlag"
+          >{{ $t("submit") }}</md-button
+        >
+        <md-button class="md-primary" @click="close">
+          {{ $t("close") }}
+        </md-button>
+      </md-dialog-actions>
+    </md-dialog>
     <md-snackbar
       md-position="center"
       :md-duration="5000"
       :md-active.sync="showSnackbar"
+      class="md-primary"
     >
-      <span>{{ message }}</span>
+      <span>
+        {{ message }}
+        <md-button
+          v-if="link"
+          :href="link"
+          target="_blank"
+          :style="{ color: this.theme === 'dark' ? '#000' : '#fff' }"
+          >here</md-button
+        >
+      </span>
     </md-snackbar>
-  </md-dialog>
+  </md-content>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import showdown from "showdown";
 
 import { API } from "@/services/api";
@@ -60,17 +74,20 @@ export default {
     description: "",
     converter: new showdown.Converter(),
     showSnackbar: false,
+    link: undefined,
     message: ""
   }),
-  computed: mapState({
-    language: state => state.language,
-    teamKey: state => state.team,
-    token: state => state.token,
-    user: state => state.user,
-    repository: state => state.repository
-  }),
+  computed: {
+    ...mapState({
+      theme: state => state.theme,
+      language: state => state.language,
+      teamKey: state => state.team,
+      token: state => state.token,
+      user: state => state.user,
+      repository: state => state.repository
+    })
+  },
   methods: {
-    ...mapActions(["addPullRequestToPending"]),
     close() {
       if (this.$route.params.id) {
         this.$router.push("/challenges");
@@ -96,11 +113,10 @@ export default {
       nizkctf
         .submitFlag(this.flag, this.info)
         .then(data => {
-          this.addPullRequestToPending(data.number),
-            this.showMessage(this.$t("flagFound"));
+          this.showMessage(this.$t("flagFound"), data.url);
         })
         .catch(err => {
-          this.showMessage(err);
+          this.showMessage(err, null);
           console.error(err);
         })
         .finally(() => {
@@ -108,8 +124,9 @@ export default {
           this.sendingFlag = false;
         });
     },
-    showMessage(message) {
+    showMessage(message, link = null) {
       this.message = message;
+      this.link = link;
       this.showSnackbar = true;
     }
   },

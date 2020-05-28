@@ -84,29 +84,6 @@
       >
         <span>{{ toastMergeds.content }}</span>
       </md-snackbar>
-      <md-dialog :md-active.sync="alertClosedPullRequests.visible">
-        <md-dialog-title>{{ $t("warning") }}</md-dialog-title>
-        <md-dialog-content>
-          <p>{{ alertClosedPullRequests.content }}</p>
-          <ul>
-            <li
-              v-for="item in alertClosedPullRequests.challenges"
-              :key="item.id"
-            >
-              <a target="_blank" rel="noopener noreferrer" :href="item.url">
-                {{ item.id }}
-              </a>
-            </li>
-          </ul>
-        </md-dialog-content>
-        <md-dialog-actions>
-          <md-button
-            class="md-primary"
-            @click="alertClosedPullRequests.visible = false"
-            >{{ $t("close") }}</md-button
-          >
-        </md-dialog-actions>
-      </md-dialog>
       <router-view />
     </md-app-content>
   </md-app>
@@ -115,7 +92,6 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { createPolling } from "@/utils";
-import { GitHub, GitLab } from "@/services/nizkctf";
 import * as Sentry from "@sentry/browser";
 import { API } from "@/services/api";
 
@@ -126,7 +102,6 @@ export default {
   data: () => ({
     owner: config.owner,
     submissionsRepo: config.submissionsRepo,
-    poolingPullRequests: undefined,
     poolingAcceptedSubmissions: undefined,
     popupLogoutVisible: false,
     menuVisible: false,
@@ -147,17 +122,14 @@ export default {
     theme: state => state.theme,
     user: state => state.user,
     token: state => state.token,
-    teamName: state => state.team && state.team.name,
-    pendingPullRequests: state => state.pendingPullRequests
+    teamName: state => state.team && state.team.name
   }),
   methods: {
     ...mapActions([
       "setUser",
       "setToken",
       "setRepository",
-      "setPendingPullRequests",
       "setSolvedChallengesFromPolling",
-      "removePullRequestFromPending",
       "startFirebaseConnection"
     ]),
     async checkPullRequestsState(repohost, list) {
@@ -175,51 +147,6 @@ export default {
       );
       return states;
     },
-    setListOfPendingPullRequests(repohost) {
-      repohost
-        .listPullRequests(config.submissionsRepo, this.user.username, "opened")
-        .then(data => {
-          const list = data.map(item => item.number);
-          list.length > 0 && this.setPendingPullRequests(list);
-        });
-    },
-    updateListOfPendingPullRequests(repohost) {
-      this.checkPullRequestsState(repohost, this.pendingPullRequests)
-        .then(list => {
-          this.toastMergeds.content = null;
-          this.toastMergeds.challenges = [];
-          this.alertClosedPullRequests.challenges = [];
-          list.forEach(item => {
-            const challenge = item.title.replace("Proof: found flag for", "");
-            if (item.state === "merged") {
-              this.toastMergeds.challenges.push(challenge);
-              this.removePullRequestFromPending(item.number);
-            } else if (item.state === "closed") {
-              this.alertClosedPullRequests.challenges.push({
-                id: challenge,
-                number: item.number,
-                url: item.url
-              });
-              this.removePullRequestFromPending(item.number);
-            }
-          });
-        })
-        .finally(() => {
-          if (this.toastMergeds.challenges.length > 0) {
-            this.toastMergeds.content = this.$t("acceptedChallenges", {
-              challenges: this.toastMergeds.challenges
-            });
-            this.toastMergeds.visible = true;
-          }
-
-          if (this.alertClosedPullRequests.challenges.length > 0) {
-            this.alertClosedPullRequests.content = this.$t(
-              "notAcceptedChallenges"
-            );
-            this.alertClosedPullRequests.visible = true;
-          }
-        });
-    },
     createPollingAcceptedSubmissions() {
       const callback = () => {
         API.listSolvedChallenges()
@@ -235,27 +162,6 @@ export default {
           });
       };
       this.poolingAcceptedSubmissions = createPolling(callback);
-    },
-    createPullRequestsPooling() {
-      if (config.repohost === "github") {
-        const github = new GitHub(this.token);
-        const callback = () =>
-          this.pendingPullRequests.length > 0
-            ? this.updateListOfPendingPullRequests(github)
-            : this.setListOfPendingPullRequests(github);
-
-        this.poolingPullRequests = createPolling(callback, 15000); // 15s
-      } else if (config.repohost === "gitlab") {
-        const gitlab = new GitLab(this.token);
-        const callback = () =>
-          this.pendingPullRequests.length > 0
-            ? this.updateListOfPendingPullRequests(gitlab)
-            : this.setListOfPendingPullRequests(gitlab);
-
-        this.poolingPullRequests = createPolling(callback, 15000); // 15s
-      } else {
-        throw new TypeError(`Invalid repohost: ${config.repohost}`);
-      }
     },
     toggleMenu() {
       this.menuVisible = !this.menuVisible;
@@ -274,15 +180,8 @@ export default {
     this.startFirebaseConnection();
     this.createPollingAcceptedSubmissions();
     this.poolingAcceptedSubmissions.start();
-    if (this.user && this.user.username) {
-      this.createPullRequestsPooling();
-      this.poolingPullRequests.start();
-    }
   },
   beforeDestroy() {
-    if (this.poolingPullRequests) {
-      this.poolingPullRequests.stop();
-    }
     if (this.poolingAcceptedSubmissions) {
       this.poolingAcceptedSubmissions.stop();
     }
@@ -301,18 +200,6 @@ export default {
             username: value.name
           });
         });
-      }
-
-      if (
-        value &&
-        (!this.poolingPullRequests || !this.poolingPullRequests.running)
-      ) {
-        this.createPullRequestsPooling();
-        this.poolingPullRequests.start();
-      } else {
-        if (this.poolingPullRequests.running) {
-          this.poolingPullRequests.stop();
-        }
       }
     }
   }

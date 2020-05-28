@@ -73,7 +73,8 @@ export default class GitHub {
     return {
       number: data.number,
       head_sha: data.head.sha,
-      base_sha: data.base.sha
+      base_sha: data.base.sha,
+      url: data.html_url
     };
   }
 

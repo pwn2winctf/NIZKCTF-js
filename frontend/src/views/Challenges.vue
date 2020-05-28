@@ -10,7 +10,10 @@
         >{{ item }}</md-chip
       >
     </md-content>
-    <md-content class="grid-cards">
+    <md-content v-if="!isLoadedChallenges" class="spinner">
+      <md-progress-spinner md-mode="indeterminate" />
+    </md-content>
+    <md-content v-else class="grid-cards">
       <md-card
         v-for="challenge in filteredChallenges"
         v-bind:key="challenge.id"
@@ -52,6 +55,7 @@ export default {
   name: "Challenges",
   components: { ChallengeInfoDialog },
   data: () => ({
+    isLoadedChallenges: false,
     challenges: [],
     popup: {
       isOpen: false
@@ -89,7 +93,7 @@ export default {
 
       const challenges = this.challenges.map(item => ({
         ...item,
-        solved: !!solved[item.title],
+        solved: !!solved[item.id],
         solves: solves[item.id] || 0,
         points: computeScore((solves[item.id] || 0) + 1)
       }));
@@ -97,7 +101,7 @@ export default {
       this.challenges = challenges;
       this.filteredChallenges = this.challenges;
 
-      if (this.$route.params.id) {
+      if (this.$route.params.id && this.isLoadedChallenges) {
         const challenge = this.challenges.find(
           ({ id }) => id === this.$route.params.id
         );
@@ -131,6 +135,7 @@ export default {
 
           this.challenges = datas;
           this.categories = categories;
+          this.isLoadedChallenges = true;
           this.fillList();
         })
         .catch(err => console.error(err));
@@ -224,5 +229,12 @@ export default {
 
 .solved-challenge {
   background-color: #77dd77 !important;
+}
+
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>

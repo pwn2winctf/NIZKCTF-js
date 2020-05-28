@@ -68,7 +68,7 @@ export default class GitLab {
     targetRepo,
     targetBranch
   ) {
-    const { iid, diff_refs } = await this.api.MergeRequests.create(
+    const { iid, diff_refs, web_url } = await this.api.MergeRequests.create(
       sourceRepo,
       sourceBranch,
       targetBranch,
@@ -81,7 +81,8 @@ export default class GitLab {
     return {
       number: iid,
       base_sha: diff_refs.base_sha,
-      head_sha: diff_refs.head_sha
+      head_sha: diff_refs.head_sha,
+      url: web_url
     };
   }
   async listPullRequests(projectId, authorUsername, state) {
