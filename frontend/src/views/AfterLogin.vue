@@ -20,9 +20,9 @@
         ></md-textarea>
       </md-field>
       <div class="center">
-        <md-button class="md-raised md-primary" @click="copyTeamSecret">
-          {{ $t("copyToClipboard") }}
-        </md-button>
+        <md-button class="md-raised md-primary" @click="copyTeamSecret">{{
+          $t("copyToClipboard")
+        }}</md-button>
       </div>
     </md-content>
     <md-steppers v-else :md-active-step.sync="active" md-vertical md-linear>
@@ -107,17 +107,17 @@
               </md-field>
               <md-list style="height:300px; overflow:scroll">
                 <md-list-item v-for="item in filteredCountries" :key="item.key">
-                  <md-checkbox v-model="team.countries" :value="item.key">{{
-                    item.name
-                  }}</md-checkbox>
+                  <md-checkbox v-model="team.countries" :value="item.key">
+                    {{ item.name }}
+                  </md-checkbox>
                   <country-flag :country="item.key" size="normal" />
                 </md-list-item>
               </md-list>
             </md-content>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" type="submit">
-                {{ $t("submit") }}
-              </md-button>
+              <md-button class="md-raised md-primary" type="submit">{{
+                $t("submit")
+              }}</md-button>
             </div>
           </div>
           <div v-else>
@@ -126,9 +126,9 @@
               <md-input v-model="encodedTeamInput" required></md-input>
             </md-field>
             <div style="display:flex; justify-content:center;">
-              <md-button class="md-raised md-primary" type="submit">{{
-                $t("submit")
-              }}</md-button>
+              <md-button class="md-raised md-primary" type="submit">
+                {{ $t("submit") }}
+              </md-button>
             </div>
           </div>
         </form>
@@ -220,6 +220,10 @@ export default {
   },
   methods: {
     ...mapActions(["setToken", "setUser", "setRepository", "setTeam"]),
+    handleNeedAuthentication() {
+      this.setToken(null);
+      this.showMessage(this.$t("invalidToken"));
+    },
     copyTeamSecret() {
       navigator.clipboard
         .writeText(this.encodedTeam)
@@ -288,6 +292,7 @@ export default {
     },
     async createTeam() {
       const nizkctf = new NIZKCTF(
+        this.handleNeedAuthentication,
         this.token,
         this.repository,
         config.submissionsRepo,
@@ -396,7 +401,7 @@ export default {
     },
     async getUser(token) {
       if (config.repohost === "github") {
-        const github = new GitHub(token);
+        const github = new GitHub(token, this.handleNeedAuthentication);
         const data = await github.getUser();
         return data;
       } else if (config.repohost === "gitlab") {
@@ -408,7 +413,7 @@ export default {
     },
     async createFork(token) {
       if (config.repohost === "github") {
-        const github = new GitHub(token);
+        const github = new GitHub(token, this.handleNeedAuthentication);
         const { path } = await github.createFork(config.submissionsRepo);
 
         const branches = await github.listBranches(path);
@@ -443,7 +448,7 @@ export default {
     },
     async verifyFork(token) {
       if (config.repohost === "github") {
-        const github = new GitHub(token);
+        const github = new GitHub(token, this.handleNeedAuthentication);
         const { repo } = repoNameHandler(config.submissionsRepo);
         try {
           const content = await github.getContents(

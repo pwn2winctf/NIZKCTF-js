@@ -6,9 +6,17 @@ export const repoNameHandler = repoName => {
 };
 
 export default class GitHub {
-  constructor(token) {
+  constructor(token, onNeedAuthentication) {
     this.octokit = new Octokit({
       auth: token
+    });
+
+    this.octokit.hook.error("request", async error => {
+      if (error.status === 401) {
+        onNeedAuthentication();
+      }
+
+      throw error;
     });
   }
 

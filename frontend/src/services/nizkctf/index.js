@@ -8,7 +8,14 @@ import { deployPath } from "../../config";
 const repohostDict = { github: GitHub, gitlab: GitLab };
 
 export default class NIZKCTF {
-  constructor(token, local, upstream, repohost, team = undefined) {
+  constructor(
+    onNeedAuthentication,
+    token,
+    local,
+    upstream,
+    repohost,
+    team = undefined
+  ) {
     if (!repohostDict[repohost]) {
       throw new TypeError(`Invalid repohost: ${repohost}`);
     }
@@ -16,7 +23,7 @@ export default class NIZKCTF {
     this.local = local;
     this.upstream = upstream;
 
-    this.api = new repohostDict[repohost](this.token);
+    this.api = new repohostDict[repohost](this.token, onNeedAuthentication);
     this.team = team;
   }
 
