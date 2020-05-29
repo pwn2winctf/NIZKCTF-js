@@ -57,7 +57,13 @@ export default class NIZKCTF {
     const proof = await this._createProof(challenge, keys.privateKey);
 
     const path = getTeamPath(this.team.name);
-    const message = `Proof: found flag for ${challenge.id}`;
+    const message = `Proof: found flag for ${challenge.id} - ${path}`;
+
+    const list = await this.api.listPullRequests(this.upstream, 'opened', `${message}:in:title`)
+
+    if (list.length > 0) {
+      throw new Error("Your team has already sent this flag and it is in the bot's processing queue");
+    }
 
     const newProof = Buffer.from(proof).toString("base64");
 
