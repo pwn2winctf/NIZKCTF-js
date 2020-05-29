@@ -114,7 +114,13 @@ export default {
         }
       }
 
-      this.filteredChallenges = this.challenges;
+      if (this.selectedCategory) {
+        this.filteredChallenges = this.challenges.filter(item =>
+          item.tags.includes(this.selectedCategory)
+        );
+      } else {
+        this.filteredChallenges = this.challenges;
+      }
     },
     loadChallenges() {
       API.getChallenges()
