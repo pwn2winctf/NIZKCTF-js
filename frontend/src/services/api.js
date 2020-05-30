@@ -27,7 +27,7 @@ export const API = {
     }),
   getTeam: teamName => {
     const path = getTeamPath(teamName);
-    return api.get(`/${path}/team.json?_${now()}`);
+    return api.get(`/${path}/team.json`);
   },
   getTeamMembers: teamName => {
     const path = getTeamPath(teamName);
