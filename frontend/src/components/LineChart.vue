@@ -7,6 +7,9 @@ export default {
   mixins: [reactiveProp],
   props: ["options"],
   mounted() {
+    if (this.$data._chart) {
+      this.$data._chart.destroy();
+    }
     this.renderChart(this.chartData, this.options);
   }
 };
