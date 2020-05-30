@@ -18,12 +18,12 @@
           slot-scope="{ item }"
           @click="openPopup(item)"
         >
-          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>
-            {{ item.pos }}
-          </md-table-cell>
-          <md-table-cell :md-label="$t('team')" md-sort-by="team">
-            {{ item.name }}
-          </md-table-cell>
+          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
+            item.pos
+          }}</md-table-cell>
+          <md-table-cell :md-label="$t('team')" md-sort-by="team">{{
+            item.name
+          }}</md-table-cell>
           <md-table-cell :md-label="$t('country')">
             <country-flag
               class="flags"
@@ -33,9 +33,9 @@
               size="normal"
             />
           </md-table-cell>
-          <md-table-cell :md-label="$t('score')" md-sort-by="score">
-            {{ item.score }}
-          </md-table-cell>
+          <md-table-cell :md-label="$t('score')" md-sort-by="score">{{
+            item.score
+          }}</md-table-cell>
         </md-table-row>
       </md-table>
     </md-content>
@@ -134,7 +134,10 @@ export default {
     }
   },
   created() {
-    this.rankPolling = createPolling(() => this.loadSolvedChallenges());
+    this.rankPolling = createPolling(
+      () => this.loadSolvedChallenges(),
+      30 * 60000
+    ); // 30 min
     this.rankPolling.start();
   },
   methods: {
@@ -208,6 +211,25 @@ export default {
       this.topStandings = topStandings;
       this.timeAxis = timeAxis;
     },
+
+    async mergeTeamInfo() {
+      const teams = this.solvedChallenges.map(
+        ({ team, score, pos, taskStats }) => {
+          const teamData = this.teams.find(item => item.name === team);
+          return {
+            ...teamData,
+            pos,
+            score,
+            solvedChallenges: Object.entries(taskStats).map(item => ({
+              name: item[0],
+              ...item[1]
+            }))
+          };
+        }
+      );
+
+      this.teams = teams;
+    },
     async loadSolvedChallenges() {
       this.calculateScore();
 
@@ -252,7 +274,8 @@ export default {
   },
   watch: {
     solvedChallenges() {
-      this.loadSolvedChallenges();
+      this.mergeTeamInfo();
+      this.calculateScore();
     }
   }
 };
