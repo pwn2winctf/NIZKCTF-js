@@ -18,12 +18,12 @@
           slot-scope="{ item }"
           @click="openPopup(item)"
         >
-          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>{{
-            item.pos
-          }}</md-table-cell>
-          <md-table-cell :md-label="$t('team')" md-sort-by="team">{{
-            item.name
-          }}</md-table-cell>
+          <md-table-cell md-label="POS" md-sort-by="pos" md-numeric>
+            {{ item.pos }}
+          </md-table-cell>
+          <md-table-cell :md-label="$t('team')" md-sort-by="team">
+            {{ item.name }}
+          </md-table-cell>
           <md-table-cell :md-label="$t('country')">
             <country-flag
               class="flags"
@@ -33,9 +33,9 @@
               size="normal"
             />
           </md-table-cell>
-          <md-table-cell :md-label="$t('score')" md-sort-by="score">{{
-            item.score
-          }}</md-table-cell>
+          <md-table-cell :md-label="$t('score')" md-sort-by="score">
+            {{ item.score }}
+          </md-table-cell>
         </md-table-row>
       </md-table>
     </md-content>
@@ -143,7 +143,6 @@ export default {
       this.popup.name = item.name;
       this.popup.crypt_pk = item.crypt_pk;
       this.popup.sign_pk = item.sign_pk;
-      this.popup.members = item.members;
       this.popup.score = item.score;
       this.popup.solvedChallenges = item.solvedChallenges;
       this.popup.isOpen = true;
@@ -237,12 +236,10 @@ export default {
       const teams = await Promise.all(
         this.solvedChallenges.map(async ({ team, score, pos, taskStats }) => {
           const teamResponse = await API.getTeam(team);
-          const teamMembersResponse = await API.getTeamMembers(team);
           return {
             pos,
             score,
             ...teamResponse.data,
-            members: teamMembersResponse.data,
             solvedChallenges: Object.entries(taskStats).map(item => ({
               name: item[0],
               ...item[1]

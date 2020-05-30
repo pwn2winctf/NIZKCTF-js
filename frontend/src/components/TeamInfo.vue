@@ -5,14 +5,17 @@
       <p>{{ $t("score") }}: {{ info.score }}</p>
       <p>Crypt PK: {{ info.crypt_pk }}</p>
       <p>Sign PK: {{ info.sign_pk }}</p>
-      <md-table v-model="info.members">
+      <md-content v-if="loading" class="spinner">
+        <md-progress-spinner md-mode="indeterminate" />
+      </md-content>
+      <md-table v-else v-model="members">
         <md-table-toolbar>
           <h3>{{ $t("members") }}</h3>
         </md-table-toolbar>
         <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell :md-label="$t('username')">{{
-            item.username
-          }}</md-table-cell>
+          <md-table-cell :md-label="$t('username')">
+            {{ item.username }}
+          </md-table-cell>
           <md-table-cell md-label="ID">{{ item.id }}</md-table-cell>
         </md-table-row>
       </md-table>
@@ -26,36 +29,65 @@
           <h3>{{ $t("solves") }}</h3>
         </md-table-toolbar>
         <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell :md-label="$t('challenge')">{{
-            item.name
-          }}</md-table-cell>
-          <md-table-cell :md-label="$t('time')" md-sort-by="time">{{
-            formatDate(item.time)
-          }}</md-table-cell>
+          <md-table-cell :md-label="$t('challenge')">
+            {{ item.name }}
+          </md-table-cell>
+          <md-table-cell :md-label="$t('time')" md-sort-by="time">
+            {{ formatDate(item.time) }}
+          </md-table-cell>
         </md-table-row>
       </md-table>
     </md-dialog-content>
     <md-dialog-actions>
-      <md-button class="md-primary" @click="onClose">{{
-        $t("close")
-      }}</md-button>
+      <md-button class="md-primary" @click="onClose">
+        {{ $t("close") }}
+      </md-button>
     </md-dialog-actions>
   </md-dialog>
 </template>
 
 <script>
 import fromUnixTime from "date-fns/fromUnixTime";
+import { API } from "@/services/api";
 import format from "date-fns/format";
 
 export default {
   name: "TeamInfo",
   props: ["info", "onClose"],
+  data: () => ({
+    loading: true,
+    members: []
+  }),
   methods: {
     formatDate(datetime) {
       return format(fromUnixTime(datetime), "MMM dd HH:mm");
+    }
+  },
+
+  watch: {
+    info: {
+      handler: function(value) {
+        this.loading = true;
+        if (value.isOpen) {
+          API.getTeamMembers(value.name)
+            .then(({ data }) => {
+              this.members = data;
+            })
+            .finally(() => {
+              this.loading = false;
+            });
+        }
+      },
+      deep: true
     }
   }
 };
 </script>
 
-<style type="sass" scoped></style>
+<style type="sass" scoped>
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
