@@ -210,9 +210,13 @@ export default {
     },
 
     async mergeTeamInfo() {
-      const teams = this.solvedChallenges.map(
-        ({ team, score, pos, taskStats }) => {
+      const teams = this.solvedChallenges
+        .map(({ team, score, pos, taskStats }) => {
           const teamData = this.teams.find(item => item.name === team);
+          if (!teamData) {
+            // it may be that the team information has not yet been loaded
+            return undefined;
+          }
           return {
             ...teamData,
             pos,
@@ -222,8 +226,8 @@ export default {
               ...item[1]
             }))
           };
-        }
-      );
+        })
+        .filter(item => item !== undefined);
 
       this.teams = teams;
     },
