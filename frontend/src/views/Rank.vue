@@ -134,10 +134,7 @@ export default {
     }
   },
   created() {
-    this.rankPolling = createPolling(
-      () => this.loadSolvedChallenges(),
-      30 * 60000
-    ); // 30 min
+    this.rankPolling = createPolling(() => this.loadTeamsInfo(), 30 * 60000); // 30 min
     this.rankPolling.start();
   },
   methods: {
@@ -230,7 +227,7 @@ export default {
 
       this.teams = teams;
     },
-    async loadSolvedChallenges() {
+    async loadTeamsInfo() {
       this.calculateScore();
 
       const teams = await Promise.all(
@@ -274,8 +271,8 @@ export default {
   },
   watch: {
     solvedChallenges() {
-      this.mergeTeamInfo();
       this.calculateScore();
+      this.mergeTeamInfo();
     }
   }
 };
