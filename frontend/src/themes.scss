@@ -4,7 +4,8 @@
   "default",
   (
     primary: md-get-palette-color(black, A200),
-    accent: md-get-palette-color(red, A200)
+    accent: md-get-palette-color(red, A200),
+    primary-on-background: md-get-palette-color(red, 800)
   )
 );
 
