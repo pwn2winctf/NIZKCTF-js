@@ -46,6 +46,7 @@ export default {
     teamCountries: "Team countries",
     submit: "Submit",
     fixErrors: "Please fix the following error(s):",
+    invalidToken: "The github token is invalid. Sign in again",
     teamPrivateKey: "Team private key",
     verifyingFlag: "Please wait, we are checking the flag against the hash.",
     flagFound:
@@ -133,6 +134,7 @@ export default {
     teamCountries: "Países do time",
     submit: "Enviar",
     fixErrors: "Por favor, corrija o(s) seguinte(s) erro(s):",
+    invalidToken: "O token do github está inválido. Faça login novamente",
     teamPrivateKey: "Chave privada do time",
     flagFound:
       "Flag encontrada, enviada! Você pode acompanhar o status do seu envio",

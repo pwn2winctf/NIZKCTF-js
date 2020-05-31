@@ -17,7 +17,7 @@
           class="md-primary md-layout-item card-tag"
           >{{ tag }}</md-chip
         >
-        <div v-if="teamKey && !info.solved" class="flag-field">
+        <div v-if="teamKey && token && !info.solved" class="flag-field">
           <md-field>
             <md-input v-model="flag" :placeholder="flagFormat"></md-input>
           </md-field>
@@ -25,7 +25,7 @@
       </md-dialog-content>
       <md-dialog-actions>
         <md-button
-          v-if="!loading && teamKey && !info.solved"
+          v-if="!loading && teamKey && token && !info.solved"
           class="md-raised md-accent"
           @click="submitFlag"
           >{{ $t("submit") }}</md-button
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import showdown from "showdown";
 
 import { API } from "@/services/api";
@@ -88,6 +88,13 @@ export default {
     })
   },
   methods: {
+    ...mapActions(["setToken", "setUser", "setRepository"]),
+    handleNeedAuthentication() {
+      this.setToken(null);
+      this.setUser(null);
+      this.setRepository(null);
+      this.showMessage(this.$t("invalidToken"));
+    },
     close() {
       if (this.$route.params.id) {
         this.$router.push("/challenges");
@@ -104,6 +111,7 @@ export default {
       this.loading = true;
       this.sendingFlag = true;
       const nizkctf = new NIZKCTF(
+        this.handleNeedAuthentication,
         this.token,
         this.repository,
         config.submissionsRepo,

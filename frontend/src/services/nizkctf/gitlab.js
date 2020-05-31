@@ -1,10 +1,11 @@
 import { Gitlab } from "gitlab";
 
 export default class GitLab {
-  constructor(token) {
+  constructor(token, onNeedAuthentication) {
     this.api = new Gitlab({
       oauthToken: token
     });
+    this.onNeedAuthentication = onNeedAuthentication;
   }
 
   async getUser() {
