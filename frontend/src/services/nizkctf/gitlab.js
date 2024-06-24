@@ -86,6 +86,7 @@ export default class GitLab {
     };
   }
   async listPullRequests(projectId, authorUsername, state) {
+    // TODO implements filter
     const response = await this.api.MergeRequests.all({
       projectId,
       authorUsername,

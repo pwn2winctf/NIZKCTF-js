@@ -78,12 +78,14 @@ export default class GitHub {
     };
   }
 
-  async listPullRequests(repoName, username, state) {
+  async listPullRequests(repoName, state, filter, username = null) {
     const status = state === "opened" ? "open" : state;
 
     const { owner, repo } = repoNameHandler(repoName);
 
-    const query = `is:pr+repo:${owner}/${repo}+author:${username}+state:${status}`;
+    const query = filter
+      ? `${filter}+is:pr+repo:${owner}/${repo}+state:${status}`
+      : `is:pr+repo:${owner}/${repo}+author:${username}+state:${status}`;
 
     const { data } = await this.octokit.search.issuesAndPullRequests({
       q: query
